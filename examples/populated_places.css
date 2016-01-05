@@ -1,0 +1,9 @@
+#populated_places_simple {
+    marker-fill-opacity: 0.8;
+    marker-line-color: #FFF;
+    marker-line-width: 1;
+    marker-line-opacity: 1;
+    marker-allow-overlap: true;
+    marker-width: 10;
+    marker-fill: buckets([pop_max], ramp([pop_max], colorbrewer(Greens), jenks));
+}

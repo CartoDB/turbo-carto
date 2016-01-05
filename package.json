@@ -1,0 +1,53 @@
+{
+  "name": "turbo-cartocss",
+  "version": "1.0.0",
+  "description": "CartoCSS preprocessor",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "make test-all"
+  },
+  "author": {
+    "name": "CartoDB",
+    "url": "http://cartodb.com/",
+    "email": "wadus@cartodb.com"
+  },
+  "contributors": [
+    "Raul Ochoa <rochoa@cartodb.com>"
+  ],
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/CartoDB/turbo-cartocss/blob/master/LICENCE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:CartoDB/turbo-cartocss.git"
+  },
+  "dependencies": {
+    "browser-request": "^0.3.3",
+    "colorbrewer": "0.0.2",
+    "debug": "^2.2.0",
+    "es6-promise": "^3.0.2",
+    "less": "^2.5.3",
+    "postcss": "^5.0.13",
+    "querystring": "^0.2.0",
+    "queue-async": "^1.0.7",
+    "request": "^2.67.0"
+  },
+  "devDependencies": {
+    "browserify": "^12.0.1",
+    "istanbul": "^0.4.1",
+    "jshint": "^2.9.1-rc2",
+    "mocha": "^2.3.4",
+    "semistandard": "^7.0.4",
+    "semistandard-format": "^2.1.0",
+    "yargs": "^3.31.0"
+  },
+  "semistandard": {
+    "globals": [ "describe", "it" ],
+    "ignore": [
+      "examples/app.js"
+    ]
+  }
+}
