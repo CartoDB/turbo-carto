@@ -4,6 +4,8 @@ AKA CartoCSS preprocessor
 
 tl;dr Enables adding functions to CartoCSS that can be evaluated asynchronously.
 
+[![Build Status](https://travis-ci.org/CartoDB/turbo-cartocss.png?branch=master)](https://travis-ci.org/CartoDB/turbo-cartocss)
+
 TBC.
 
 ## Limitations
