@@ -2,16 +2,17 @@
 
 var assert = require('assert');
 var FnExecutor = require('../../src/fn/fn-executor');
+var DummyDatasource = require('../support/dummy-datasource');
 
 describe('FnExecutor', function () {
   it('should exec a happy case', function (done) {
-    var fn = new FnExecutor(
+    var fn = new FnExecutor(new DummyDatasource(),
       'buckets', [
         'population',
-        new FnExecutor(
+        new FnExecutor(new DummyDatasource(),
           'ramp', [
             'population',
-            new FnExecutor(
+            new FnExecutor(new DummyDatasource(),
               'colorbrewer', [
                 'GnBu'
               ]

@@ -1,13 +1,12 @@
 'use strict';
 
 var postcss = require('postcss');
-var FnFactory = require('./fn/fn-abstract-factory');
-var SqlApiDatasource = require('./backend/sql-api-datasource');
 var PostcssTurboCartoCss = require('./postcss-turbo-cartocss');
 
-function turbocartocss (cartocss, query, callback) {
-  FnFactory.setDatasource(new SqlApiDatasource(query));
-  postcss([PostcssTurboCartoCss])
+function turbocartocss (cartocss, datasource, callback) {
+  var postCssTurboCartoCss = new PostcssTurboCartoCss(datasource);
+
+  postcss([postCssTurboCartoCss.getPlugin()])
     .process(cartocss)
     .then(function (result) {
       callback(null, result.css);
@@ -16,3 +15,4 @@ function turbocartocss (cartocss, query, callback) {
 }
 
 module.exports = turbocartocss;
+module.exports.datasource = require('./datasource');

@@ -1,3 +1,6 @@
+'use strict';
+
+/* jshint ignore:start */
 var map = L.map('map', {
     scrollWheelZoom: false,
     center: [30, 0],
@@ -29,7 +32,12 @@ function updateMap() {
         map.removeLayer(rasterLayer);
     }
 
-    turbocartocss(cssEditor.getValue(), sqlEditor.getValue(), function(err, cartocss) {
+    var datasource = new turbocartocss.datasource.SqlApi(sqlEditor.getValue());
+    turbocartocss(cssEditor.getValue(), datasource, function(err, cartocss) {
+        if (err) {
+            console.error(err.message);
+            throw err;
+        }
         var config = {
             "version": "1.2.0",
             "layers": [
@@ -53,7 +61,7 @@ function updateMap() {
 
                 var tilesEndpoint = currentEndpoint() + '/' + layergroup.layergroupid + '/{z}/{x}/{y}.png';
 
-                var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
+                var protocol = 'https:' === document.location.protocol ? 'https' : 'http';
                 if (layergroup.cdn_url && layergroup.cdn_url[protocol]) {
                     var domain = layergroup.cdn_url[protocol];
                     if ('http' === protocol) {
@@ -92,3 +100,4 @@ document.getElementById('endpoint').addEventListener('blur', updateMap, false);
 
 
 updateMap();
+/* jshint ignore:end */

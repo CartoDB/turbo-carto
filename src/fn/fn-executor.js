@@ -2,9 +2,10 @@
 
 var debug = require('../helper/debug')('fn-executor');
 var queue = require('queue-async');
-var FnFactory = require('./fn-abstract-factory');
+var FnFactory = require('./fn-factory');
 
-function FnExecutor (fnName, fnArgs) {
+function FnExecutor (datasource, fnName, fnArgs) {
+  this.datasource = datasource;
   this.fnName = fnName;
   this.args = fnArgs;
 }
@@ -13,7 +14,7 @@ module.exports = FnExecutor;
 
 FnExecutor.prototype.exec = function (callback) {
   debug('[ENTERING] Fn.prototype.exec %s(%j)', this.fnName, this.args);
-  var backendFn = FnFactory.create(this.fnName);
+  var backendFn = FnFactory.create(this.fnName, this.datasource);
   var nestedFnIndexes = this.args.reduce(function (nestedFns, arg, index) {
     if (arg instanceof FnExecutor) {
       nestedFns.push(index);

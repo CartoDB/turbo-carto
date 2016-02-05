@@ -3,17 +3,18 @@
 var FnExecutor = require('./fn-executor');
 var queue = require('queue-async');
 
-function FnBuilder () {
+function FnBuilder (datasource) {
+  this.datasource = datasource;
   this.fnExecutors = [];
 }
 
 module.exports = FnBuilder;
 
 FnBuilder.prototype.add = function (decl, fnNode) {
-  this.fnExecutors.push({ decl: decl, fnExecutor: createFnExecutor(fnNode) });
+  this.fnExecutors.push({ decl: decl, fnExecutor: createFnExecutor(fnNode, this.datasource) });
 };
 
-function createFnExecutor (fnNode) {
+function createFnExecutor (fnNode, datasource) {
   var fnArgs = [];
   if (Array.isArray(fnNode.nodes)) {
     fnArgs = fnNode.nodes.reduce(function (args, nestedFnNode) {
@@ -23,7 +24,7 @@ function createFnExecutor (fnNode) {
           args.push(nestedFnNode.value);
           break;
         case 'function':
-          args.push(createFnExecutor(nestedFnNode));
+          args.push(createFnExecutor(nestedFnNode, datasource));
           break;
         default:
       // pass: includes 'div', 'space', 'comment'
@@ -31,7 +32,7 @@ function createFnExecutor (fnNode) {
       return args;
     }, []);
   }
-  return new FnExecutor(fnNode.value, fnArgs);
+  return new FnExecutor(datasource, fnNode.value, fnArgs);
 }
 
 FnBuilder.prototype.exec = function (callback) {

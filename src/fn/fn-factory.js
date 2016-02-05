@@ -3,18 +3,12 @@
 var debug = require('../helper/debug')('fn-factory');
 var colorbrewer = require('colorbrewer');
 
-var DummyDatasource = require('../backend/dummy-datasource');
-
 function columnName (column) {
   return column.replace('[', '').replace(']', '');
 }
 
 var FnFactory = {
-  datasource: new DummyDatasource(),
-  setDatasource: function (datasource) {
-    this.datasource = datasource;
-  },
-  create: function (fnName) {
+  create: function (fnName, datasource) {
     switch (fnName) {
       case 'buckets':
         return function fn$buckets (column, ramp, callback) {
@@ -32,7 +26,7 @@ var FnFactory = {
         // column, scheme, callback
         return function fn$ramp (column, min, max, method, callback) {
           debug('fn$ramp(%j)', arguments);
-          debug('Using "%s" datasource to calculate ramp', this.datasource.getName());
+          debug('Using "%s" datasource to calculate ramp', datasource.getName());
 
           var i;
           var rampResult = [];
@@ -52,7 +46,7 @@ var FnFactory = {
               method = 'quantiles';
             }
 
-            this.datasource.getRamp(columnName(column), method, function (err, ramp) {
+            datasource.getRamp(columnName(column), method, function (err, ramp) {
               if (err) {
                 return callback(err);
               }
@@ -71,7 +65,7 @@ var FnFactory = {
               callback = method;
               method = 'quantiles';
             }
-            this.datasource.getRamp(columnName(column), method, function (err, ramp) {
+            datasource.getRamp(columnName(column), method, function (err, ramp) {
               if (err) {
                 return callback(err);
               }
@@ -87,7 +81,7 @@ var FnFactory = {
               return callback(null, rampResult);
             });
           }
-        }.bind(this);
+        };
       case 'colorbrewer':
         return function fn$colorbrewer (scheme, callback) {
           if (!callback) {
