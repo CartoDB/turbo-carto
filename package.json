@@ -14,12 +14,7 @@
   "contributors": [
     "Raul Ochoa <rochoa@cartodb.com>"
   ],
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "https://github.com/CartoDB/turbo-cartocss/blob/master/LICENCE"
-    }
-  ],
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git@github.com:CartoDB/turbo-cartocss.git"
