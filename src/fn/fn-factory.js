@@ -2,10 +2,7 @@
 
 var debug = require('../helper/debug')('fn-factory');
 var colorbrewer = require('colorbrewer');
-
-function columnName (column) {
-  return column.replace('[', '').replace(']', '');
-}
+var columnName = require('../helper/column-name');
 
 var FnFactory = {
   create: function (fnName, datasource) {
