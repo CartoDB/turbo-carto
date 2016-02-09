@@ -26,6 +26,7 @@
     "es6-promise": "^3.0.2",
     "less": "^2.5.3",
     "postcss": "^5.0.13",
+    "postcss-value-parser": "^3.2.3",
     "querystring": "^0.2.0",
     "queue-async": "^1.0.7",
     "request": "^2.67.0"
@@ -40,7 +41,10 @@
     "yargs": "^3.31.0"
   },
   "semistandard": {
-    "globals": [ "describe", "it" ],
+    "globals": [
+      "describe",
+      "it"
+    ],
     "ignore": [
       "examples/app.js"
     ]
