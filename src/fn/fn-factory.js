@@ -12,7 +12,7 @@ var FnFactory = {
       case 'buckets':
         return function fn$buckets (column, ramp) {
           debug('fn$buckets(%j)', arguments);
-          return new Promise(function (resolve, reject) {
+          return new Promise(function (resolve) {
             resolve({
               column: columnName(column),
               start: ramp.shift(),
@@ -38,7 +38,6 @@ var FnFactory = {
             // color ramp:
             var scheme = min;
 
-
             return new Promise(function (resolve, reject) {
               datasource.getRamp(columnName(column), method, function (err, ramp) {
                 if (err) {
@@ -52,10 +51,8 @@ var FnFactory = {
                 resolve(rampResult);
               });
             });
-
           } else {
             // numeric ramp
-
             return new Promise(function (resolve, reject) {
               datasource.getRamp(columnName(column), method, function (err, ramp) {
                 if (err) {
@@ -72,7 +69,6 @@ var FnFactory = {
                 }
                 resolve(rampResult);
               });
-
             });
           }
         };
