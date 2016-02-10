@@ -4,7 +4,7 @@ var fns = [
   require('./fn-ramp'),
   require('./fn-colorbrew'),
   require('./fn-buckets'),
-  // require('./fn-identity')
+// require('./fn-identity')
 ];
 
 var FnFactory = {

@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   // pass, other functions will be resolved by other preprocessor
-  return function fn$identity() {
+  return function fn$identity () {
     var args = new Array(arguments.length);
     for (var i = 0; i < args.length; ++i) {
-      //i is always valid index in the arguments object
+      // i is always valid index in the arguments object
       args[i] = arguments[i];
     }
     var callback = args.pop();
