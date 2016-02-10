@@ -32,13 +32,12 @@ var FnFactory = {
           var i;
           var rampResult = [];
 
+          method = method || 'quantiles';
+
           if (Array.isArray(min)) {
             // color ramp:
-            //  - column, scheme, method, callback
-            //  - column, scheme, callback
             var scheme = min;
 
-            method = method || 'quantiles';
 
             return new Promise(function (resolve, reject) {
               datasource.getRamp(columnName(column), method, function (err, ramp) {
@@ -56,12 +55,6 @@ var FnFactory = {
 
           } else {
             // numeric ramp
-            //  - column, min, max, method, callback
-            //  - column, min, max, callback
-            if (!callback) {
-              callback = method;
-              method = 'quantiles';
-            }
 
             return new Promise(function (resolve, reject) {
               datasource.getRamp(columnName(column), method, function (err, ramp) {
@@ -94,7 +87,7 @@ var FnFactory = {
               result = def[5];
             }
             resolve(result);
-          })
+          });
         };
       default:
         throw new Error('Unsupported function/nesting found in function "' + fnName + '"');
