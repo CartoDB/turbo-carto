@@ -1,7 +1,8 @@
 'use strict';
 
+require('es6-promise').polyfill();
+
 var FnExecutor = require('./fn-executor');
-var queue = require('queue-async');
 
 function FnBuilder (datasource) {
   this.datasource = datasource;
@@ -35,17 +36,13 @@ function createFnExecutor (fnNode, datasource) {
   return new FnExecutor(datasource, fnNode.value, fnArgs);
 }
 
-FnBuilder.prototype.exec = function (callback) {
-  var fnExecutorsQueue = queue(this.fnExecutors.length);
-  this.fnExecutors.forEach(function (fnExecutor) {
-    fnExecutorsQueue.defer(function (decl, fnExecutor, done) {
-      fnExecutor.exec(function (err, result) {
-        if (err) {
-          return done(err);
-        }
-        return done(null, { decl: decl, result: result });
+FnBuilder.prototype.exec = function () {
+  var executorsExec = this.fnExecutors.map(function (fnExecutor) {
+    return fnExecutor.fnExecutor.exec()
+      .then(function (result) {
+        return { decl: fnExecutor.decl, result: result };
       });
-    }, fnExecutor.decl, fnExecutor.fnExecutor);
   });
-  fnExecutorsQueue.awaitAll(callback);
+
+  return Promise.all(executorsExec);
 };
