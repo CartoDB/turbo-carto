@@ -19,6 +19,7 @@ var cartocss = fs.readFileSync(filename, {encoding: 'utf-8'});
 var postcss = require('postcss');
 var PostcssTurboCartoCss = require('../src/postcss-turbo-cartocss');
 var SqlApiDatasource = require('../src/datasource/sql-api-datasource');
+var GeojsonDatasource = require('../src/datasource').Geojson;
 
 // stubbed datasource
 var datasource = {
@@ -37,6 +38,32 @@ if (argv.datasource === 'sql') {
     process.exit(1);
   }
   datasource = new SqlApiDatasource(argv.query);
+}
+
+if (argv.datasource === 'geojson') {
+  if (!argv.file) {
+    console.error('geojson datasource requires --file (relative path) param');
+    process.exit(1);
+  }
+
+  var geojsonPath = argv.file;
+
+  if (!fs.existsSync(geojsonPath)) {
+    console.error('File "%s" does not exist', geojsonPath);
+    process.exit(1);
+  }
+
+  var geojsonRaw = fs.readFileSync(geojsonPath, {encoding: 'utf-8'});
+  var geojson;
+
+  try {
+    geojson = JSON.parse(geojsonRaw);
+  } catch (err) {
+    console.error('Error parsing geojson', err);
+    process.exit(1);
+  }
+
+  datasource = new GeojsonDatasource(geojson);
 }
 
 var postCssTurboCartoCss = new PostcssTurboCartoCss(datasource);
