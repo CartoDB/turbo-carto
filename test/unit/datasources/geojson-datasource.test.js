@@ -22,5 +22,4 @@ describe('geojson-datasource', function () {
       assert.deepEqual(jenks, [ 10, 140437, 381116, 837000, 2151000, 2184000 ]);
     });
   });
-
 });
