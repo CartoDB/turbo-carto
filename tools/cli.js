@@ -16,9 +16,8 @@ if (!fs.existsSync(filename)) {
 }
 var cartocss = fs.readFileSync(filename, {encoding: 'utf-8'});
 
-var postcss = require('postcss');
-var PostcssTurboCartoCss = require('../src/postcss-turbo-cartocss');
-var SqlApiDatasource = require('../src/datasource/sql-api-datasource');
+var turboCartoCss = require('../src/');
+var SqlApiDatasource = require('../src/datasource').SqlApi;
 var GeojsonDatasource = require('../src/datasource').Geojson;
 
 // stubbed datasource
@@ -66,12 +65,9 @@ if (argv.datasource === 'geojson') {
   datasource = new GeojsonDatasource(geojson);
 }
 
-var postCssTurboCartoCss = new PostcssTurboCartoCss(datasource);
-postcss([postCssTurboCartoCss.getPlugin()])
-  .process(cartocss)
-  .then(function (result) {
-    console.log(result.css);
-  })
-  .catch(function (err) {
-    console.error(err);
-  });
+turboCartoCss(cartocss, datasource, function (err, css) {
+  if (err) {
+    return console.log(err);
+  }
+  console.log(css);
+});
