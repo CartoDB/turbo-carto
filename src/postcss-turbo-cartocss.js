@@ -28,26 +28,7 @@ PostcssTurboCartoCss.prototype.getPlugin = function () {
         }, false);
       });
 
-      return fnBuilder.exec()
-        .then(function (results) {
-          results.forEach(function (result) {
-            var decl = result.decl;
-            var parent = decl.parent;
-
-            var bucketsResult = result.result;
-            parent.append(postcss.decl({prop: decl.prop, value: bucketsResult.start}));
-            var ramp = bucketsResult.ramp.reverse();
-            for (var i = 0; i < ramp.length; i += 2) {
-              var rule = postcss.rule({
-                selector: '[ ' + bucketsResult.column + ' < ' + ramp[i + 1] + ' ]'
-              });
-              rule.append(postcss.decl({prop: decl.prop, value: ramp[i]}));
-              parent.append(rule);
-            }
-
-            decl.remove();
-          });
-        });
+      return fnBuilder.exec();
     };
   });
 };

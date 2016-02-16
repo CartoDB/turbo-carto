@@ -4,6 +4,6 @@
     marker-line-width: 1;
     marker-line-opacity: 1;
     marker-allow-overlap: true;
-    marker-width: 10;
-    marker-fill: buckets([pop_max], ramp([pop_max], colorbrewer(Greens), jenks));
+    marker-width: ramp([pop_max], 10, 20, quantiles);
+    marker-fill: ramp([pop_max], colorbrewer(Greens), jenks);
 }

@@ -12,10 +12,10 @@ function FnBuilder (datasource) {
 module.exports = FnBuilder;
 
 FnBuilder.prototype.add = function (decl, fnNode) {
-  this.fnExecutors.push({ decl: decl, fnExecutor: createFnExecutor(fnNode, this.datasource) });
+  this.fnExecutors.push({ decl: decl, fnExecutor: createFnExecutor(fnNode, this.datasource, decl) });
 };
 
-function createFnExecutor (fnNode, datasource) {
+function createFnExecutor (fnNode, datasource, decl) {
   var fnArgs = [];
   if (Array.isArray(fnNode.nodes)) {
     fnArgs = fnNode.nodes.reduce(function (args, nestedFnNode) {
@@ -25,7 +25,7 @@ function createFnExecutor (fnNode, datasource) {
           args.push(nestedFnNode.value);
           break;
         case 'function':
-          args.push(createFnExecutor(nestedFnNode, datasource));
+          args.push(createFnExecutor(nestedFnNode, datasource, decl));
           break;
         default:
       // pass: includes 'div', 'space', 'comment'
@@ -33,15 +33,12 @@ function createFnExecutor (fnNode, datasource) {
       return args;
     }, []);
   }
-  return new FnExecutor(datasource, fnNode.value, fnArgs);
+  return new FnExecutor(datasource, fnNode.value, fnArgs, decl);
 }
 
 FnBuilder.prototype.exec = function () {
   var executorsExec = this.fnExecutors.map(function (fnExecutor) {
-    return fnExecutor.fnExecutor.exec()
-      .then(function (result) {
-        return { decl: fnExecutor.decl, result: result };
-      });
+    return fnExecutor.fnExecutor.exec();
   });
 
   return Promise.all(executorsExec);
