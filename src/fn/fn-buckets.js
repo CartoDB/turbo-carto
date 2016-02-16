@@ -28,7 +28,7 @@ module.exports = function (datasource, decl) {
         column = columnName(column);
         rampResult = rampResult.reverse();
 
-        parent.append(postcss.decl({ prop: decl.prop, value: start}));
+        parent.append(postcss.decl({ prop: decl.prop, value: start }));
 
         for (i = 0; i < rampResult.length; i += 2) {
           var rule = postcss.rule({
@@ -43,7 +43,7 @@ module.exports = function (datasource, decl) {
   };
 };
 
-function getRamp(datasource, column, method) {
+function getRamp (datasource, column, method) {
   return new Promise(function (resolve, reject) {
     datasource.getRamp(columnName(column), method || 'quantiles', function (err, ramp) {
       if (err) {

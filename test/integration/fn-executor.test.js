@@ -19,7 +19,7 @@ describe('FnExecutor', function () {
       ],
       {
         parent: {
-          append: function () {},
+          append: function () {}
         },
         remove: function () {}
       }

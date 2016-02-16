@@ -11,7 +11,7 @@ module.exports = function (fnName) {
     var args = new Array(arguments.length);
     for (var i = 0; i < args.length; ++i) {
       // i is always valid index in the arguments object
-      if (typeof arguments[i] ===  'string') {
+      if (typeof arguments[i] === 'string') {
         args[i] = '\'' + arguments[i] + '\'';
       } else {
         args[i] = arguments[i];

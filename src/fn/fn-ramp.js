@@ -21,7 +21,7 @@ module.exports = function (datasource, decl) {
         column = columnName(column);
         rampResult = rampResult.reverse();
 
-        parent.append(postcss.decl({ prop: decl.prop, value: start}));
+        parent.append(postcss.decl({ prop: decl.prop, value: start }));
 
         for (var i = 0; i < rampResult.length; i += 2) {
           var rule = postcss.rule({
@@ -38,7 +38,7 @@ module.exports = function (datasource, decl) {
   };
 };
 
-function ramp(datasource, column, method, min, max) {
+function ramp (datasource, column, method, min, max) {
   if (!Array.isArray(min)) {
     return numericRamp(datasource, column, method, min, max);
   }
@@ -47,7 +47,7 @@ function ramp(datasource, column, method, min, max) {
   return colorRamp(datasource, column, method, scheme);
 }
 
-function getRamp(datasource, column, method) {
+function getRamp (datasource, column, method) {
   return new Promise(function (resolve, reject) {
     datasource.getRamp(columnName(column), method, function (err, ramp) {
       if (err) {
