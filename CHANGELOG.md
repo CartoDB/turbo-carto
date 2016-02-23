@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.3.0
-Released 2016-mm-dd
+Released 2016-02-23
 
 Allow to use a custom number of buckets in ramps #6
 
