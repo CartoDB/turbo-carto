@@ -1,18 +1,25 @@
 'use strict';
 
-module.exports = function () {
-  // pass, other functions will be resolved by other preprocessor
+require('es6-promise').polyfill();
+
+var debug = require('../helper/debug')('fn-factory');
+
+module.exports = function (fnName) {
   return function fn$identity () {
+    debug('fn$identity(%j)', arguments);
+
     var args = new Array(arguments.length);
     for (var i = 0; i < args.length; ++i) {
       // i is always valid index in the arguments object
-      args[i] = arguments[i];
+      if (typeof arguments[i] === 'string') {
+        args[i] = '\'' + arguments[i] + '\'';
+      } else {
+        args[i] = arguments[i];
+      }
     }
-    var callback = args.pop();
-    console.log('fn$identity %j', args);
 
-    return callback(null, 'identity' + '(' + args.join(',') + ')');
+    return Promise.resolve(fnName + '(' + args.join(',') + ')');
   };
 };
 
-module.exports.fnName = 'identity';
+module.exports.fnName = 'pass';
