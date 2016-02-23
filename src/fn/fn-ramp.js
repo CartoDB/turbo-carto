@@ -7,7 +7,7 @@ var columnName = require('../helper/column-name');
 var postcss = require('postcss');
 
 module.exports = function (datasource, decl) {
-  return function fn$ramp (column, /*...*/args) {
+  return function fn$ramp (column, /* ... */args) {
     debug('fn$ramp(%j)', arguments);
     debug('Using "%s" datasource to calculate ramp', datasource.getName());
 
