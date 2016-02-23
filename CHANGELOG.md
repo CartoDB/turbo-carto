@@ -1,7 +1,15 @@
 # Changelog
 
-## Version 0.2.1
+## Version 0.3.0
 Released 2016-mm-dd
+
+Allow to use a custom number of buckets in ramps #6
+
+Number of buckets can be specified with a param in numeric ramps
+and with array lenght in color ramps
+
+IMPORTANT: Backwards incompatible change
+Datasource now requires an extra param for the number of buckets.
 
 
 ## Version 0.2.0
