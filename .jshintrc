@@ -28,7 +28,7 @@
     "undef"         : true,     // true: Require all non-global variables to be declared (prevents global leaks)
     "unused"        : true,     // true: Require all defined variables be used
     "strict"        : true,     // true: Requires all functions run in ES5 Strict Mode
-    "maxparams"     : 5,        // {int} Max number of formal params allowed per function
+    "maxparams"     : 6,        // {int} Max number of formal params allowed per function
 //    "maxdepth"      : false,  // {int} Max depth of nested blocks (within functions)
 //    "maxstatements" : false,  // {int} Max number statements per function
     "maxcomplexity" : 6,        // {int} Max cyclomatic complexity per function
