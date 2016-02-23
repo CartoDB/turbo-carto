@@ -23,8 +23,10 @@ format: node_modules
 
 TEST_SUITE := $(shell find test/{integration,unit} -name "*.js")
 
+MOCHA_TIMEOUT := 500
+
 test: node_modules
-	./node_modules/.bin/mocha -u bdd -t 5000 $(TEST_SUITE) ${MOCHA_ARGS}
+	./node_modules/.bin/mocha -u bdd -t $(MOCHA_TIMEOUT) $(TEST_SUITE) ${MOCHA_ARGS}
 
 test-all: check-code-style jshint test
 
