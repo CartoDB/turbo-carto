@@ -26,7 +26,7 @@ var datasource = {
     return 'StubDatasource';
   },
 
-  getRamp: function (column, scheme, callback) {
+  getRamp: function (column, buckets, method, callback) {
     return callback(null, [100000, 250000, 500000, 1e6, 1.5e6, 2e6, 1e7]);
   }
 };
