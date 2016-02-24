@@ -6,8 +6,7 @@ var DummyDatasource = require('../support/dummy-datasource');
 
 describe('FnExecutor', function () {
   it('should exec a happy case', function () {
-    var fn = new FnExecutor(
-      new DummyDatasource(),
+    var fn = new FnExecutor(new DummyDatasource(),
       'ramp',
       [
         'population',
@@ -27,16 +26,16 @@ describe('FnExecutor', function () {
     return fn.exec()
       .then(function (result) {
         assert.deepEqual(result, [
-          '#0868ac',
-          1500000,
-          '#43a2ca',
-          1000000,
-          '#7bccc4',
-          500000,
-          '#bae4bc',
-          250000,
+          0,
           '#f0f9e8',
-          100000
+          1,
+          '#bae4bc',
+          2,
+          '#7bccc4',
+          3,
+          '#43a2ca',
+          4,
+          '#0868ac'
         ]);
       });
   });

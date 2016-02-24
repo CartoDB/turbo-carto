@@ -16,12 +16,11 @@ module.exports = function (datasource, decl) {
     return ramp(datasource, column, args)
       .then(function (rampResult) {
         var parent = decl.parent;
-        var start = rampResult.shift();
+        var defaultValue = rampResult[1];
 
         column = columnName(column);
-        rampResult = rampResult.reverse();
 
-        parent.append(postcss.decl({ prop: decl.prop, value: start }));
+        parent.append(postcss.decl({ prop: decl.prop, value: defaultValue }));
 
         for (var i = 0; i < rampResult.length; i += 2) {
           var rule = postcss.rule({
@@ -111,8 +110,6 @@ function colorRamp (datasource, column, scheme, method) {
       var i;
       var rampResult = [];
 
-      rampResult.push(scheme[0]);
-
       for (i = 0; i < buckets; i++) {
         rampResult.push(ramp[i]);
         rampResult.push(scheme[i]);
@@ -132,7 +129,6 @@ function numericRamp (datasource, column, min, max, buckets, method) {
       max = +max;
       var range = max - min;
       var width = range / buckets;
-      rampResult.push(min);
       for (i = 0; i < buckets; i++) {
         rampResult.push(ramp[i]);
         rampResult.push(min + ((i + 1) * width));
