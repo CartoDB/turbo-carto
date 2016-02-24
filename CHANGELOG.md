@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.4.0
-Released 2016-mm-dd
+Released 2016-02-24
 
  - Ramp now reverses rule selectors from min to max values
 
