@@ -26,7 +26,7 @@ module.exports = function (datasource, decl) {
           var rule = postcss.rule({
             selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
           });
-          rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i+3] }));
+          rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 3] }));
           parent.append(rule);
         }
 

@@ -10,7 +10,6 @@ var datasource = new DummyDatasource();
 var postCssTurboCartoCss = new PostcssTurboCartoCss(datasource);
 
 describe('color-ramp', function () {
-
   var cartocss = [
     '#layer{',
     '  polygon-opacity: 1;',
@@ -43,7 +42,7 @@ describe('color-ramp', function () {
     '}'
   ].join('\n');
 
-  it('should return a rule selector with color ramp', function(done) {
+  it('should return a rule selector with color ramp', function (done) {
     postcss([postCssTurboCartoCss.getPlugin()])
       .process(cartocss)
       .then(function (result) {
@@ -53,6 +52,5 @@ describe('color-ramp', function () {
       .catch(function (err) {
         done(err);
       });
-
   });
 });
