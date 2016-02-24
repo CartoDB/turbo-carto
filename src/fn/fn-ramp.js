@@ -22,11 +22,11 @@ module.exports = function (datasource, decl) {
 
         parent.append(postcss.decl({ prop: decl.prop, value: defaultValue }));
 
-        for (var i = 0; i < rampResult.length; i += 2) {
+        for (var i = 0, until = rampResult.length - 2; i < until; i += 2) {
           var rule = postcss.rule({
-            selector: '[ ' + column + ' <= ' + rampResult[i + 1] + ' ]'
+            selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
           });
-          rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i] }));
+          rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i+3] }));
           parent.append(rule);
         }
 

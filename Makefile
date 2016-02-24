@@ -21,7 +21,7 @@ check-code-style: node_modules
 format: node_modules
 	./node_modules/.bin/semistandard-format -w src/*.js src/**/*.js test/**/*.js
 
-TEST_SUITE := $(shell find test/{integration,unit} -name "*.js")
+TEST_SUITE := $(shell find test/{acceptance,integration,unit} -name "*.js")
 
 MOCHA_TIMEOUT := 500
 
