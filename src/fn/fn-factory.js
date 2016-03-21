@@ -3,7 +3,8 @@
 var fns = [
   require('./fn-ramp'),
   require('./fn-colorbrew'),
-  require('./fn-buckets')
+  require('./fn-buckets'),
+  require('./fn-colors')
 ];
 var fnIdentity = require('./fn-identity');
 
