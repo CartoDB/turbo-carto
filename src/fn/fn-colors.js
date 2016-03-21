@@ -6,12 +6,13 @@ var debug = require('../helper/debug')('fn-factory');
 
 module.exports = function () {
   return function fn$colors () {
-    var args = arguments
+    var args = arguments;
+    debug('fn$colors(%j)', arguments);
     return new Promise(function (resolve) {
-      var colors = Object.keys(args).map(function(k){return args[k]})
+      var colors = Object.keys(args).map(function (k) { return args[k]; });
       resolve(colors);
     });
-  }
+  };
 };
 
 module.exports.fnName = 'colors';
