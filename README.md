@@ -27,6 +27,8 @@ npm install
 
 #### Some examples
 
+##### SQL API datasource:
+
 Current examples expect to have CartoDB's SQL API running at http://development.localhost.lan:8080/. It should have a
 publicly accessible `populated_places_simple` table.
 
@@ -36,8 +38,15 @@ Examples using a cli tool:
 $ ./tools/cli.js examples/populated_places.css # will use a dummy datasource, check tools/cli.js source
 $ ./tools/cli.js examples/populated_places.css --datasource sql --query 'select * from populated_places_simple'
 ```
+Visit `examples/index.html`, it also.
 
-Visit `examples/index.html`, it also .
+##### Geojson datasource:
+
+Using a cli tool:
+
+```shell
+$ ./tools/cli.js examples/populated_places.css --datasource geojson --file examples/geojson-source.json
+```
 
 ## Tests
 
