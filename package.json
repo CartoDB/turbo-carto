@@ -20,22 +20,20 @@
     "url": "git@github.com:CartoDB/turbo-cartocss.git"
   },
   "dependencies": {
-    "browser-request": "^0.3.3",
     "colorbrewer": "0.0.2",
     "debug": "^2.2.0",
     "es6-promise": "^3.0.2",
-    "less": "^2.5.3",
     "postcss": "^5.0.13",
-    "postcss-value-parser": "^3.2.3",
-    "querystring": "^0.2.0",
-    "queue-async": "^1.0.7",
-    "request": "^2.67.0"
+    "postcss-value-parser": "^3.2.3"
   },
   "devDependencies": {
+    "browser-request": "^0.3.3",
     "browserify": "^12.0.1",
     "istanbul": "^0.4.1",
     "jshint": "^2.9.1-rc2",
     "mocha": "^2.3.4",
+    "querystring": "^0.2.0",
+    "request": "^2.67.0",
     "semistandard": "^7.0.4",
     "semistandard-format": "^2.1.0",
     "yargs": "^3.31.0"

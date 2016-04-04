@@ -68,17 +68,16 @@
             <label for="sql_editor">SQL</label>
             <label for="css_editor">CartoCSS</label>
             <textarea id="sql_editor" class="code">select *
-from populated_places_simple</textarea>
+from populated_places_simple
+order by pop_max desc</textarea>
             <textarea id="css_editor" class="code">#populated_places_simple {
   marker-fill-opacity: 1.0;
   marker-line-color: #FFF;
   marker-line-width: 1;
   marker-line-opacity: 1;
   marker-allow-overlap: true;
-  marker-width: 10;
-  marker-fill: blue;
-  /*marker-width: buckets([pop_max], ramp([pop_max], 6, 30));
-  marker-fill: buckets([pop_max], ramp([pop_max], colorbrewer(YlGnBu)));*/
+  marker-width: ramp([pop_max], 4, 16, quantiles));
+  marker-fill: ramp([pop_max], colorbrewer(YlGnBu), quantiles);
 }</textarea>
             <div class="clear"></div>
         </form>
@@ -92,6 +91,7 @@ from populated_places_simple</textarea>
 <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/mode/css/css.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/mode/sql/sql.min.js"></script>
 
+<script src="../dist/datasource.js"></script>
 <script src="../dist/bundle.js"></script>
 <script src="app.js"></script>
 

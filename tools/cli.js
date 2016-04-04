@@ -18,7 +18,7 @@ var cartocss = fs.readFileSync(filename, {encoding: 'utf-8'});
 
 var postcss = require('postcss');
 var PostcssTurboCartoCss = require('../src/postcss-turbo-cartocss');
-var SqlApiDatasource = require('../src/datasource/sql-api-datasource');
+var SqlApiDatasource = require('../examples/sql-api-datasource');
 
 // stubbed datasource
 var datasource = {

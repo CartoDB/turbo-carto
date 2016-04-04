@@ -15,4 +15,3 @@ function turbocartocss (cartocss, datasource, callback) {
 }
 
 module.exports = turbocartocss;
-module.exports.datasource = require('./datasource');

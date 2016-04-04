@@ -32,7 +32,7 @@ function updateMap() {
         map.removeLayer(rasterLayer);
     }
 
-    var datasource = new turbocartocss.datasource.SqlApi(sqlEditor.getValue());
+    var datasource = new SqlApiDatasource(sqlEditor.getValue());
     turbocartocss(cssEditor.getValue(), datasource, function(err, cartocss) {
         if (err) {
             console.error(err.message);
