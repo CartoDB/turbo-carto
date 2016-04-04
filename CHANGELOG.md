@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.4.1
+## Version 0.5.0
 Released 2016-mm-dd
+
+ - Move SQL API datasource to examples, datasource not part of public API.
 
 
 ## Version 0.4.0
