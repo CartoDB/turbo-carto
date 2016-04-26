@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.5.2
+Released 2016-mm-dd
+
+
 ## Version 0.5.1
 Released 2016-04-26
 
