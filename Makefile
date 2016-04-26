@@ -11,7 +11,7 @@ node_modules:
 
 dist:
 	./node_modules/.bin/browserify -s SqlApiDatasource examples/sql-api-datasource.js > dist/datasource.js
-	./node_modules/.bin/browserify -s turbocartocss src/index.js > dist/bundle.js
+	./node_modules/.bin/browserify -s turbocarto src/index.js > dist/bundle.js
 
 jshint: node_modules
 	@./node_modules/.bin/jshint src/ test/

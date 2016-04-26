@@ -1,12 +1,12 @@
 'use strict';
 
 var postcss = require('postcss');
-var PostcssTurboCartoCss = require('./postcss-turbo-cartocss');
+var PostcssTurboCarto = require('./postcss-turbo-carto');
 
-function turbocartocss (cartocss, datasource, callback) {
-  var postCssTurboCartoCss = new PostcssTurboCartoCss(datasource);
+function turbocarto (cartocss, datasource, callback) {
+  var postCssTurboCarto = new PostcssTurboCarto(datasource);
 
-  postcss([postCssTurboCartoCss.getPlugin()])
+  postcss([postCssTurboCarto.getPlugin()])
     .process(cartocss)
     .then(function (result) {
       callback(null, result.css);
@@ -14,4 +14,4 @@ function turbocartocss (cartocss, datasource, callback) {
     .catch(callback);
 }
 
-module.exports = turbocartocss;
+module.exports = turbocarto;

@@ -1,6 +1,6 @@
 'use strict';
 
 var debug = require('debug');
-module.exports = function turboCartoCssDebug (ns) {
-  return debug(['turbo-cartocss', ns].join(':'));
+module.exports = function turboCartoDebug (ns) {
+  return debug(['turbo-carto', ns].join(':'));
 };

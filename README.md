@@ -1,10 +1,10 @@
-# Turbo CartoCSS
+# Turbo Carto
 
 AKA CartoCSS preprocessor
 
 tl;dr Enables adding functions to CartoCSS that can be evaluated asynchronously.
 
-[![Build Status](https://travis-ci.org/CartoDB/turbo-cartocss.png?branch=master)](https://travis-ci.org/CartoDB/turbo-cartocss)
+[![Build Status](https://travis-ci.org/CartoDB/turbo-carto.png?branch=master)](https://travis-ci.org/CartoDB/turbo-carto)
 
 TBC.
 
@@ -51,4 +51,4 @@ That will check code style and run the tests.
 
 ## TODO
 
-See https://github.com/CartoDB/turbo-cartocss/issues
+See https://github.com/CartoDB/turbo-carto/issues

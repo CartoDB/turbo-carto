@@ -33,7 +33,7 @@ function updateMap() {
     }
 
     var datasource = new SqlApiDatasource(sqlEditor.getValue());
-    turbocartocss(cssEditor.getValue(), datasource, function(err, cartocss) {
+    turbocarto(cssEditor.getValue(), datasource, function(err, cartocss) {
         if (err) {
             console.error(err.message);
             throw err;

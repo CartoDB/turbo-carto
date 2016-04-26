@@ -6,15 +6,15 @@ var valueParser = require('postcss-value-parser');
 var postcss = require('postcss');
 var FnBuilder = require('./fn/fn-builder');
 
-function PostcssTurboCartoCss (datasource) {
+function PostcssTurboCarto (datasource) {
   this.datasource = datasource;
 }
 
-module.exports = PostcssTurboCartoCss;
+module.exports = PostcssTurboCarto;
 
-PostcssTurboCartoCss.prototype.getPlugin = function () {
+PostcssTurboCarto.prototype.getPlugin = function () {
   var self = this;
-  return postcss.plugin('turbo-cartocss', function (/* opts */) {
+  return postcss.plugin('turbo-carto', function (/* opts */) {
     return function (css /* , result */) {
       var fnBuilder = new FnBuilder(self.datasource);
 

@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.5.2
+## Version 0.6.0
 Released 2016-mm-dd
+
+- Renames project to turbo-carto.
 
 
 ## Version 0.5.1

@@ -2,12 +2,12 @@
 
 var assert = require('assert');
 var postcss = require('postcss');
-var PostcssTurboCartoCss = require('../../src/postcss-turbo-cartocss');
+var PostcssTurboCarto = require('../../src/postcss-turbo-carto');
 var DummyDatasource = require('../support/dummy-datasource');
 
 var datasource = new DummyDatasource();
 
-var postCssTurboCartoCss = new PostcssTurboCartoCss(datasource);
+var postcssTurboCarto = new PostcssTurboCarto(datasource);
 
 describe('color-ramp', function () {
   var cartocss = [
@@ -43,7 +43,7 @@ describe('color-ramp', function () {
   ].join('\n');
 
   it('should return a rule selector with color ramp', function (done) {
-    postcss([postCssTurboCartoCss.getPlugin()])
+    postcss([postcssTurboCarto.getPlugin()])
       .process(cartocss)
       .then(function (result) {
         assert.equal(result.css, expectedCartocss);

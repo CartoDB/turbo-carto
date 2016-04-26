@@ -1,6 +1,6 @@
 {
-  "name": "turbo-cartocss",
-  "version": "0.5.2",
+  "name": "turbo-carto",
+  "version": "0.6.0",
   "description": "CartoCSS preprocessor",
   "main": "src/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git@github.com:CartoDB/turbo-cartocss.git"
+    "url": "git@github.com:CartoDB/turbo-carto.git"
   },
   "dependencies": {
     "colorbrewer": "1.0.0",
