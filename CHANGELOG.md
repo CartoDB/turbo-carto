@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.5.1
-Released 2016-mm-dd
+Released 2016-04-26
 
 - Use fixed versions in package.json
 
