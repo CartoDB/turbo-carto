@@ -3,6 +3,7 @@
 var fns = [
   require('./fn-ramp'),
   require('./fn-colorbrew'),
+  require('./fn-cartocolor'),
   require('./fn-buckets'),
   require('./fn-colors')
 ];
