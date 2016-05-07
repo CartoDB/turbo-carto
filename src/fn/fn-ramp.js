@@ -15,22 +15,23 @@ module.exports = function (datasource, decl) {
 
     return ramp(datasource, column, args)
       .then(function (rampResult) {
-        var parent = decl.parent;
         var defaultValue = rampResult[1];
 
         column = columnName(column);
 
-        parent.append(postcss.decl({ prop: decl.prop, value: defaultValue }));
+        var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
+        decl.replaceWith(initialDecl);
 
+        var previousNode = initialDecl;
         for (var i = 0, until = rampResult.length - 2; i < until; i += 2) {
           var rule = postcss.rule({
             selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
           });
           rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 3] }));
-          parent.append(rule);
-        }
 
-        decl.remove();
+          rule.moveAfter(previousNode);
+          previousNode = rule;
+        }
 
         return rampResult;
       });
