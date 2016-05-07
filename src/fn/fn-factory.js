@@ -7,14 +7,22 @@ var fns = [
   require('./fn-buckets'),
   require('./fn-colors')
 ];
+var fnMap = fns.reduce(function (fnMap, fn) {
+  fnMap[fn.fnName] = fn;
+  return fnMap;
+}, {});
 var fnIdentity = require('./fn-identity');
+var fnAnonymousTuple = require('./fn-anonymous-tuple');
 
 var FnFactory = {
   create: function (fnName, datasource, decl) {
-    for (var i = 0; i < fns.length; i++) {
-      if (fns[i].fnName === fnName) {
-        return fns[i](datasource, decl);
-      }
+    if (fnName === '') {
+      return fnAnonymousTuple();
+    }
+
+    var fn = fnMap[fnName];
+    if (fn) {
+      return fn(datasource, decl);
     }
 
     return fnIdentity(fnName);

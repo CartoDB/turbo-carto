@@ -39,4 +39,37 @@ describe('FnExecutor', function () {
         ]);
       });
   });
+
+  it('should use anonymous-tuple for empty function names', function () {
+    var fn = new FnExecutor(new DummyDatasource(),
+      'ramp',
+      [
+        'population',
+        new FnExecutor(new DummyDatasource(),
+          '', [
+            'Red',
+            'Green',
+            'Blue'
+          ]
+        )
+      ],
+      {
+        parent: {
+          append: function () {}
+        },
+        remove: function () {}
+      }
+    );
+    return fn.exec()
+      .then(function (result) {
+        assert.deepEqual(result, [
+          0,
+          'Red',
+          1,
+          'Green',
+          2,
+          'Blue'
+        ]);
+      });
+  });
 });

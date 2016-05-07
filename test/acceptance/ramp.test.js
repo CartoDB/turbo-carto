@@ -53,4 +53,36 @@ describe('color-ramp', function () {
         done(err);
       });
   });
+
+  it('should use array', function (done) {
+    var cartocss = [
+      '#layer{',
+      '  polygon-opacity: 1;',
+      '  polygon-fill: ramp([area2], (Red, Green, Blue), jenks);',
+      '}'
+    ].join('\n');
+
+    var expectedCartocss = [
+      '#layer{',
+      '  polygon-opacity: 1;',
+      '  polygon-fill: Red;',
+      '  [ area2 > 0 ]{',
+      '    polygon-fill: Green',
+      '  }',
+      '  [ area2 > 1 ]{',
+      '    polygon-fill: Blue',
+      '  }',
+      '}'
+    ].join('\n');
+
+    postcss([postcssTurboCarto.getPlugin()])
+      .process(cartocss)
+      .then(function (result) {
+        assert.equal(result.css, expectedCartocss);
+        done();
+      })
+      .catch(function (err) {
+        done(err);
+      });
+  });
 });
