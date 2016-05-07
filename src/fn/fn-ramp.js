@@ -71,25 +71,31 @@ module.exports = function (datasource, decl) {
 function ramp (datasource, column, args) {
   var method;
 
+  var tuple = [];
+
   if (Array.isArray(args[0])) {
-    var scheme = args[0];
+    tuple = args[0];
     method = args[1];
+  } else {
+    var min = +args[0];
+    var max = +args[1];
 
-    return colorRamp(datasource, column, scheme, method);
+    var buckets = 5;
+    method = args[2];
+
+    if (Number.isFinite(+args[2])) {
+      buckets = +args[2];
+      method = args[3];
+    }
+
+    var range = max - min;
+    var width = range / buckets;
+    for (var i = 0; i < buckets; i++) {
+      tuple.push(min + ((i + 1) * width));
+    }
   }
 
-  var min = +args[0];
-  var max = +args[1];
-
-  var buckets = 5;
-  method = args[2];
-
-  if (Number.isFinite(+args[2])) {
-    buckets = +args[2];
-    method = args[3];
-  }
-
-  return numericRamp(datasource, column, min, max, buckets, method);
+  return tupleRamp(datasource, column, tuple, method);
 }
 
 function getRamp (datasource, column, buckets, method) {
@@ -103,8 +109,8 @@ function getRamp (datasource, column, buckets, method) {
   });
 }
 
-function colorRamp (datasource, column, scheme, method) {
-  var buckets = scheme.length;
+function tupleRamp (datasource, column, tuple, method) {
+  var buckets = tuple.length;
   return getRamp(datasource, column, buckets, method)
     .then(function (ramp) {
       var i;
@@ -112,26 +118,7 @@ function colorRamp (datasource, column, scheme, method) {
 
       for (i = 0; i < buckets; i++) {
         rampResult.push(ramp[i]);
-        rampResult.push(scheme[i]);
-      }
-
-      return rampResult;
-    });
-}
-
-function numericRamp (datasource, column, min, max, buckets, method) {
-  return getRamp(datasource, column, buckets, method)
-    .then(function (ramp) {
-      var i;
-      var rampResult = [];
-
-      min = +min;
-      max = +max;
-      var range = max - min;
-      var width = range / buckets;
-      for (i = 0; i < buckets; i++) {
-        rampResult.push(ramp[i]);
-        rampResult.push(min + ((i + 1) * width));
+        rampResult.push(tuple[i]);
       }
 
       return rampResult;
