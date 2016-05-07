@@ -116,7 +116,7 @@ describe('color-ramp', function () {
       });
   });
 
-  it('should place prop in place and not append at end of selector', function(done) {
+  it('should place prop in place and not append at end of selector', function (done) {
     var cartocss = [
       '#layer{',
       '  marker-width: ramp([population], (4, 8, 12), jenks);',

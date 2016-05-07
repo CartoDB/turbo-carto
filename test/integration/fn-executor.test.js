@@ -6,7 +6,7 @@ var DummyDatasource = require('../support/dummy-datasource');
 var postcss = require('postcss');
 
 describe('FnExecutor', function () {
-  function createDecl() {
+  function createDecl () {
     var root = postcss.rule({
       selector: '#root'
     });
