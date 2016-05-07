@@ -3,8 +3,19 @@
 var assert = require('assert');
 var FnExecutor = require('../../src/fn/fn-executor');
 var DummyDatasource = require('../support/dummy-datasource');
+var postcss = require('postcss');
 
 describe('FnExecutor', function () {
+  function createDecl() {
+    var root = postcss.rule({
+      selector: '#root'
+    });
+    var decl = postcss.decl({ prop: 'color', value: 'red' });
+    root.append(decl);
+
+    return decl;
+  }
+
   it('should exec a happy case', function () {
     var fn = new FnExecutor(new DummyDatasource(),
       'ramp',
@@ -16,12 +27,7 @@ describe('FnExecutor', function () {
           ]
         )
       ],
-      {
-        parent: {
-          append: function () {}
-        },
-        remove: function () {}
-      }
+      createDecl()
     );
     return fn.exec()
       .then(function (result) {
@@ -53,12 +59,7 @@ describe('FnExecutor', function () {
           ]
         )
       ],
-      {
-        parent: {
-          append: function () {}
-        },
-        remove: function () {}
-      }
+      createDecl()
     );
     return fn.exec()
       .then(function (result) {
