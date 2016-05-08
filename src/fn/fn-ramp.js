@@ -4,6 +4,7 @@ require('es6-promise').polyfill();
 
 var debug = require('../helper/debug')('fn-factory');
 var columnName = require('../helper/column-name');
+var buckets = require('../helper/linear-buckets');
 var postcss = require('postcss');
 
 module.exports = function (datasource, decl) {
@@ -64,10 +65,10 @@ module.exports = function (datasource, decl) {
  *  <Number>minVal, <Number>maxValue, <String>method
  *
  * [10            , 20,             , 4]
- *  <Number>minVal, <Number>maxValue, <Number>buckets
+ *  <Number>minVal, <Number>maxValue, <Number>numBuckets
  *
  * [10            , 20,             , 4              , jenks]
- *  <Number>minVal, <Number>maxValue, <Number>buckets, <String>method
+ *  <Number>minVal, <Number>maxValue, <Number>numBuckets, <String>method
  */
 function ramp (datasource, column, args) {
   var method;
@@ -81,19 +82,15 @@ function ramp (datasource, column, args) {
     var min = +args[0];
     var max = +args[1];
 
-    var buckets = 5;
+    var numBuckets = 5;
     method = args[2];
 
     if (Number.isFinite(+args[2])) {
-      buckets = +args[2];
+      numBuckets = +args[2];
       method = args[3];
     }
 
-    var range = max - min;
-    var width = range / buckets;
-    for (var i = 0; i < buckets; i++) {
-      tuple.push(min + ((i + 1) * width));
-    }
+    tuple = buckets(min, max, numBuckets);
   }
 
   return tupleRamp(datasource, column, tuple, method);

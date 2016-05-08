@@ -147,4 +147,34 @@ describe('color-ramp', function () {
         done(err);
       });
   });
+
+  it('should interpolate values from min/max call', function (done) {
+    var cartocss = [
+      '#layer{',
+      '  marker-width: ramp([population], 4, 12, 3, jenks);',
+      '}'
+    ].join('\n');
+
+    var expectedCartocss = [
+      '#layer{',
+      '  marker-width: 4;',
+      '  [ population > 0 ]{',
+      '    marker-width: 8',
+      '  }',
+      '  [ population > 1 ]{',
+      '    marker-width: 12',
+      '  }',
+      '}'
+    ].join('\n');
+
+    postcss([postcssTurboCarto.getPlugin()])
+      .process(cartocss)
+      .then(function (result) {
+        assert.equal(result.css, expectedCartocss);
+        done();
+      })
+      .catch(function (err) {
+        done(err);
+      });
+  });
 });
