@@ -1,13 +1,28 @@
 # Changelog
 
-## Version 0.6.1
+## Version 0.8.0
 Released 2016-mm-dd
+
+- Improve/fix numeric ramps
+- Replace properties decl in place instead of appending to parent #25
+- Ramp function not coupled with selector types, e.g., polygon-color #24
+- Support for tuples via anonymous functions #23
+
+
+## Version 0.7.1
+
+- Fixes cartocolor dep
+
+## Version 0.7.0
+
+- Cartocolor integration #19
 
 
 ## Version 0.6.0
 Released 2016-04-26
 
 - Renames project to turbo-carto.
+- adding function to allow arbitrary colors in ramp call #13
 
 
 ## Version 0.5.1
