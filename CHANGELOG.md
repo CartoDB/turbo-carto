@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.8.0
-Released 2016-mm-dd
+Released 2016-05-11
 
 - Improve/fix numeric ramps
 - Replace properties decl in place instead of appending to parent #25
