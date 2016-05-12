@@ -30,7 +30,7 @@ var scenarios = fs.readdirSync(scenariosPath)
   });
 
 
-describe('color-ramp', function () {
+describe('ramp', function () {
 
   function getCartoCss (cartocss, callback) {
     postcss([postcssTurboCarto.getPlugin()])
