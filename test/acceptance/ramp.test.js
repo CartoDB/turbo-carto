@@ -12,12 +12,12 @@ var postcssTurboCarto = new PostcssTurboCarto(datasource);
 
 var scenariosPath = __dirname + '/scenarios';
 var scenarios = fs.readdirSync(scenariosPath)
-  .filter(function(filename) {
+  .filter(function (filename) {
     return filename.match(/.css$/) &&
       !filename.match(/expected.css$/) &&
       !filename.match(/^skip/);
   })
-  .map(function(cssFilename) {
+  .map(function (cssFilename) {
     var desc = cssFilename.replace(/\.css$/, '').replace(/-/g, ' ');
     var cartocssFilePath = scenariosPath + '/' + cssFilename;
     var expectedCartocssFilePath = scenariosPath + '/' + cssFilename.replace(/css$/, 'expected.css');
@@ -29,9 +29,7 @@ var scenarios = fs.readdirSync(scenariosPath)
     };
   });
 
-
 describe('ramp', function () {
-
   function getCartoCss (cartocss, callback) {
     postcss([postcssTurboCarto.getPlugin()])
       .process(cartocss)
@@ -43,9 +41,9 @@ describe('ramp', function () {
       });
   }
 
-  scenarios.forEach(function(scenario) {
+  scenarios.forEach(function (scenario) {
     it(scenario.desc, function (done) {
-      getCartoCss(scenario.cartocss, function(err, cartocssResult) {
+      getCartoCss(scenario.cartocss, function (err, cartocssResult) {
         if (err) {
           return done(err);
         }
@@ -54,5 +52,4 @@ describe('ramp', function () {
       });
     });
   });
-
 });
