@@ -46,7 +46,9 @@ describe('color-ramp', function () {
   scenarios.forEach(function(scenario) {
     it(scenario.desc, function (done) {
       getCartoCss(scenario.cartocss, function(err, cartocssResult) {
-        assert.ok(!err, err);
+        if (err) {
+          return done(err);
+        }
         assert.equal(cartocssResult, scenario.expectedCartocss);
         done();
       });
