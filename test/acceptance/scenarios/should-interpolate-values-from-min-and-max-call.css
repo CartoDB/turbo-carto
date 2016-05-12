@@ -1,0 +1,3 @@
+#layer{
+  marker-width: ramp([population], 4, 12, 3, jenks);
+}

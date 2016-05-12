@@ -1,0 +1,22 @@
+#layer{
+  polygon-opacity: 1;
+  polygon-fill: #ffffcc;
+  [ area2 > 0 ]{
+    polygon-fill: #c7e9b4
+  }
+  [ area2 > 1 ]{
+    polygon-fill: #7fcdbb
+  }
+  [ area2 > 2 ]{
+    polygon-fill: #41b6c4
+  }
+  [ area2 > 3 ]{
+    polygon-fill: #1d91c0
+  }
+  [ area2 > 4 ]{
+    polygon-fill: #225ea8
+  }
+  [ area2 > 5 ]{
+    polygon-fill: #0c2c84
+  }
+}

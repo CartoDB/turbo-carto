@@ -1,0 +1,4 @@
+#layer{
+  polygon-opacity: 1;
+  polygon-fill: ramp([area2], (Red, Green, Blue), jenks);
+}

@@ -1,0 +1,10 @@
+#layer{
+  polygon-opacity: 1;
+  polygon-fill: Red;
+  [ area2 > 0 ]{
+    polygon-fill: Green
+  }
+  [ area2 > 1 ]{
+    polygon-fill: Blue
+  }
+}

@@ -1,0 +1,9 @@
+#layer{
+  marker-width: 4;
+  [ population > 0 ]{
+    marker-width: 8
+  }
+  [ population > 1 ]{
+    marker-width: 12
+  }
+}
