@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.8.1
+## Version 0.9.0
 Released 2016-mm-dd
+
+- Strategy for ramp datasource: allows to hint turbo-carto about how to split buckets
 
 
 ## Version 0.8.0

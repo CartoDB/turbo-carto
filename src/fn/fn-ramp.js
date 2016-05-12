@@ -7,6 +7,46 @@ var columnName = require('../helper/column-name');
 var buckets = require('../helper/linear-buckets');
 var postcss = require('postcss');
 
+var strategy = {
+  max: function maxStrategy (column, rampResult, decl) {
+    var defaultValue = rampResult[1];
+    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
+    decl.replaceWith(initialDecl);
+
+    var previousNode = initialDecl;
+    for (var i = 0, until = rampResult.length - 2; i < until; i += 2) {
+      var rule = postcss.rule({
+        selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
+      });
+      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 3] }));
+
+      rule.moveAfter(previousNode);
+      previousNode = rule;
+    }
+
+    return rampResult;
+  },
+
+  split: function splitStrategy (column, rampResult, decl) {
+    var defaultValue = rampResult[1];
+    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
+    decl.replaceWith(initialDecl);
+
+    var previousNode = initialDecl;
+    for (var i = 2, until = rampResult.length; i < until; i += 2) {
+      var rule = postcss.rule({
+        selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
+      });
+      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
+
+      rule.moveAfter(previousNode);
+      previousNode = rule;
+    }
+
+    return rampResult;
+  }
+};
+
 module.exports = function (datasource, decl) {
   return function fn$ramp (column, /* ... */args) {
     debug('fn$ramp(%j)', arguments);
@@ -16,25 +56,8 @@ module.exports = function (datasource, decl) {
 
     return ramp(datasource, column, args)
       .then(function (rampResult) {
-        var defaultValue = rampResult[1];
-
-        column = columnName(column);
-
-        var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-        decl.replaceWith(initialDecl);
-
-        var previousNode = initialDecl;
-        for (var i = 0, until = rampResult.length - 2; i < until; i += 2) {
-          var rule = postcss.rule({
-            selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
-          });
-          rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 3] }));
-
-          rule.moveAfter(previousNode);
-          previousNode = rule;
-        }
-
-        return rampResult;
+        var strategyFn = strategy.hasOwnProperty(rampResult.strategy) ? strategy[rampResult.strategy] : strategy.max;
+        return strategyFn(columnName(column), rampResult.ramp, decl);
       });
   };
 };
@@ -111,6 +134,12 @@ function tupleRamp (datasource, column, tuple, method) {
   var buckets = tuple.length;
   return getRamp(datasource, column, buckets, method)
     .then(function (ramp) {
+      var strategy = 'max';
+      if (!Array.isArray(ramp)) {
+        strategy = ramp.strategy || 'max';
+        ramp = ramp.ramp;
+      }
+
       var i;
       var rampResult = [];
 
@@ -119,7 +148,7 @@ function tupleRamp (datasource, column, tuple, method) {
         rampResult.push(tuple[i]);
       }
 
-      return rampResult;
+      return { ramp: rampResult, strategy: strategy };
     });
 }
 
