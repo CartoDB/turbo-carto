@@ -131,25 +131,39 @@ function getRamp (datasource, column, buckets, method) {
 }
 
 function tupleRamp (datasource, column, tuple, method) {
-  var buckets = tuple.length;
-  return getRamp(datasource, column, buckets, method)
-    .then(function (ramp) {
-      var strategy = 'max';
-      if (!Array.isArray(ramp)) {
-        strategy = ramp.strategy || 'max';
-        ramp = ramp.ramp;
-      }
+  if (Array.isArray(method)) {
+    var ramp = method;
+    if (tuple.length !== ramp.length) {
+      return Promise.reject(
+        new Error('Invalid ramp length. Got ' + ramp.length + ' values, expected ' + tuple.length + '.')
+      );
+    }
+    return Promise.resolve({ramp: ramp, strategy: 'split'}).then(createRampFn(tuple));
+  }
 
-      var i;
-      var rampResult = [];
+  return getRamp(datasource, column, tuple.length, method).then(createRampFn(tuple));
+}
 
-      for (i = 0; i < buckets; i++) {
-        rampResult.push(ramp[i]);
-        rampResult.push(tuple[i]);
-      }
+function createRampFn (tuple) {
+  return function prepareRamp (ramp) {
+    var strategy = 'max';
+    if (!Array.isArray(ramp)) {
+      strategy = ramp.strategy || 'max';
+      ramp = ramp.ramp;
+    }
 
-      return { ramp: rampResult, strategy: strategy };
-    });
+    var buckets = tuple.length;
+
+    var i;
+    var rampResult = [];
+
+    for (i = 0; i < buckets; i++) {
+      rampResult.push(ramp[i]);
+      rampResult.push(tuple[i]);
+    }
+
+    return { ramp: rampResult, strategy: strategy };
+  };
 }
 
 module.exports.fnName = 'ramp';

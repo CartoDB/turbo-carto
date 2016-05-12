@@ -4,6 +4,7 @@
 Released 2016-mm-dd
 
 - Strategy for ramp datasource: allows to hint turbo-carto about how to split buckets
+- Allow providing a hardcoded quantification ramp via anonymous function
 
 
 ## Version 0.8.0
