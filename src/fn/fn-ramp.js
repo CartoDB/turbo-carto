@@ -141,6 +141,11 @@ function tupleRamp (datasource, column, tuple, method) {
     return Promise.resolve({ramp: ramp, strategy: 'split'}).then(createRampFn(tuple));
   }
 
+  // normalize method
+  if (method) {
+    method = method.toLowerCase();
+  }
+
   return getRamp(datasource, column, tuple.length, method).then(createRampFn(tuple));
 }
 
