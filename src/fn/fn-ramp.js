@@ -4,6 +4,7 @@ require('es6-promise').polyfill();
 
 var debug = require('../helper/debug')('fn-factory');
 var columnName = require('../helper/column-name');
+var TurboCartoError = require('../helper/turbo-carto-error');
 var buckets = require('../helper/linear-buckets');
 var postcss = require('postcss');
 
@@ -58,6 +59,19 @@ module.exports = function (datasource, decl) {
       .then(function (rampResult) {
         var strategyFn = strategy.hasOwnProperty(rampResult.strategy) ? strategy[rampResult.strategy] : strategy.max;
         return strategyFn(columnName(column), rampResult.ramp, decl);
+      })
+      .catch(function (err) {
+        var context = {};
+        if (decl.parent) {
+          context.selector = decl.parent.selector;
+        }
+        if (decl.source) {
+          context.source = {
+            start: decl.source.start,
+            end: decl.source.end
+          };
+        }
+        throw new TurboCartoError('Unable to process "' + decl.prop + '"', err, context);
       });
   };
 };
@@ -98,10 +112,22 @@ function ramp (datasource, column, args) {
 
   var tuple = [];
 
+  if (args.length === 0) {
+    return Promise.reject(
+      new TurboCartoError('Invalid number of arguments')
+    );
+  }
+
   if (Array.isArray(args[0])) {
     tuple = args[0];
     method = args[1];
   } else {
+    if (args.length < 2) {
+      return Promise.reject(
+        new TurboCartoError('Invalid number of arguments')
+      );
+    }
+
     var min = +args[0];
     var max = +args[1];
 
@@ -123,7 +149,9 @@ function getRamp (datasource, column, buckets, method) {
   return new Promise(function (resolve, reject) {
     datasource.getRamp(columnName(column), buckets, method, function (err, ramp) {
       if (err) {
-        return reject(err);
+        return reject(
+          new TurboCartoError('Unable to compute ramp', err)
+        );
       }
       resolve(ramp);
     });
@@ -135,7 +163,7 @@ function tupleRamp (datasource, column, tuple, method) {
     var ramp = method;
     if (tuple.length !== ramp.length) {
       return Promise.reject(
-        new Error('Invalid ramp length. Got ' + ramp.length + ' values, expected ' + tuple.length + '.')
+        new TurboCartoError('Invalid ramp length. Got ' + ramp.length + ' values, expected ' + tuple.length)
       );
     }
     return Promise.resolve({ramp: ramp, strategy: 'split'}).then(createRampFn(tuple));

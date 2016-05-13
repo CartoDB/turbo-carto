@@ -3,6 +3,7 @@
 ## Version 0.9.0
 Released 2016-mm-dd
 
+- Adds custom errors to expose better/more information about what failed
 - Strategy for ramp datasource: allows to hint turbo-carto about how to split buckets
 - Allow providing a hardcoded quantification ramp via anonymous function
 
