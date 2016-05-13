@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.9.0
-Released 2016-mm-dd
+Released 2016-05-13
 
 - Adds custom errors to expose better/more information about what failed
 - Strategy for ramp datasource: allows to hint turbo-carto about how to split buckets
