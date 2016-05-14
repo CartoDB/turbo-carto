@@ -25,6 +25,7 @@ Released 2016-05-11
 
 - Fixes cartocolor dep
 
+
 ## Version 0.7.0
 
 - Cartocolor integration #19
@@ -61,7 +62,7 @@ Released 2016-02-23
 Allow to use a custom number of buckets in ramps #6
 
 Number of buckets can be specified with a param in numeric ramps
-and with array lenght in color ramps
+and with array length in color ramps
 
 IMPORTANT: Backwards incompatible change
 Datasource now requires an extra param for the number of buckets.
