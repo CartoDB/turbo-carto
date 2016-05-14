@@ -5,6 +5,18 @@
 ### Basic usage
 
 ```css
+marker-fill: ramp([column_name], (red, green, blue));
+                  |                    |
+                  v                    |
+      column to calculate ramp         |
+                                       v
+                  it will use a 3 buckets color ramp as provided
+```
+
+
+### Basic usage with colorbrewer or cartocolor
+
+```css
 marker-fill: ramp([column_name], colorbrewer(Greens));
                   |                    |
                   v                    |
@@ -36,6 +48,20 @@ marker-fill: ramp([column_name], colorbrewer(Reds), jenks);
 ## Numeric ramps: *-width, *-opacity
 
 ### Basic usage
+
+```css
+marker-width: ramp([column_name], (4, 8, 16, 32));
+                   |                    |
+                   v                    |
+       column to calculate ramp         |
+                                        |
+                                        |
+                                        |
+                                        v
+                       provide the steps for the symbol sizes
+```
+
+### Basic usage with interpolation for symbol size
 
 ```css
 marker-width: ramp([column_name], 4, 18);
