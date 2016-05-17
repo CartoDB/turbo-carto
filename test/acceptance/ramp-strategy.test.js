@@ -9,7 +9,14 @@ var DummyStrategyDatasource = require('../support/dummy-strategy-datasource');
 var dummyDatasource = new DummyDatasource();
 var maxStrategyDatasource = new DummyStrategyDatasource('max');
 var splitStrategyDatasource = new DummyStrategyDatasource('split');
-var exactStrategyDatasource = new DummyStrategyDatasource('exact');
+var exactStrategyDatasource = new DummyStrategyDatasource('exact', function(buckets) {
+  var ramp = [];
+  var start = 'a'.charCodeAt(0);
+  for (var i = 0; i < buckets; i++) {
+    ramp.push(String.fromCharCode(start + i));
+  }
+  return ramp;
+});
 
 describe('ramp-strategy', function () {
   function getCartoCss (datasource, cartocss, callback) {
@@ -91,13 +98,13 @@ describe('ramp-strategy', function () {
       expectedCartocss: [
         '#layer{',
         '  marker-width: 10;',
-        '  [ population = 1 ]{',
+        '  [ population = \'b\' ]{',
         '    marker-width: 20',
         '  }',
-        '  [ population = 2 ]{',
+        '  [ population = \'c\' ]{',
         '    marker-width: 30',
         '  }',
-        '  [ population = 3 ]{',
+        '  [ population = \'d\' ]{',
         '    marker-width: 40',
         '  }',
         '}'

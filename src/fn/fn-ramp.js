@@ -55,7 +55,7 @@ var strategy = {
     var previousNode = initialDecl;
     for (var i = 2, until = rampResult.length; i < until; i += 2) {
       var rule = postcss.rule({
-        selector: '[ ' + column + ' = ' + rampResult[i] + ' ]'
+        selector: '[ ' + column + ' = \'' + rampResult[i] + '\' ]'
       });
       rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
 
@@ -185,7 +185,8 @@ function tupleRamp (datasource, column, tuple, method) {
         new TurboCartoError('Invalid ramp length. Got ' + ramp.length + ' values, expected ' + tuple.length)
       );
     }
-    return Promise.resolve({ramp: ramp, strategy: 'split'}).then(createRampFn(tuple));
+    var strategy = ramp.map(function(n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';
+    return Promise.resolve({ramp: ramp, strategy: strategy}).then(createRampFn(tuple));
   }
 
   // normalize method
