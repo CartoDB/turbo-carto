@@ -9,6 +9,7 @@ var DummyStrategyDatasource = require('../support/dummy-strategy-datasource');
 var dummyDatasource = new DummyDatasource();
 var maxStrategyDatasource = new DummyStrategyDatasource('max');
 var splitStrategyDatasource = new DummyStrategyDatasource('split');
+var exactStrategyDatasource = new DummyStrategyDatasource('exact');
 
 describe('ramp-strategy', function () {
   function getCartoCss (datasource, cartocss, callback) {
@@ -78,12 +79,35 @@ describe('ramp-strategy', function () {
         '  }',
         '}'
       ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy generates different cartocss',
+      datasource: exactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30, 40));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
     }
   ];
 
   scenarios.forEach(function (scenario) {
     it(scenario.desc, function (done) {
-      getCartoCss(scenario.datasource, cartocss, function (err, cartocssResult) {
+      getCartoCss(scenario.datasource, scenario.cartocss || cartocss, function (err, cartocssResult) {
         if (err) {
           return done(err);
         }

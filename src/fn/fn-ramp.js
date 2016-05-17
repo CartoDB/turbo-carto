@@ -45,6 +45,25 @@ var strategy = {
     }
 
     return rampResult;
+  },
+
+  exact: function exactStrategy (column, rampResult, decl) {
+    var defaultValue = rampResult[1];
+    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
+    decl.replaceWith(initialDecl);
+
+    var previousNode = initialDecl;
+    for (var i = 2, until = rampResult.length; i < until; i += 2) {
+      var rule = postcss.rule({
+        selector: '[ ' + column + ' = ' + rampResult[i] + ' ]'
+      });
+      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
+
+      rule.moveAfter(previousNode);
+      previousNode = rule;
+    }
+
+    return rampResult;
   }
 };
 
