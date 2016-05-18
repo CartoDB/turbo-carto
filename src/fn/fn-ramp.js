@@ -185,7 +185,7 @@ function tupleRamp (datasource, column, tuple, method) {
         new TurboCartoError('Invalid ramp length. Got ' + ramp.length + ' values, expected ' + tuple.length)
       );
     }
-    var strategy = ramp.map(function(n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';
+    var strategy = ramp.map(function numberMapper (n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';
     return Promise.resolve({ramp: ramp, strategy: strategy}).then(createRampFn(tuple));
   }
 
