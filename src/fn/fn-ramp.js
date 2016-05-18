@@ -8,6 +8,27 @@ var TurboCartoError = require('../helper/turbo-carto-error');
 var buckets = require('../helper/linear-buckets');
 var postcss = require('postcss');
 
+function createSplitStrategy (selector) {
+  return function splitStrategy (column, rampResult, decl) {
+    var defaultValue = rampResult[1];
+    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
+    decl.replaceWith(initialDecl);
+
+    var previousNode = initialDecl;
+    for (var i = 2, until = rampResult.length; i < until; i += 2) {
+      var rule = postcss.rule({
+        selector: selector(column, rampResult[i])
+      });
+      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
+
+      rule.moveAfter(previousNode);
+      previousNode = rule;
+    }
+
+    return rampResult;
+  };
+}
+
 var strategy = {
   max: function maxStrategy (column, rampResult, decl) {
     var defaultValue = rampResult[1];
@@ -28,43 +49,13 @@ var strategy = {
     return rampResult;
   },
 
-  split: function splitStrategy (column, rampResult, decl) {
-    var defaultValue = rampResult[1];
-    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-    decl.replaceWith(initialDecl);
+  split: createSplitStrategy(function gtSelector (column, value) {
+    return '[ ' + column + ' > ' + value + ' ]';
+  }),
 
-    var previousNode = initialDecl;
-    for (var i = 2, until = rampResult.length; i < until; i += 2) {
-      var rule = postcss.rule({
-        selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
-      });
-      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
-
-      rule.moveAfter(previousNode);
-      previousNode = rule;
-    }
-
-    return rampResult;
-  },
-
-  exact: function exactStrategy (column, rampResult, decl) {
-    var defaultValue = rampResult[1];
-    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-    decl.replaceWith(initialDecl);
-
-    var previousNode = initialDecl;
-    for (var i = 2, until = rampResult.length; i < until; i += 2) {
-      var rule = postcss.rule({
-        selector: '[ ' + column + ' = \'' + rampResult[i] + '\' ]'
-      });
-      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
-
-      rule.moveAfter(previousNode);
-      previousNode = rule;
-    }
-
-    return rampResult;
-  }
+  exact: createSplitStrategy(function exactSelector (column, value) {
+    return '[ ' + column + ' = \'' + value + '\' ]';
+  })
 };
 
 module.exports = function (datasource, decl) {
