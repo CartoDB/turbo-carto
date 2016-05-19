@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.9.1
+## Version 0.10.0
 Released 2016-mm-dd
+
+- Add support for exact strategies, this allows, for instance, to create categorical ramps.
 
 
 ## Version 0.9.0
