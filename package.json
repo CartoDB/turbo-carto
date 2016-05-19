@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "colorbrewer": "1.0.0",
-    "cartocolor": "1.0.2",
+    "cartocolor": "1.1.0",
     "debug": "2.2.0",
     "es6-promise": "3.1.2",
     "postcss": "5.0.19",
