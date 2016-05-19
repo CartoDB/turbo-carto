@@ -6,6 +6,12 @@ Released 2016-mm-dd
 - Add support for exact strategies, this allows, for instance, to create categorical ramps.
 
 
+## Version 0.9.1
+Released 2016-05-17
+
+- Updates cartocolor to 1.1.0
+
+
 ## Version 0.9.0
 Released 2016-05-13
 
