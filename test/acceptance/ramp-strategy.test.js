@@ -98,13 +98,13 @@ describe('ramp-strategy', function () {
       expectedCartocss: [
         '#layer{',
         '  marker-width: 10;',
-        '  [ population = \'b\' ]{',
+        '  [ population = "b" ]{',
         '    marker-width: 20',
         '  }',
-        '  [ population = \'c\' ]{',
+        '  [ population = "c" ]{',
         '    marker-width: 30',
         '  }',
-        '  [ population = \'d\' ]{',
+        '  [ population = "d" ]{',
         '    marker-width: 40',
         '  }',
         '}'

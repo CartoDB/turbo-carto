@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.10.1
+Released 2016-mm-dd
+
+- Use double quotes for exact strategy.
+
+
 ## Version 0.10.0
 Released 2016-05-19
 
