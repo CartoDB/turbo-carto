@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.10.1
-Released 2016-mm-dd
+Released 2016-06-01
 
 - Use double quotes for exact strategy.
 
