@@ -5,7 +5,7 @@ var postcss = require('postcss');
 var PostcssTurboCarto = require('../../src/postcss-turbo-carto');
 var DummyDatasource = require('../support/dummy-datasource');
 
-describe('ramp-strategy', function () {
+describe('regressions', function () {
   function getCartoCss (cartocss, callback) {
     var postcssTurboCarto = new PostcssTurboCarto(new DummyDatasource());
     postcss([postcssTurboCarto.getPlugin()])
