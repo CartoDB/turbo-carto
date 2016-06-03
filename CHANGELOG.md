@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.10.2
+## Version 0.11.0
 Released 2016-mm-dd
 
 - Export version from package
