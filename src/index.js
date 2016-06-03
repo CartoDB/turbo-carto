@@ -15,3 +15,4 @@ function turbocarto (cartocss, datasource, callback) {
 }
 
 module.exports = turbocarto;
+module.exports.version = require('../package.json').version;
