@@ -13,6 +13,7 @@ function TurboCartoError (message, originalErr, context) {
   }
 
   this.message = message;
+  this.context = context;
 }
 
 require('util').inherits(TurboCartoError, Error);
