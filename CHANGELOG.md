@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.11.1
-Released 2016-mm-dd
+## Version 0.12.0
+Released 2016-06-13
+
+- Added context object to TurboCartoError
 
 
 ## Version 0.11.0
