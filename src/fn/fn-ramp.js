@@ -196,14 +196,18 @@ function createRampFn (tuple) {
       ramp = ramp.ramp;
     }
 
-    var buckets = tuple.length;
+    var buckets = Math.min(tuple.length, ramp.length);
 
     var i;
     var rampResult = [];
 
-    for (i = 0; i < buckets; i++) {
-      rampResult.push(ramp[i]);
-      rampResult.push(tuple[i]);
+    if (buckets > 0) {
+      for (i = 0; i < buckets; i++) {
+        rampResult.push(ramp[i]);
+        rampResult.push(tuple[i]);
+      }
+    } else {
+      rampResult.push(null, tuple[0]);
     }
 
     return { ramp: rampResult, strategy: strategy };
