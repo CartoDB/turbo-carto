@@ -3,6 +3,8 @@
 ## Version 0.12.1
 Released 2016-mm-dd
 
+ - Ramps using as many values as provided when there are less than tuples #37
+
 
 ## Version 0.12.0
 Released 2016-06-13
