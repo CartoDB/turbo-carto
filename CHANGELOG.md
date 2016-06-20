@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.12.2
+Released 2016-mm-dd
+
+
 ## Version 0.12.1
 Released 2016-06-20
 
