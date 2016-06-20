@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.12.1
-Released 2016-mm-dd
+Released 2016-06-20
 
  - Ramps using as many values as provided when there are less than tuples #37
 
