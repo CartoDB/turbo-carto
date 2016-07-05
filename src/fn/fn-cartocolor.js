@@ -10,7 +10,7 @@ module.exports = function () {
     debug('fn$cartocolor(%j)', arguments);
     numberDataClasses = Math.min(7, Math.max(3, numberDataClasses || 5));
     return new Promise(function (resolve) {
-      var result = cartocolor.BluPurp1[numberDataClasses];
+      var result = cartocolor.BluGrn[numberDataClasses];
       var def = cartocolor[scheme];
       if (def) {
         result = def[numberDataClasses];
