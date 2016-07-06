@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.13.1
-Released 2016-07-05
+## Version 0.14.0
+Released 2016-07-06
+
+ - Improve turbo-carto error with better messages: context not part of message anymore.
 
 
 ## Version 0.13.0

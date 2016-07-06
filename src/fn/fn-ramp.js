@@ -81,7 +81,7 @@ module.exports = function (datasource, decl) {
             end: decl.source.end
           };
         }
-        throw new TurboCartoError('Unable to process "' + decl.prop + '"', err, context);
+        throw new TurboCartoError('Failed to process "' + decl.prop + '" property:', err, context);
       });
   };
 };
@@ -124,7 +124,7 @@ function ramp (datasource, column, args) {
 
   if (args.length === 0) {
     return Promise.reject(
-      new TurboCartoError('Invalid number of arguments')
+      new TurboCartoError('invalid number of arguments')
     );
   }
 
@@ -134,7 +134,7 @@ function ramp (datasource, column, args) {
   } else {
     if (args.length < 2) {
       return Promise.reject(
-        new TurboCartoError('Invalid number of arguments')
+        new TurboCartoError('invalid number of arguments')
       );
     }
 
@@ -160,7 +160,7 @@ function getRamp (datasource, column, buckets, method) {
     datasource.getRamp(columnName(column), buckets, method, function (err, ramp) {
       if (err) {
         return reject(
-          new TurboCartoError('Unable to compute ramp', err)
+          new TurboCartoError('unable to compute ramp,', err)
         );
       }
       resolve(ramp);
@@ -173,7 +173,7 @@ function tupleRamp (datasource, column, tuple, method) {
     var ramp = method;
     if (tuple.length !== ramp.length) {
       return Promise.reject(
-        new TurboCartoError('Invalid ramp length. Got ' + ramp.length + ' values, expected ' + tuple.length)
+        new TurboCartoError('invalid ramp length, got ' + ramp.length + ' values, expected ' + tuple.length)
       );
     }
     var strategy = ramp.map(function numberMapper (n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';

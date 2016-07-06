@@ -5,14 +5,11 @@ function TurboCartoError (message, originalErr, context) {
   this.name = this.constructor.name;
 
   if (originalErr) {
-    message += '. Reason: ' + originalErr.message;
-  }
-
-  if (context) {
-    message += '. Context: ' + JSON.stringify(context);
+    message += ' ' + originalErr.message;
   }
 
   this.message = message;
+  this.originalErr = originalErr;
   this.context = context;
 }
 
