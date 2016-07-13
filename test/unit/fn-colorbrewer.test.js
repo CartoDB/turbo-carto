@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var fnColorbrewer = require('../../src/fn/fn-colorbrew');
+var fnColorbrewer = require('../../src/fn/fn-colorbrewer');
 
 describe('fn-colorbrewer', function () {
   var fn = fnColorbrewer();

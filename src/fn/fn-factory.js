@@ -2,7 +2,7 @@
 
 var fns = [
   require('./fn-ramp'),
-  require('./fn-colorbrew'),
+  require('./fn-colorbrewer'),
   require('./fn-cartocolor')
 ];
 var fnMap = fns.reduce(function (fnMap, fn) {
