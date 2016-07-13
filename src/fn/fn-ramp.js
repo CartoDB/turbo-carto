@@ -120,7 +120,7 @@ module.exports = function (datasource, decl) {
 function ramp (datasource, column, args) {
   var method;
 
-  var tuple = [];
+  var values = [];
 
   if (args.length === 0) {
     return Promise.reject(
@@ -129,7 +129,7 @@ function ramp (datasource, column, args) {
   }
 
   if (Array.isArray(args[0])) {
-    tuple = args[0];
+    values = args[0];
     method = args[1];
   } else {
     if (args.length < 2) {
@@ -149,10 +149,10 @@ function ramp (datasource, column, args) {
       method = args[3];
     }
 
-    tuple = buckets(min, max, numBuckets);
+    values = buckets(min, max, numBuckets);
   }
 
-  return tupleRamp(datasource, column, tuple, method);
+  return valuesRamp(datasource, column, values, method);
 }
 
 function getRamp (datasource, column, buckets, method) {
@@ -168,16 +168,16 @@ function getRamp (datasource, column, buckets, method) {
   });
 }
 
-function tupleRamp (datasource, column, tuple, method) {
+function valuesRamp (datasource, column, values, method) {
   if (Array.isArray(method)) {
-    var ramp = method;
-    if (tuple.length !== ramp.length) {
+    var filters = method;
+    if (values.length !== filters.length) {
       return Promise.reject(
-        new TurboCartoError('invalid ramp length, got ' + ramp.length + ' values, expected ' + tuple.length)
+        new TurboCartoError('invalid ramp length, got ' + filters.length + ' values, expected ' + values.length)
       );
     }
-    var strategy = ramp.map(function numberMapper (n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';
-    return Promise.resolve({ramp: ramp, strategy: strategy}).then(createRampFn(tuple));
+    var strategy = filters.map(function numberMapper (n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';
+    return Promise.resolve({ramp: filters, strategy: strategy}).then(createRampFn(values));
   }
 
   // normalize method
@@ -185,29 +185,29 @@ function tupleRamp (datasource, column, tuple, method) {
     method = method.toLowerCase();
   }
 
-  return getRamp(datasource, column, tuple.length, method).then(createRampFn(tuple));
+  return getRamp(datasource, column, values.length, method).then(createRampFn(values));
 }
 
-function createRampFn (tuple) {
-  return function prepareRamp (ramp) {
+function createRampFn (values) {
+  return function prepareRamp (filters) {
     var strategy = 'max';
-    if (!Array.isArray(ramp)) {
-      strategy = ramp.strategy || 'max';
-      ramp = ramp.ramp;
+    if (!Array.isArray(filters)) {
+      strategy = filters.strategy || 'max';
+      filters = filters.ramp;
     }
 
-    var buckets = Math.min(tuple.length, ramp.length);
+    var buckets = Math.min(values.length, filters.length);
 
     var i;
     var rampResult = [];
 
     if (buckets > 0) {
       for (i = 0; i < buckets; i++) {
-        rampResult.push(ramp[i]);
-        rampResult.push(tuple[i]);
+        rampResult.push(filters[i]);
+        rampResult.push(values[i]);
       }
     } else {
-      rampResult.push(null, tuple[0]);
+      rampResult.push(null, values[0]);
     }
 
     return { ramp: rampResult, strategy: strategy };
