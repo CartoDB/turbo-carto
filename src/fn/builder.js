@@ -2,7 +2,7 @@
 
 require('es6-promise').polyfill();
 
-var FnExecutor = require('./fn-executor');
+var FnExecutor = require('./executor');
 
 function FnBuilder (datasource) {
   this.datasource = datasource;

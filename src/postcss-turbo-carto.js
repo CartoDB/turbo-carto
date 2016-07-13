@@ -4,7 +4,7 @@ require('es6-promise').polyfill();
 
 var valueParser = require('postcss-value-parser');
 var postcss = require('postcss');
-var FnBuilder = require('./fn/fn-builder');
+var FnBuilder = require('./fn/builder');
 
 function PostcssTurboCarto (datasource) {
   this.datasource = datasource;

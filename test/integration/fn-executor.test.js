@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var FnExecutor = require('../../src/fn/fn-executor');
+var FnExecutor = require('../../src/fn/executor');
 var DummyDatasource = require('../support/dummy-datasource');
 var postcss = require('postcss');
 
