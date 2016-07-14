@@ -3,7 +3,7 @@
 require('es6-promise').polyfill();
 
 var debug = require('../helper/debug')('fn-executor');
-var FnFactory = require('./fn-factory');
+var FnFactory = require('./factory');
 
 function FnExecutor (datasource, fnName, fnArgs, decl) {
   this.datasource = datasource;

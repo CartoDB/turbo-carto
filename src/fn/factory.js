@@ -2,10 +2,8 @@
 
 var fns = [
   require('./fn-ramp'),
-  require('./fn-colorbrew'),
-  require('./fn-cartocolor'),
-  require('./fn-buckets'),
-  require('./fn-colors')
+  require('./fn-colorbrewer'),
+  require('./fn-cartocolor')
 ];
 var fnMap = fns.reduce(function (fnMap, fn) {
   fnMap[fn.fnName] = fn;

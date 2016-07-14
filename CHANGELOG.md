@@ -3,6 +3,8 @@
 ## Version 0.14.1
 Released 2016-mm-dd
 
+ - Removes `colors` and `buckets` function.
+
 
 ## Version 0.14.0
 Released 2016-07-06
