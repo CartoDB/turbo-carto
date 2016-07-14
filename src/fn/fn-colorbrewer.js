@@ -3,20 +3,21 @@
 require('es6-promise').polyfill();
 
 var colorbrewer = require('colorbrewer');
+var LazyResult = require('../model/lazy-result');
+var minMaxKeys = require('../helper/min-max-keys');
 var debug = require('../helper/debug')('fn-factory');
 
 module.exports = function () {
   return function fn$colorbrewer (scheme, numberDataClasses) {
     debug('fn$colorbrewer(%j)', arguments);
-    scheme = scheme || 'PuBu';
-    numberDataClasses = Math.min(7, Math.max(3, numberDataClasses || 5));
-    return new Promise(function (resolve) {
-      var result = colorbrewer.PuBu[numberDataClasses];
-      var def = colorbrewer[scheme];
-      if (def) {
-        result = def[numberDataClasses];
+    return new Promise(function (resolve, reject) {
+      if (!colorbrewer.hasOwnProperty(scheme)) {
+        return reject(new Error('Invalid colorbrewer scheme: "' + scheme + '"'));
       }
-      resolve(result);
+      var result = colorbrewer[scheme];
+      var minMax = minMaxKeys(result);
+      numberDataClasses = Math.min(minMax.max, Math.max(minMax.min, numberDataClasses || 5));
+      resolve(new LazyResult(result, numberDataClasses));
     });
   };
 };

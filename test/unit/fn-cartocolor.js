@@ -7,30 +7,30 @@ describe('fn-cartocolor', function () {
   var fn = fnCartoColor();
 
   it('should return by default 5 data classes', function (done) {
-    fn('Green2').then(function (result) {
-      assert.equal(result.length, 5);
+    fn('BluGrn').then(function (result) {
+      assert.equal(result.get().length, 5);
       done();
     });
   });
 
   it('should return at least 3 data classes', function (done) {
-    fn('Green2', 1).then(function (result) {
-      assert.equal(result.length, 3);
+    fn('Peach', 1).then(function (result) {
+      assert.equal(result.get().length, 3);
       done();
     });
   });
 
   it('should return at most 7 data classes', function (done) {
-    fn('Green2', 9).then(function (result) {
-      assert.equal(result.length, 7);
+    fn('RedOr', 9).then(function (result) {
+      assert.equal(result.get().length, 7);
       done();
     });
   });
 
   [3, 4, 5, 6, 7].forEach(function (numberDataClasses) {
     it('should return the correct number of data classes for param=' + numberDataClasses, function (done) {
-      fn('Green2', numberDataClasses).then(function (result) {
-        assert.equal(result.length, numberDataClasses);
+      fn('ArmyRose', numberDataClasses).then(function (result) {
+        assert.equal(result.get().length, numberDataClasses);
         done();
       });
     });

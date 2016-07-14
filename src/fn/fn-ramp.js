@@ -5,6 +5,7 @@ require('es6-promise').polyfill();
 var debug = require('../helper/debug')('fn-factory');
 var columnName = require('../helper/column-name');
 var TurboCartoError = require('../helper/turbo-carto-error');
+var isResult = require('../model/is-result');
 var buckets = require('../helper/linear-buckets');
 var postcss = require('postcss');
 
@@ -128,8 +129,8 @@ function ramp (datasource, column, args) {
     );
   }
 
-  if (Array.isArray(args[0])) {
-    values = args[0];
+  if (isResult(args[0])) {
+    values = args[0].get();
     method = args[1];
   } else {
     if (args.length < 2) {
@@ -169,8 +170,8 @@ function getRamp (datasource, column, buckets, method) {
 }
 
 function valuesRamp (datasource, column, values, method) {
-  if (Array.isArray(method)) {
-    var filters = method;
+  if (isResult(method)) {
+    var filters = method.get();
     if (values.length !== filters.length) {
       return Promise.reject(
         new TurboCartoError('invalid ramp length, got ' + filters.length + ' values, expected ' + values.length)

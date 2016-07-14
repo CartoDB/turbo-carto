@@ -7,14 +7,14 @@ describe('fn-anonymous-tuple', function () {
   var fn = fnAnonymousTuple();
   it('should return given strings', function (done) {
     fn('red', 'green', 'blue').then(function (result) {
-      assert.deepEqual(result, [ 'red', 'green', 'blue' ]);
+      assert.deepEqual(result.get(), [ 'red', 'green', 'blue' ]);
       done();
     });
   });
 
   it('should return given numbers', function (done) {
     fn(9, 8, 7).then(function (result) {
-      assert.deepEqual(result, [ 9, 8, 7 ]);
+      assert.deepEqual(result.get(), [ 9, 8, 7 ]);
       done();
     });
   });
