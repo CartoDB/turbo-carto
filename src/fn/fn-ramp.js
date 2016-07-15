@@ -129,10 +129,11 @@ function ramp (datasource, column, args) {
 
   /**
    * Overload scenarios to support
+   * marker-width: ramp([price], 4, 100);
    * marker-width: ramp([price], 4, 100, method);
-   * marker-width: ramp([price], 4, 100, 5, method); √
-   * marker-width: ramp([price], 4, 100, 3, (100, 200, 1000)); √
-   * marker-width: ramp([price], 4, 100, (100, 150, 250, 200, 1000)); √
+   * marker-width: ramp([price], 4, 100, 5, method);
+   * marker-width: ramp([price], 4, 100, 3, (100, 200, 1000));
+   * marker-width: ramp([price], 4, 100, (100, 150, 250, 200, 1000));
    */
   if (Number.isFinite(+args[0])) {
     return compatibilityNumericRamp(datasource, column, args);
