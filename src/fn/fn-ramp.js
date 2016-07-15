@@ -199,7 +199,7 @@ function compatibilityNumericRamp (datasource, column, args) {
   var max = +args[1];
 
   var numBuckets;
-  var filters;
+  var filters = null;
   var method;
 
   if (Number.isFinite(+args[2])) {
@@ -216,6 +216,7 @@ function compatibilityNumericRamp (datasource, column, args) {
         );
       }
     } else {
+      filters = null;
       method = args[3];
     }
   } else if (isResult(args[2])) {
