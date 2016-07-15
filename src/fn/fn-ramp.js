@@ -177,7 +177,7 @@ function compatibilityValuesRamp (datasource, column, args) {
   var values = args[0];
   var method = args[1] || 'quantiles';
   var numBuckets = values.getLength();
-  return getRamp(datasource, column, numBuckets, method).then(createRampFn(values));
+  return getRamp(datasource, column, numBuckets, method).then(compatibilityCreateRampFn(values));
 }
 
 /**
@@ -235,11 +235,11 @@ function compatibilityNumericRamp (datasource, column, args) {
   if (filters === null) {
     // normalize method
     method = (method || 'quantiles').toLowerCase();
-    return getRamp(datasource, column, numBuckets, method).then(createRampFn(values));
+    return getRamp(datasource, column, numBuckets, method).then(compatibilityCreateRampFn(values));
   }
 
   filters = filters.is(FiltersResult) ? filters : new FiltersResult(filters.get(), 'max');
-  return Promise.resolve(filters).then(createRampFn(values));
+  return Promise.resolve(filters).then(compatibilityCreateRampFn(values));
 }
 
 function getRamp (datasource, column, buckets, method) {
@@ -260,7 +260,7 @@ function getRamp (datasource, column, buckets, method) {
   });
 }
 
-function createRampFn (valuesResult) {
+function compatibilityCreateRampFn (valuesResult) {
   return function prepareRamp (filtersResult) {
     var buckets = Math.min(valuesResult.getLength(), filtersResult.getLength());
 
@@ -269,6 +269,29 @@ function createRampFn (valuesResult) {
 
     var filters = filtersResult.get();
     var values = valuesResult.get();
+
+    if (buckets > 0) {
+      for (i = 0; i < buckets; i++) {
+        rampResult.push(filters[i]);
+        rampResult.push(values[i]);
+      }
+    } else {
+      rampResult.push(null, values[0]);
+    }
+
+    return { ramp: rampResult, strategy: filtersResult.getStrategy() };
+  };
+}
+
+function createRampFn (valuesResult) {
+  return function prepareRamp (filtersResult) {
+    var buckets = filtersResult.getLength();
+
+    var i;
+    var rampResult = [];
+
+    var filters = filtersResult.get();
+    var values = valuesResult.get(buckets);
 
     if (buckets > 0) {
       for (i = 0; i < buckets; i++) {

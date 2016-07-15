@@ -1,6 +1,7 @@
 'use strict';
 
 var fns = [
+  require('./fn-buckets'),
   require('./fn-cartocolor'),
   require('./fn-colorbrewer'),
   require('./fn-ramp'),
