@@ -30,7 +30,7 @@ describe('regressions', function () {
       desc: 'should use strings for filters',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France));',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France), =);',
         '}'
       ].join('\n'),
       expectedCartocss: [
@@ -52,7 +52,7 @@ describe('regressions', function () {
       desc: 'should work with escaped strings',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, "Spain\'s", Portugal, France));',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (_, "Spain\'s", Portugal, France), =);',
         '}'
       ].join('\n'),
       expectedCartocss: [
