@@ -13,4 +13,8 @@ describe('linear-buckets', function () {
     assert.deepEqual(interpolate(0, 10, 3), [0, 5, 10]);
     assert.deepEqual(interpolate(0, 10, 3), [0, 5, 10]);
   });
+
+  it('should work with array range as first argument', function () {
+    assert.deepEqual(interpolate([0, 10], 3), [0, 5, 10]);
+  });
 });
