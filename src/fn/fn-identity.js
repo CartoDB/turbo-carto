@@ -2,7 +2,7 @@
 
 require('es6-promise').polyfill();
 
-var debug = require('../helper/debug')('fn-factory');
+var debug = require('../helper/debug')('fn-identity');
 
 module.exports = function (fnName) {
   return function fn$identity () {

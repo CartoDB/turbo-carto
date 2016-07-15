@@ -2,7 +2,7 @@
 
 require('es6-promise').polyfill();
 
-var debug = require('../helper/debug')('fn-factory');
+var debug = require('../helper/debug')('fn-anonymous-tuple');
 var ValuesResult = require('../model/values-result');
 
 module.exports = function () {

@@ -2,7 +2,7 @@
 
 require('es6-promise').polyfill();
 
-var debug = require('../helper/debug')('fn-factory');
+var debug = require('../helper/debug')('fn-ramp');
 var columnName = require('../helper/column-name');
 var TurboCartoError = require('../helper/turbo-carto-error');
 var isResult = require('../model/is-result');

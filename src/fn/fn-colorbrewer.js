@@ -5,7 +5,7 @@ require('es6-promise').polyfill();
 var colorbrewer = require('colorbrewer');
 var ValuesResult = require('../model/values-result');
 var minMaxKeys = require('../helper/min-max-keys');
-var debug = require('../helper/debug')('fn-factory');
+var debug = require('../helper/debug')('fn-colorbrewer');
 
 module.exports = function () {
   return function fn$colorbrewer (scheme, numberDataClasses) {

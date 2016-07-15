@@ -5,7 +5,7 @@ require('es6-promise').polyfill();
 var cartocolor = require('cartocolor');
 var ValuesResult = require('../model/values-result');
 var minMaxKeys = require('../helper/min-max-keys');
-var debug = require('../helper/debug')('fn-factory');
+var debug = require('../helper/debug')('fn-cartocolor');
 
 module.exports = function () {
   return function fn$cartocolor (scheme, numberDataClasses) {

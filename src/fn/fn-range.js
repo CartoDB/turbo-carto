@@ -3,7 +3,7 @@
 require('es6-promise').polyfill();
 
 var ValuesResult = require('../model/values-result');
-var debug = require('../helper/debug')('fn-factory');
+var debug = require('../helper/debug')('fn-range');
 var linearBuckets = require('../helper/linear-buckets');
 
 module.exports = function () {
