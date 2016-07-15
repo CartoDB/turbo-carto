@@ -82,12 +82,13 @@
 //    "wsh"           : false,    // Windows Scripting Host
 //    "yui"           : false,    // Yahoo User Interface
 
-    // Custom Globals
-    "globals"       : { // additional predefined global variables
-        "Promise": true,
-        "describe": true,
-        "it": true,
-        "before": true,
-        "after": true
-    }
+    // Custom predefined global variables
+    "predef": [
+        "-console", // disallows console, use debug
+        "Promise",
+        "describe",
+        "it",
+        "before",
+        "after"
+    ]
 }
