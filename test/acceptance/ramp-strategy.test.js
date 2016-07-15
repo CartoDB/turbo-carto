@@ -235,7 +235,7 @@ describe('ramp-strategy', function () {
   ];
 
   scenarios.forEach(function (scenario) {
-    var itFn = !!scenario.only ? it.only : it;
+    var itFn = scenario.only ? it.only : it;
     itFn(scenario.desc, function (done) {
       getCartoCss(scenario.datasource, scenario.cartocss || cartocss, function (err, cartocssResult) {
         if (err) {
