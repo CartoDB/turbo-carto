@@ -1,5 +1,7 @@
-function minMaxNumericKey(obj) {
-  return Object.keys(obj).reduce(function(minMax, k) {
+'use strict';
+
+function minMaxNumericKey (obj) {
+  return Object.keys(obj).reduce(function (minMax, k) {
     if (Number.isFinite(+k)) {
       if (minMax.min === null) {
         minMax.min = +k;
