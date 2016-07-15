@@ -27,6 +27,28 @@ describe('regressions', function () {
 
   var scenarios = [
     {
+      desc: 'should keep working with category quantification',
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France), category);',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = "Spain" ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = "Portugal" ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = "France" ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
       desc: 'should use strings for filters',
       cartocss: [
         '#layer{',

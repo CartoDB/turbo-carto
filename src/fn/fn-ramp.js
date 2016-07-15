@@ -167,7 +167,7 @@ function ramp (datasource, column, args) {
 }
 
 function strategyFromMapping (mapping) {
-  if (mapping === '=') {
+  if (mapping === '=' || mapping === 'category') {
     return 'exact';
   }
   return 'split';
