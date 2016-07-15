@@ -2,6 +2,7 @@
 
 var fns = [
   require('./fn-ramp'),
+  require('./fn-range'),
   require('./fn-colorbrewer'),
   require('./fn-cartocolor')
 ];
