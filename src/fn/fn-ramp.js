@@ -9,6 +9,7 @@ var isResult = require('../model/is-result');
 var linearBuckets = require('../helper/linear-buckets');
 var ValuesResult = require('../model/values-result');
 var FiltersResult = require('../model/filters-result');
+var LazyFiltersResult = require('../model/lazy-filters-result');
 var postcss = require('postcss');
 
 function createSplitStrategy (selector) {
@@ -157,8 +158,12 @@ function ramp (datasource, column, args) {
   var filters = args[1];
   var mapping = args[2];
   var strategy = strategyFromMapping(mapping);
-  filters = filters.is(FiltersResult) ? filters : new FiltersResult(filters.get(), strategy);
-  return Promise.resolve(filters).then(createRampFn(values));
+  filters = filters.is(ValuesResult) ? new FiltersResult(filters.get(), strategy) : filters;
+  if (filters.is(LazyFiltersResult)) {
+    return filters.get(column).then(createRampFn(values));
+  } else {
+    return Promise.resolve(filters).then(createRampFn(values));
+  }
 }
 
 function strategyFromMapping (mapping) {
