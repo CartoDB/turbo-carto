@@ -17,6 +17,7 @@ var exactStrategyDatasource = new DummyStrategyDatasource('exact', function alph
   }
   return ramp;
 });
+var numericExactStrategyDatasource = new DummyStrategyDatasource('exact');
 
 describe('ramp-strategy', function () {
   function getCartoCss (datasource, cartocss, callback) {
@@ -105,6 +106,29 @@ describe('ramp-strategy', function () {
         '    marker-width: 30',
         '  }',
         '  [ population = "d" ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy generates uses numeric values',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30, 40));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
         '    marker-width: 40',
         '  }',
         '}'

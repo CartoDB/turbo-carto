@@ -57,7 +57,7 @@ var strategy = {
   }),
 
   exact: createSplitStrategy(function exactSelector (column, value) {
-    return '[ ' + column + ' = "' + value + '" ]';
+    return Number.isFinite(value) ? '[ ' + column + ' = ' + value + ' ]' : '[ ' + column + ' = "' + value + '" ]';
   })
 };
 

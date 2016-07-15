@@ -121,7 +121,7 @@ describe('regressions', function () {
     {
       desc: 'should work when result provides less values than tuples',
       datasource: new DummyStrategyDatasource('exact', function () {
-        return [1, 2];
+        return ['1', '2'];
       }),
       cartocss: [
         '#layer{',
