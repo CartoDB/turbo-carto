@@ -3,7 +3,7 @@
 require('es6-promise').polyfill();
 
 var colorbrewer = require('colorbrewer');
-var LazyResult = require('../model/lazy-result');
+var ValuesResult = require('../model/values-result');
 var minMaxKeys = require('../helper/min-max-keys');
 var debug = require('../helper/debug')('fn-factory');
 
@@ -17,7 +17,7 @@ module.exports = function () {
       var result = colorbrewer[scheme];
       var minMax = minMaxKeys(result);
       numberDataClasses = Math.min(minMax.max, Math.max(minMax.min, numberDataClasses || 5));
-      resolve(new LazyResult(result, numberDataClasses));
+      resolve(new ValuesResult(result, numberDataClasses));
     });
   };
 };

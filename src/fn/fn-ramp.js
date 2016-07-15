@@ -6,7 +6,9 @@ var debug = require('../helper/debug')('fn-factory');
 var columnName = require('../helper/column-name');
 var TurboCartoError = require('../helper/turbo-carto-error');
 var isResult = require('../model/is-result');
-var buckets = require('../helper/linear-buckets');
+var linearBuckets = require('../helper/linear-buckets');
+var ValuesResult = require('../model/values-result');
+var FiltersResult = require('../model/filters-result');
 var postcss = require('postcss');
 
 function createSplitStrategy (selector) {
@@ -119,88 +121,152 @@ module.exports = function (datasource, decl) {
  *  <Number>minVal, <Number>maxValue, <Number>numBuckets, <String>method
  */
 function ramp (datasource, column, args) {
-  var method;
-
-  var values = [];
-
   if (args.length === 0) {
     return Promise.reject(
       new TurboCartoError('invalid number of arguments')
     );
   }
 
-  if (isResult(args[0])) {
-    values = args[0].get();
-    method = args[1];
-  } else {
-    if (args.length < 2) {
-      return Promise.reject(
-        new TurboCartoError('invalid number of arguments')
-      );
-    }
-
-    var min = +args[0];
-    var max = +args[1];
-
-    var numBuckets = 5;
-    method = args[2];
-
-    if (Number.isFinite(+args[2])) {
-      numBuckets = +args[2];
-      method = args[3];
-    }
-
-    values = buckets(min, max, numBuckets);
+  /**
+   * Overload scenarios to support
+   * marker-width: ramp([price], 4, 100, method);
+   * marker-width: ramp([price], 4, 100, 5, method); √
+   * marker-width: ramp([price], 4, 100, 3, (100, 200, 1000)); √
+   * marker-width: ramp([price], 4, 100, (100, 150, 250, 200, 1000)); √
+   */
+  if (Number.isFinite(+args[0])) {
+    return compatibilityNumericRamp(datasource, column, args);
   }
 
-  return valuesRamp(datasource, column, values, method);
+  /**
+   * Overload methods to support
+   * marker-fill: ramp([price], colorbrewer(Reds));
+   * marker-fill: ramp([price], colorbrewer(Reds), jenks);
+   */
+  if (!isResult(args[1])) {
+    return compatibilityValuesRamp(datasource, column, args);
+  }
+
+  /**
+   * Overload methods to support from here
+   * marker-fill: ramp([price], colorbrewer(Reds), (100, 200, 300, 400, 500));
+   * marker-fill: ramp([price], colorbrewer(Reds), (100, 200, 300, 400, 500), =);
+   */
+  var values = args[0];
+  var filters = args[1];
+  var mapping = args[2];
+  var strategy = strategyFromMapping(mapping);
+  filters = filters.is(FiltersResult) ? filters : new FiltersResult(filters.get(), strategy);
+  return Promise.resolve(filters).then(createRampFn(values));
+}
+
+function strategyFromMapping (mapping) {
+  if (mapping === '=') {
+    return 'exact';
+  }
+  return 'split';
+}
+
+/**
+ * Overload methods to support
+ * marker-fill: ramp([price], colorbrewer(Reds));
+ * marker-fill: ramp([price], colorbrewer(Reds), jenks);
+ */
+function compatibilityValuesRamp (datasource, column, args) {
+  var values = args[0];
+  var method = args[1] || 'quantiles';
+  var numBuckets = values.getLength();
+  return getRamp(datasource, column, numBuckets, method).then(createRampFn(values));
+}
+
+/**
+ * Overload scenarios to support
+ * marker-width: ramp([price], 4, 100);
+ * marker-width: ramp([price], 4, 100, method);
+ * marker-width: ramp([price], 4, 100, 5, method); √
+ * marker-width: ramp([price], 4, 100, 3, (100, 200, 1000)); √
+ * marker-width: ramp([price], 4, 100, (100, 150, 250, 200, 1000)); √
+ */
+function compatibilityNumericRamp (datasource, column, args) {
+  // jshint maxcomplexity:9
+  if (args.length < 2) {
+    return Promise.reject(
+      new TurboCartoError('invalid number of arguments')
+    );
+  }
+
+  var min = +args[0];
+  var max = +args[1];
+
+  var numBuckets;
+  var filters;
+  var method;
+
+  if (Number.isFinite(+args[2])) {
+    numBuckets = +args[2];
+
+    if (isResult(args[3])) {
+      filters = args[3];
+      method = null;
+      if (filters.getLength() !== numBuckets) {
+        return Promise.reject(
+          new TurboCartoError(
+              'invalid ramp length, got ' + filters.getLength() + ' values, expected ' + values.getLength()
+          )
+        );
+      }
+    } else {
+      method = args[3];
+    }
+  } else if (isResult(args[2])) {
+    filters = args[2];
+    numBuckets = filters.getLength();
+    method = null;
+  } else {
+    filters = null;
+    numBuckets = 5;
+    method = args[2];
+  }
+
+  var values = new ValuesResult([min, max], numBuckets, linearBuckets);
+
+  if (filters === null) {
+    // normalize method
+    method = (method || 'quantiles').toLowerCase();
+    return getRamp(datasource, column, numBuckets, method).then(createRampFn(values));
+  }
+
+  filters = filters.is(FiltersResult) ? filters : new FiltersResult(filters.get(), 'max');
+  return Promise.resolve(filters).then(createRampFn(values));
 }
 
 function getRamp (datasource, column, buckets, method) {
   return new Promise(function (resolve, reject) {
-    datasource.getRamp(columnName(column), buckets, method, function (err, ramp) {
+    datasource.getRamp(columnName(column), buckets, method, function (err, filters) {
       if (err) {
         return reject(
           new TurboCartoError('unable to compute ramp,', err)
         );
       }
-      resolve(ramp);
+      var strategy = 'max';
+      if (!Array.isArray(filters)) {
+        strategy = filters.strategy || 'max';
+        filters = filters.ramp;
+      }
+      resolve(new FiltersResult(filters, strategy));
     });
   });
 }
 
-function valuesRamp (datasource, column, values, method) {
-  if (isResult(method)) {
-    var filters = method.get();
-    if (values.length !== filters.length) {
-      return Promise.reject(
-        new TurboCartoError('invalid ramp length, got ' + filters.length + ' values, expected ' + values.length)
-      );
-    }
-    var strategy = filters.map(function numberMapper (n) { return +n; }).every(Number.isFinite) ? 'split' : 'exact';
-    return Promise.resolve({ramp: filters, strategy: strategy}).then(createRampFn(values));
-  }
-
-  // normalize method
-  if (method) {
-    method = method.toLowerCase();
-  }
-
-  return getRamp(datasource, column, values.length, method).then(createRampFn(values));
-}
-
-function createRampFn (values) {
-  return function prepareRamp (filters) {
-    var strategy = 'max';
-    if (!Array.isArray(filters)) {
-      strategy = filters.strategy || 'max';
-      filters = filters.ramp;
-    }
-
-    var buckets = Math.min(values.length, filters.length);
+function createRampFn (valuesResult) {
+  return function prepareRamp (filtersResult) {
+    var buckets = Math.min(valuesResult.getLength(), filtersResult.getLength());
 
     var i;
     var rampResult = [];
+
+    var filters = filtersResult.get();
+    var values = valuesResult.get();
 
     if (buckets > 0) {
       for (i = 0; i < buckets; i++) {
@@ -211,7 +277,7 @@ function createRampFn (values) {
       rampResult.push(null, values[0]);
     }
 
-    return { ramp: rampResult, strategy: strategy };
+    return { ramp: rampResult, strategy: filtersResult.getStrategy() };
   };
 }
 

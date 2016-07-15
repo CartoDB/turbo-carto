@@ -1,8 +1,11 @@
-var Result = require('./result');
-var LazyResult = require('./lazy-result');
+'use strict';
 
-function isResult(obj) {
-  return typeof obj === 'object' && (obj.constructor === LazyResult || obj.constructor === Result)
+var ValuesResult = require('./values-result');
+var FiltersResult = require('./filters-result');
+
+function isResult (obj) {
+  return typeof obj === 'object' && obj !== null &&
+    (obj.constructor === ValuesResult || obj.constructor === FiltersResult);
 }
 
 module.exports = isResult;
