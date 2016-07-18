@@ -162,7 +162,8 @@ describe('regressions', function () {
   ];
 
   scenarios.forEach(function (scenario) {
-    it(scenario.desc, function (done) {
+    var itFn = scenario.only ? it.only : it;
+    itFn(scenario.desc, function (done) {
       getCartoCss(scenario.cartocss, scenario.datasource, function (err, cartocssResult) {
         if (err) {
           return done(err);
