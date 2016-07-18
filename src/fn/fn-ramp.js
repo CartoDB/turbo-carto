@@ -180,7 +180,7 @@ function strategyFromMapping (mapping) {
  */
 function compatibilityValuesRamp (datasource, column, args) {
   var values = args[0];
-  var method = args[1] || 'quantiles';
+  var method = (args[1] || 'quantiles').toLowerCase();
   var numBuckets = values.getLength();
   return getRamp(datasource, column, numBuckets, method).then(compatibilityCreateRampFn(values));
 }
