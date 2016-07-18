@@ -1,0 +1,4 @@
+#layer{
+  polygon-opacity: 1;
+  marker-width: ramp([price], (4, 8, 16, 32), (50, 75.5, 88, 94.5), <);
+}
