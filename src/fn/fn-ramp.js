@@ -153,6 +153,7 @@ function ramp (datasource, column, args) {
    * Overload methods to support from here
    * marker-fill: ramp([price], colorbrewer(Reds), (100, 200, 300, 400, 500));
    * marker-fill: ramp([price], colorbrewer(Reds), (100, 200, 300, 400, 500), =);
+   * marker-fill: ramp([price], (...values), (...filters), [mapping]);
    */
   var values = args[0];
   var filters = args[1];
