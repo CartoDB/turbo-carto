@@ -217,7 +217,7 @@ function compatibilityNumericRamp (datasource, column, args) {
       if (filters.getLength() !== numBuckets) {
         return Promise.reject(
           new TurboCartoError(
-              'invalid ramp length, got ' + filters.getLength() + ' values, expected ' + values.getLength()
+              'invalid ramp length, got ' + filters.getLength() + ' values, expected ' + numBuckets
           )
         );
       }
