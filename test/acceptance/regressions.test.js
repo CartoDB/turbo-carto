@@ -153,7 +153,7 @@ describe('regressions', function () {
       expectedCartocss: [
         '#layer{',
         '  marker-fill: #fee5d9;',
-        '  [ population = "2" ]{',
+        '  [ population = 2 ]{',
         '    marker-fill: #fcbba1',
         '  }',
         '}'
