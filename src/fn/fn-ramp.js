@@ -10,6 +10,7 @@ var linearBuckets = require('../helper/linear-buckets');
 var ValuesResult = require('../model/values-result');
 var FiltersResult = require('../model/filters-result');
 var LazyFiltersResult = require('../model/lazy-filters-result');
+var RampResult = require('../model/ramp/ramp-result');
 var postcss = require('postcss');
 
 function createSplitStrategy (selector) {
@@ -71,6 +72,9 @@ module.exports = function (datasource, decl) {
 
     return ramp(datasource, column, args)
       .then(function (rampResult) {
+        if (rampResult.constructor === RampResult) {
+          return rampResult.process(columnName(column), decl);
+        }
         var strategyFn = strategy.hasOwnProperty(rampResult.strategy) ? strategy[rampResult.strategy] : strategy.max;
         return strategyFn(columnName(column), rampResult.ramp, decl);
       })
@@ -167,11 +171,19 @@ function ramp (datasource, column, args) {
   }
 }
 
+var oldMappings2Strategies = {
+  quantiles: 'max',
+  equal: 'max',
+  jenks: 'max',
+  headtails: 'split',
+  category: 'exact'
+};
+
 function strategyFromMapping (mapping) {
-  if (mapping === '=' || mapping === 'category') {
-    return 'exact';
+  if (oldMappings2Strategies.hasOwnProperty(mapping)) {
+    return oldMappings2Strategies[mapping];
   }
-  return 'split';
+  return mapping || '>';
 }
 
 /**
@@ -291,6 +303,10 @@ function compatibilityCreateRampFn (valuesResult) {
 
 function createRampFn (valuesResult) {
   return function prepareRamp (filtersResult) {
+    if (RampResult.STRATEGIES_SUPPORTED.hasOwnProperty(filtersResult.getStrategy())) {
+      return new RampResult(valuesResult, filtersResult, filtersResult.getStrategy());
+    }
+
     var buckets = Math.min(valuesResult.getMaxSize(), filtersResult.getMaxSize());
 
     var i;
