@@ -193,18 +193,21 @@ describe('ramp-strategy', function () {
       ].join('\n'),
       expectedCartocss: [
         '#layer{',
-        '  marker-width: 10;',
+        '  marker-width: 50;',
+        '  [ population = 0 ]{',
+        '    marker-width: 10',
+        '  }',
         '  [ population = 1 ]{',
-        '    marker-width: 20',
+        '    marker-width: 18',
         '  }',
         '  [ population = 2 ]{',
-        '    marker-width: 30',
+        '    marker-width: 26',
         '  }',
         '  [ population = 3 ]{',
-        '    marker-width: 40',
+        '    marker-width: 34',
         '  }',
         '  [ population = 4 ]{',
-        '    marker-width: 50',
+        '    marker-width: 42',
         '  }',
         '}'
       ].join('\n')
@@ -214,20 +217,20 @@ describe('ramp-strategy', function () {
       datasource: numericExactStrategyDatasource,
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], range(10, 40), category(4));',
+        '  marker-width: ramp([population], range(10, 40), category(3));',
         '}'
       ].join('\n'),
       expectedCartocss: [
         '#layer{',
-        '  marker-width: 10;',
+        '  marker-width: 40;',
+        '  [ population = 0 ]{',
+        '    marker-width: 10',
+        '  }',
         '  [ population = 1 ]{',
         '    marker-width: 20',
         '  }',
         '  [ population = 2 ]{',
         '    marker-width: 30',
-        '  }',
-        '  [ population = 3 ]{',
-        '    marker-width: 40',
         '  }',
         '}'
       ].join('\n')
