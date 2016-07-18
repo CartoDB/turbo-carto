@@ -1,9 +1,10 @@
 'use strict';
 
-function ValuesResult (result, defaultSize, getter) {
+function ValuesResult (result, defaultSize, getter, maxSize) {
   this.result = result;
   this.defaultSize = defaultSize || result.length;
   this.getter = getter;
+  this.maxSize = maxSize || result.length;
 }
 
 module.exports = ValuesResult;
@@ -23,6 +24,10 @@ ValuesResult.prototype.get = function (size) {
 
 ValuesResult.prototype.getLength = function (size) {
   return this.get(size).length;
+};
+
+ValuesResult.prototype.getMaxSize = function() {
+  return this.maxSize;
 };
 
 ValuesResult.prototype.toString = function () {

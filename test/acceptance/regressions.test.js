@@ -158,6 +158,25 @@ describe('regressions', function () {
         '  }',
         '}'
       ].join('\n')
+    },
+    {
+      desc: 'should work with less values than filters',
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (8, 24, 96), (8, 24, 96, 128));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 8;',
+        '  [ population > 24 ]{',
+        '    marker-width: 24',
+        '  }',
+        '  [ population > 96 ]{',
+        '    marker-width: 96',
+        '  }',
+        '}'
+      ].join('\n')
     }
   ];
 

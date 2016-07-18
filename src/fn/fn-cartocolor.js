@@ -17,7 +17,7 @@ module.exports = function () {
       var result = cartocolor[scheme];
       var minMax = minMaxKeys(result);
       numberDataClasses = Math.min(minMax.max, Math.max(minMax.min, numberDataClasses || 5));
-      resolve(new ValuesResult(result, numberDataClasses));
+      resolve(new ValuesResult(result, numberDataClasses, null, minMax.max));
     });
   };
 };

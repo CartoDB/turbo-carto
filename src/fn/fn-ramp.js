@@ -235,7 +235,7 @@ function compatibilityNumericRamp (datasource, column, args) {
     method = args[2];
   }
 
-  var values = new ValuesResult([min, max], numBuckets, linearBuckets);
+  var values = new ValuesResult([min, max], numBuckets, linearBuckets, Number.POSITIVE_INFINITY);
 
   if (filters === null) {
     // normalize method
@@ -290,7 +290,7 @@ function compatibilityCreateRampFn (valuesResult) {
 
 function createRampFn (valuesResult) {
   return function prepareRamp (filtersResult) {
-    var buckets = filtersResult.getLength();
+    var buckets = Math.min(valuesResult.getMaxSize(), filtersResult.getMaxSize());
 
     var i;
     var rampResult = [];

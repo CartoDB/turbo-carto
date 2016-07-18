@@ -12,7 +12,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var result = [+min, +max];
       numBuckets = Number.isFinite(+numBuckets) ? +numBuckets : 5;
-      resolve(new ValuesResult(result, numBuckets, linearBuckets));
+      resolve(new ValuesResult(result, numBuckets, linearBuckets, Number.POSITIVE_INFINITY));
     });
   };
 };
