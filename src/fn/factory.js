@@ -1,9 +1,12 @@
 'use strict';
 
 var fns = [
-  require('./fn-ramp'),
+  require('./fn-buckets'),
+  require('./fn-buckets-category'),
+  require('./fn-cartocolor'),
   require('./fn-colorbrewer'),
-  require('./fn-cartocolor')
+  require('./fn-ramp'),
+  require('./fn-range')
 ];
 var fnMap = fns.reduce(function (fnMap, fn) {
   fnMap[fn.fnName] = fn;

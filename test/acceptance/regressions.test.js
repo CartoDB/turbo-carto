@@ -27,10 +27,32 @@ describe('regressions', function () {
 
   var scenarios = [
     {
+      desc: 'should keep working with category quantification',
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France), category);',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = "Spain" ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = "Portugal" ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = "France" ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
       desc: 'should use strings for filters',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France));',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France), category);',
         '}'
       ].join('\n'),
       expectedCartocss: [
@@ -52,7 +74,7 @@ describe('regressions', function () {
       desc: 'should work with escaped strings',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, "Spain\'s", Portugal, France));',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (_, "Spain\'s", Portugal, France), category);',
         '}'
       ].join('\n'),
       expectedCartocss: [
@@ -121,7 +143,7 @@ describe('regressions', function () {
     {
       desc: 'should work when result provides less values than tuples',
       datasource: new DummyStrategyDatasource('exact', function () {
-        return [1, 2];
+        return ['1', '2'];
       }),
       cartocss: [
         '#layer{',

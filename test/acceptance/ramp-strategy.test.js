@@ -17,6 +17,7 @@ var exactStrategyDatasource = new DummyStrategyDatasource('exact', function alph
   }
   return ramp;
 });
+var numericExactStrategyDatasource = new DummyStrategyDatasource('exact');
 
 describe('ramp-strategy', function () {
   function getCartoCss (datasource, cartocss, callback) {
@@ -109,11 +110,133 @@ describe('ramp-strategy', function () {
         '  }',
         '}'
       ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy generates uses numeric values',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30, 40));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy is generated from buckets fn',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], range(10, 50), buckets([population], category));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '  [ population = 4 ]{',
+        '    marker-width: 50',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy is generated from buckets fn, force number of buckets',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], range(10, 40), buckets([population], category, 4));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy is generated from category fn',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], range(10, 50), category());',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '  [ population = 4 ]{',
+        '    marker-width: 50',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'result with exact strategy is generated from category fn, force number of buckets',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], range(10, 40), category(4));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  marker-width: 10;',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
     }
   ];
 
   scenarios.forEach(function (scenario) {
-    it(scenario.desc, function (done) {
+    var itFn = scenario.only ? it.only : it;
+    itFn(scenario.desc, function (done) {
       getCartoCss(scenario.datasource, scenario.cartocss || cartocss, function (err, cartocssResult) {
         if (err) {
           return done(err);
