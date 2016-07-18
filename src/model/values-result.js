@@ -26,7 +26,7 @@ ValuesResult.prototype.getLength = function (size) {
   return this.get(size).length;
 };
 
-ValuesResult.prototype.getMaxSize = function() {
+ValuesResult.prototype.getMaxSize = function () {
   return this.maxSize;
 };
 
