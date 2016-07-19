@@ -234,6 +234,31 @@ describe('ramp-strategy', function () {
         '  }',
         '}'
       ].join('\n')
+    },
+    {
+      desc: 'should not set default value for equal mapping when values and filters are same size',
+      datasource: numericExactStrategyDatasource,
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (0, 1, 2, 3), =);',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  [ population = 0 ]{',
+        '    marker-width: 10',
+        '  }',
+        '  [ population = 1 ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = 2 ]{',
+        '    marker-width: 30',
+        '  }',
+        '  [ population = 3 ]{',
+        '    marker-width: 40',
+        '  }',
+        '}'
+      ].join('\n')
     }
   ];
 

@@ -117,17 +117,19 @@ RampResult.prototype.process = function (column, decl) {
 };
 
 RampResult.prototype.processEquality = function (column, decl) {
-  if ((this.filters.getLength() + 1) > this.values.getMaxSize()) {
-    throw new TurboCartoError('`' + this.mapping + '` requires more values than filters to work.');
+  if ((this.filters.getLength()) > this.values.getMaxSize()) {
+    throw new TurboCartoError('`' + this.mapping + '` requires more or same values than filters to work.');
   }
 
   var values = this.values.get(this.filters.getLength() + 1);
   var filters = this.filters.get();
 
-  var defaultValue = values[values.length - 1];
-
-  var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-  decl.replaceWith(initialDecl);
+  var initialDecl = decl;
+  if (values.length !== filters.length) {
+    var defaultValue = values[values.length - 1];
+    initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
+    decl.replaceWith(initialDecl);
+  }
 
   var previousNode = initialDecl;
   filters.forEach(function (filter, index) {
@@ -140,6 +142,10 @@ RampResult.prototype.processEquality = function (column, decl) {
     rule.moveAfter(previousNode);
     previousNode = rule;
   });
+
+  if (values.length === filters.length) {
+    decl.remove();
+  }
 
   return { values: values, filters: filters, mapping: this.mapping };
 };
