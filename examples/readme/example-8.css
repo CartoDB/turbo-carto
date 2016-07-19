@@ -1,0 +1,3 @@
+#selector {
+    marker-width: ramp([price], range(4, 40), equal(5));
+}

@@ -6,7 +6,7 @@ var postcss = require('postcss');
 function RampResult (values, filters, mapping) {
   this.values = values;
   this.filters = filters;
-  this.mapping = mapping;
+  this.mapping = mapping || '>';
 }
 
 module.exports = RampResult;
@@ -103,8 +103,6 @@ var STRATEGIES_SUPPORTED = {
    */
 };
 
-RampResult.STRATEGIES_SUPPORTED = STRATEGIES_SUPPORTED;
-
 RampResult.prototype.process = function (column, decl) {
   var strategy = STRATEGIES_SUPPORTED[this.mapping];
   if (strategy === STRATEGIES_SUPPORTED['<']) {
@@ -114,6 +112,10 @@ RampResult.prototype.process = function (column, decl) {
   } else {
     return this.processGreaterThanOrEqual(column, decl);
   }
+};
+
+RampResult.supports = function (strategy) {
+  return STRATEGIES_SUPPORTED.hasOwnProperty(strategy) || !strategy;
 };
 
 RampResult.prototype.processEquality = function (column, decl) {
@@ -153,7 +155,7 @@ RampResult.prototype.processEquality = function (column, decl) {
 RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   var buckets = Math.min(this.values.getMaxSize(), this.filters.getMaxSize());
 
-  var values = this.values.get(buckets);
+  var values = this.values.get((buckets <= 1) ? buckets + 1 : buckets);
   var filters = this.filters.get(buckets);
 
   var defaultValue = values[0];
@@ -161,7 +163,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   decl.replaceWith(initialDecl);
 
   var previousNode = initialDecl;
-  filters.slice(0, filters.length - 1).forEach(function (filter, index) {
+  filters.slice(0, Math.max(filters.length - 1, 1)).forEach(function (filter, index) {
     var rule = postcss.rule({
       selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
     });

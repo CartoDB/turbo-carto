@@ -1,0 +1,3 @@
+#selector {
+    polygon-fill: ramp([room_type], cartocolor(Bold), category(4));
+}

@@ -76,8 +76,8 @@ order by pop_max desc</textarea>
   marker-line-width: 1;
   marker-line-opacity: 1;
   marker-allow-overlap: true;
-  marker-width: ramp([pop_max], 4, 16, quantiles));
-  marker-fill: ramp([pop_max], colorbrewer(YlGnBu), quantiles);
+  marker-width: ramp([pop_max], range(4, 16), quantiles()));
+  marker-fill: ramp([pop_max], colorbrewer(YlGnBu), quantiles());
 }</textarea>
             <div class="clear"></div>
         </form>
