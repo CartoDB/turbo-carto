@@ -36,15 +36,15 @@ var ramps = {
   quantiles: [ 2, 5, 8, 10 ]
 };
 
-var datasource = new DummyDatasource(function(column, buckets, method) {
+var datasource = new DummyDatasource(function (column, buckets, method) {
   return ramps[method];
 });
 
 describe('ramp-buckets', function () {
-  function createCartocss(fn, mapping) {
+  function createCartocss (fn, mapping) {
     return [
       '#layer{',
-      '  marker-width: ramp([pop], (10, 20, 30, 40), ' + fn + '' + (!!mapping ? (', ' + mapping) : '') + ')',
+      '  marker-width: ramp([pop], (10, 20, 30, 40), ' + fn + '' + (mapping ? (', ' + mapping) : '') + ')',
       '}'
     ].join('\n');
   }
@@ -53,7 +53,7 @@ describe('ramp-buckets', function () {
     {
       desc: 'equal uses >',
       quantification: 'equal',
-      expectedCartocss: function(mapping) {
+      expectedCartocss: function (mapping) {
         mapping = mapping || '>';
         return [
           '#layer{',
@@ -74,7 +74,7 @@ describe('ramp-buckets', function () {
     {
       desc: 'headtails uses <',
       quantification: 'headtails',
-      expectedCartocss: function(mapping) {
+      expectedCartocss: function (mapping) {
         mapping = mapping || '<';
         return [
           '#layer{',
@@ -95,7 +95,7 @@ describe('ramp-buckets', function () {
     {
       desc: 'jenks uses >',
       quantification: 'jenks',
-      expectedCartocss: function(mapping) {
+      expectedCartocss: function (mapping) {
         mapping = mapping || '>';
         return [
           '#layer{',
@@ -116,7 +116,7 @@ describe('ramp-buckets', function () {
     {
       desc: 'quantiles uses >',
       quantification: 'quantiles',
-      expectedCartocss: function(mapping) {
+      expectedCartocss: function (mapping) {
         mapping = mapping || '>';
         return [
           '#layer{',
