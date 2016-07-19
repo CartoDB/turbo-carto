@@ -40,11 +40,11 @@ var datasource = new DummyDatasource(function(column, buckets, method) {
   return ramps[method];
 });
 
-describe.only('ramp-buckets', function () {
-  function createCartocss(fn) {
+describe('ramp-buckets', function () {
+  function createCartocss(fn, mapping) {
     return [
       '#layer{',
-      '  marker-width: ramp([pop], (10, 20, 30, 40), ' + fn + ')',
+      '  marker-width: ramp([pop], (10, 20, 30, 40), ' + fn + '' + (!!mapping ? (', ' + mapping) : '') + ')',
       '}'
     ].join('\n');
   }
@@ -53,74 +53,86 @@ describe.only('ramp-buckets', function () {
     {
       desc: 'equal uses >',
       quantification: 'equal',
-      expectedCartocss: [
-        '#layer{',
-        '  marker-width: 10;',
-        '  [ pop > 2 ]{',
-        '    marker-width: 20',
-        '  }',
-        '  [ pop > 4 ]{',
-        '    marker-width: 30',
-        '  }',
-        '  [ pop > 6 ]{',
-        '    marker-width: 40',
-        '  }',
-        '}'
-      ].join('\n')
+      expectedCartocss: function(mapping) {
+        mapping = mapping || '>';
+        return [
+          '#layer{',
+          '  marker-width: 10;',
+          '  [ pop ' + mapping + ' 2 ]{',
+          '    marker-width: 20',
+          '  }',
+          '  [ pop ' + mapping + ' 4 ]{',
+          '    marker-width: 30',
+          '  }',
+          '  [ pop ' + mapping + ' 6 ]{',
+          '    marker-width: 40',
+          '  }',
+          '}'
+        ].join('\n');
+      }
     },
     {
       desc: 'headtails uses <',
       quantification: 'headtails',
-      expectedCartocss: [
-        '#layer{',
-        '  marker-width: 40;',
-        '  [ pop < 5 ]{',
-        '    marker-width: 10',
-        '  }',
-        '  [ pop < 8 ]{',
-        '    marker-width: 20',
-        '  }',
-        '  [ pop < 10 ]{',
-        '    marker-width: 30',
-        '  }',
-        '}'
-      ].join('\n')
+      expectedCartocss: function(mapping) {
+        mapping = mapping || '<';
+        return [
+          '#layer{',
+          '  marker-width: 40;',
+          '  [ pop ' + mapping + ' 5 ]{',
+          '    marker-width: 10',
+          '  }',
+          '  [ pop ' + mapping + ' 8 ]{',
+          '    marker-width: 20',
+          '  }',
+          '  [ pop ' + mapping + ' 10 ]{',
+          '    marker-width: 30',
+          '  }',
+          '}'
+        ].join('\n');
+      }
     },
     {
       desc: 'jenks uses >',
       quantification: 'jenks',
-      expectedCartocss: [
-        '#layer{',
-        '  marker-width: 10;',
-        '  [ pop > 3 ]{',
-        '    marker-width: 20',
-        '  }',
-        '  [ pop > 5 ]{',
-        '    marker-width: 30',
-        '  }',
-        '  [ pop > 8 ]{',
-        '    marker-width: 40',
-        '  }',
-        '}'
-      ].join('\n')
+      expectedCartocss: function(mapping) {
+        mapping = mapping || '>';
+        return [
+          '#layer{',
+          '  marker-width: 10;',
+          '  [ pop ' + mapping + ' 3 ]{',
+          '    marker-width: 20',
+          '  }',
+          '  [ pop ' + mapping + ' 5 ]{',
+          '    marker-width: 30',
+          '  }',
+          '  [ pop ' + mapping + ' 8 ]{',
+          '    marker-width: 40',
+          '  }',
+          '}'
+        ].join('\n');
+      }
     },
     {
       desc: 'quantiles uses >',
       quantification: 'quantiles',
-      expectedCartocss: [
-        '#layer{',
-        '  marker-width: 10;',
-        '  [ pop > 2 ]{',
-        '    marker-width: 20',
-        '  }',
-        '  [ pop > 5 ]{',
-        '    marker-width: 30',
-        '  }',
-        '  [ pop > 8 ]{',
-        '    marker-width: 40',
-        '  }',
-        '}'
-      ].join('\n')
+      expectedCartocss: function(mapping) {
+        mapping = mapping || '>';
+        return [
+          '#layer{',
+          '  marker-width: 10;',
+          '  [ pop ' + mapping + ' 2 ]{',
+          '    marker-width: 20',
+          '  }',
+          '  [ pop ' + mapping + ' 5 ]{',
+          '    marker-width: 30',
+          '  }',
+          '  [ pop ' + mapping + ' 8 ]{',
+          '    marker-width: 40',
+          '  }',
+          '}'
+        ].join('\n');
+      }
     }
   ];
 
@@ -137,7 +149,7 @@ describe.only('ramp-buckets', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss);
+        assert.equal(cartocssResult, scenario.expectedCartocss());
         done();
       });
     });
@@ -150,7 +162,24 @@ describe.only('ramp-buckets', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss);
+        assert.equal(cartocssResult, scenario.expectedCartocss());
+        done();
+      });
+    });
+  });
+
+  scenarios.forEach(function (scenario) {
+    var itFn = scenario.only ? it.only : it;
+    var mapping = '>=';
+    if (scenario.quantification === 'headtails') {
+      mapping = '<=';
+    }
+    itFn(scenario.desc + ' with fn() call, overwritten with ' + mapping, function (done) {
+      turbocarto(createCartocss(scenario.quantification + '(4)', mapping), datasource, function (err, cartocssResult) {
+        if (err) {
+          return done(err);
+        }
+        assert.equal(cartocssResult, scenario.expectedCartocss(mapping));
         done();
       });
     });

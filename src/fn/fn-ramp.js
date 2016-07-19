@@ -183,7 +183,7 @@ function strategyFromMapping (mapping) {
   if (oldMappings2Strategies.hasOwnProperty(mapping)) {
     return oldMappings2Strategies[mapping];
   }
-  return mapping || '>';
+  return mapping;
 }
 
 /**
