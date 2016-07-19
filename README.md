@@ -58,7 +58,7 @@ Where:
  - `(...filters)` is **how** `property` is gonna get the different values.
  - `mapping` is the type of filter that will be applied: <, >, =.
 
-So for the previous example you could write (see `examples/readme/example-0.css`):
+So for the previous example you could write (see [examples/readme/example-0.css](./examples/readme/example-0.css)):
 
 ```css
 #selector {
@@ -80,7 +80,7 @@ If you want to have a category map, to generate a CartoCSS like:
 }
 ```
 
-You can use the same approach but specifying the mapping type to be an equality (see `[examples/readme-example-1.css](./examples/readme-example-1.css)`):
+You can use the same approach but specifying the mapping type to be an equality (see [examples/readme/example-1.css](./examples/readme/example-1.css))):
 
 ```css
 #selector {
@@ -89,7 +89,7 @@ You can use the same approach but specifying the mapping type to be an equality 
 ```
 
 See that in this case the last value is the default value, and if the number of values is equal to the number of filters
-it won't have a default value, like in (see `[examples/readme-example-2.css](./examples/readme-example-2.css)`):
+it won't have a default value, like in (see [examples/readme/example-2.css](./examples/readme/example-2.css))):
 
 ```css
 #selector {
@@ -104,7 +104,7 @@ That's nice, but it is still unlinked from the actual data/attributes.
 To generate ramps based on actual data you have to say what kind of quantification you want to use, for that purpose
 Turbo-Carto provides some shorthand methods that will delegate the filters computation to different collaborators.
 
-Let's say you want to compute the ramp using jenks as quantification function (see `[examples/readme-example-3.css](./examples/readme-example-3.css)`):
+Let's say you want to compute the ramp using jenks as quantification function (see [examples/readme/example-3.css](./examples/readme/example-3.css))):
 
 ```css
 #selector {
@@ -112,7 +112,7 @@ Let's say you want to compute the ramp using jenks as quantification function (s
 }
 ```
 
-Or generate a category map depending on the room_type property (see `[examples/readme-example-4.css](./examples/readme-example-4.css)`):
+Or generate a category map depending on the room_type property (see [examples/readme/example-4.css](./examples/readme/example-4.css))):
 
 ```css
 #selector {
@@ -120,7 +120,7 @@ Or generate a category map depending on the room_type property (see `[examples/r
 }
 ```
 
-You can override the mapping if you know your data requires an more strict filter (see `[examples/readme-example-5.css](./examples/readme-example-5.css)`):
+You can override the mapping if you know your data requires an more strict filter (see [examples/readme/example-5.css](./examples/readme/example-5.css))):
 
 ```css
 #selector {
@@ -139,7 +139,7 @@ Shorthand methods include:
 
 For color ramps there are a couple of handy functions to retrieve color palettes: `cartocolor` and `colorbrewer`.
 
-You can create a choropleth map using Reds color palette from colorbrewer (see `[examples/readme-example-6.css](./examples/readme-example-6.css)`):
+You can create a choropleth map using Reds color palette from colorbrewer (see [examples/readme/example-6.css](./examples/readme/example-6.css))):
 
 ```css
 #selector {
@@ -147,7 +147,7 @@ You can create a choropleth map using Reds color palette from colorbrewer (see `
 }
 ```
 
-Or a category map using Bold color palette from cartocolor (see `[examples/readme-example-7.css](./examples/readme-example-7.css)`):
+Or a category map using Bold color palette from cartocolor (see [examples/readme/example-7.css](./examples/readme/example-7.css))):
 
 ```css
 #selector {
@@ -159,7 +159,7 @@ Or a category map using Bold color palette from cartocolor (see `[examples/readm
 
 Sometimes is really useful to have a continuous range that can be split in as many bins as desired, so you don't have to
 worry about how many values you have to provide for your calculated filters. You only specify the start and the end, and
-the values are computed linearly (see `[examples/readme-example-8.css](./examples/readme-example-8.css)`):
+the values are computed linearly (see [examples/readme/example-8.css](./examples/readme/example-8.css))):
 
 ```css
 #selector {
