@@ -12,8 +12,13 @@ module.exports = function (datasource) {
     debug('Using "%s" datasource to calculate categories', datasource.getName());
     return new Promise(function (resolve) {
       return resolve(new LazyFiltersResult(function (column) {
-        return fnBuckets(datasource)(column, 'category', numBuckets);
-      }), 'exact');
+        return fnBuckets(datasource)(column, 'category', numBuckets).then(function (filters) {
+          filters.strategy = '==';
+          return new Promise(function (resolve) {
+            return resolve(filters);
+          });
+        });
+      }));
     });
   };
 };

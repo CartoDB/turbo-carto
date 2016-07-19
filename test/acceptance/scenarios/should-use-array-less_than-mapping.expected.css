@@ -1,0 +1,13 @@
+#layer{
+  polygon-opacity: 1;
+  marker-width: 32;
+  [ price < 50 ]{
+    marker-width: 4
+  }
+  [ price < 75.5 ]{
+    marker-width: 8
+  }
+  [ price < 88 ]{
+    marker-width: 16
+  }
+}

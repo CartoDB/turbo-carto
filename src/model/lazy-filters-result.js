@@ -5,9 +5,8 @@ require('es6-promise').polyfill();
 var util = require('util');
 var FiltersResult = require('./filters-result');
 
-function LazyFiltersResult (filterGenerator, strategy) {
+function LazyFiltersResult (filterGenerator) {
   this.filterGenerator = filterGenerator;
-  this.strategy = strategy;
 }
 
 util.inherits(LazyFiltersResult, FiltersResult);

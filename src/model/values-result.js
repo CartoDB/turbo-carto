@@ -16,6 +16,9 @@ ValuesResult.prototype.get = function (size) {
   }
 
   if (Array.isArray(this.result)) {
+    if (size > 0) {
+      return this.result.slice(0, size);
+    }
     return this.result;
   }
 
