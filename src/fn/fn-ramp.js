@@ -165,7 +165,7 @@ function ramp (datasource, column, args) {
   var strategy = strategyFromMapping(mapping);
   filters = filters.is(ValuesResult) ? new FiltersResult(filters.get(), strategy) : filters;
   if (filters.is(LazyFiltersResult)) {
-    return filters.get(column).then(createRampFn(values));
+    return filters.get(column, strategy).then(createRampFn(values));
   } else {
     return Promise.resolve(filters).then(createRampFn(values));
   }

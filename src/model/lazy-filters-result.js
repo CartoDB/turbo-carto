@@ -13,7 +13,7 @@ util.inherits(LazyFiltersResult, FiltersResult);
 
 module.exports = LazyFiltersResult;
 
-LazyFiltersResult.prototype.get = function (column) {
-  return this.filterGenerator(column);
+LazyFiltersResult.prototype.get = function (column, strategy) {
+  return this.filterGenerator(column, strategy);
 };
 

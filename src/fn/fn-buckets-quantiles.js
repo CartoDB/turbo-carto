@@ -11,9 +11,9 @@ module.exports = function (datasource) {
     debug('fn$quantiles(%j)', arguments);
     debug('Using "%s" datasource to calculate quantiles', datasource.getName());
     return new Promise(function (resolve) {
-      return resolve(new LazyFiltersResult(function (column) {
+      return resolve(new LazyFiltersResult(function (column, strategy) {
         return fnBuckets(datasource)(column, 'quantiles', numBuckets).then(function (filters) {
-          filters.strategy = '>';
+          filters.strategy = strategy || '>';
           return new Promise(function (resolve) {
             return resolve(filters);
           });
