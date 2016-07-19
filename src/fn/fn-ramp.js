@@ -303,7 +303,7 @@ function compatibilityCreateRampFn (valuesResult) {
 
 function createRampFn (valuesResult) {
   return function prepareRamp (filtersResult) {
-    if (RampResult.STRATEGIES_SUPPORTED.hasOwnProperty(filtersResult.getStrategy())) {
+    if (RampResult.supports(filtersResult.getStrategy())) {
       return new RampResult(valuesResult, filtersResult, filtersResult.getStrategy());
     }
 

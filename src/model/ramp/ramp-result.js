@@ -103,8 +103,6 @@ var STRATEGIES_SUPPORTED = {
    */
 };
 
-RampResult.STRATEGIES_SUPPORTED = STRATEGIES_SUPPORTED;
-
 RampResult.prototype.process = function (column, decl) {
   var strategy = STRATEGIES_SUPPORTED[this.mapping];
   if (strategy === STRATEGIES_SUPPORTED['<']) {
@@ -114,6 +112,10 @@ RampResult.prototype.process = function (column, decl) {
   } else {
     return this.processGreaterThanOrEqual(column, decl);
   }
+};
+
+RampResult.supports = function (strategy) {
+  return STRATEGIES_SUPPORTED.hasOwnProperty(strategy) || !strategy;
 };
 
 RampResult.prototype.processEquality = function (column, decl) {
