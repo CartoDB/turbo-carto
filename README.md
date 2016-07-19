@@ -84,7 +84,7 @@ You can use the same approach but specifying the mapping type to be an equality 
 
 ```css
 #selector {
-    marker-width: ramp([room_type], (green, red), ("Private room"), =);
+    marker-fill: ramp([room_type], (green, red), ("Private room"), =);
 }
 ```
 
