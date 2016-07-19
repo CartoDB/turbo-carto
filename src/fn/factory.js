@@ -3,6 +3,10 @@
 var fns = [
   require('./fn-buckets'),
   require('./fn-buckets-category'),
+  require('./fn-buckets-equal'),
+  require('./fn-buckets-headtails'),
+  require('./fn-buckets-jenks'),
+  require('./fn-buckets-quantiles'),
   require('./fn-cartocolor'),
   require('./fn-colorbrewer'),
   require('./fn-ramp'),
