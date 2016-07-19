@@ -26,7 +26,10 @@ var datasource = {
   },
 
   getRamp: function (column, buckets, method, callback) {
-    return callback(null, [100000, 250000, 500000, 1e6, 1.5e6, 2e6, 1e7]);
+    if (method === 'category') {
+      return callback(null, ['Private Room', 'Entire House', 'Other', 'Complete floor'].slice(0, buckets));
+    }
+    return callback(null, [100000, 250000, 500000, 1e6, 1.5e6, 2e6, 1e7].slice(0, buckets));
   }
 };
 
