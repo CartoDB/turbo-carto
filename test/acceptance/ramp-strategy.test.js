@@ -1,8 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var postcss = require('postcss');
-var PostcssTurboCarto = require('../../src/postcss-turbo-carto');
+var turbocarto = require('../../src/index');
 var DummyDatasource = require('../support/dummy-datasource');
 var DummyStrategyDatasource = require('../support/dummy-strategy-datasource');
 
@@ -20,18 +19,6 @@ var exactStrategyDatasource = new DummyStrategyDatasource('exact', function alph
 var numericExactStrategyDatasource = new DummyStrategyDatasource('exact');
 
 describe('ramp-strategy', function () {
-  function getCartoCss (datasource, cartocss, callback) {
-    var postcssTurboCarto = new PostcssTurboCarto(datasource);
-    postcss([postcssTurboCarto.getPlugin()])
-      .process(cartocss)
-      .then(function (result) {
-        return callback(null, result.css);
-      })
-      .catch(function (err) {
-        return callback(err);
-      });
-  }
-
   var cartocss = [
     '#layer{',
     '  marker-width: ramp([population], 10, 50, 5);',
@@ -265,7 +252,7 @@ describe('ramp-strategy', function () {
   scenarios.forEach(function (scenario) {
     var itFn = scenario.only ? it.only : it;
     itFn(scenario.desc, function (done) {
-      getCartoCss(scenario.datasource, scenario.cartocss || cartocss, function (err, cartocssResult) {
+      turbocarto(scenario.cartocss || cartocss, scenario.datasource, function (err, cartocssResult) {
         if (err) {
           return done(err);
         }

@@ -161,7 +161,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   decl.replaceWith(initialDecl);
 
   var previousNode = initialDecl;
-  filters.slice(1).forEach(function (filter, index) {
+  filters.slice(0, filters.length - 1).forEach(function (filter, index) {
     var rule = postcss.rule({
       selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
     });

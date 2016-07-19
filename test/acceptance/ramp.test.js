@@ -2,13 +2,10 @@
 
 var fs = require('fs');
 var assert = require('assert');
-var postcss = require('postcss');
-var PostcssTurboCarto = require('../../src/postcss-turbo-carto');
+var turbocarto = require('../../src/index');
 var DummyDatasource = require('../support/dummy-datasource');
 
 var datasource = new DummyDatasource();
-
-var postcssTurboCarto = new PostcssTurboCarto(datasource);
 
 var scenariosPath = __dirname + '/scenarios';
 var scenarios = fs.readdirSync(scenariosPath)
@@ -30,20 +27,9 @@ var scenarios = fs.readdirSync(scenariosPath)
   });
 
 describe('ramp', function () {
-  function getCartoCss (cartocss, callback) {
-    postcss([postcssTurboCarto.getPlugin()])
-      .process(cartocss)
-      .then(function (result) {
-        return callback(null, result.css);
-      })
-      .catch(function (err) {
-        return callback(err);
-      });
-  }
-
   scenarios.forEach(function (scenario) {
     it(scenario.desc, function (done) {
-      getCartoCss(scenario.cartocss, function (err, cartocssResult) {
+      turbocarto(scenario.cartocss, datasource, function (err, cartocssResult) {
         if (err) {
           return done(err);
         }
