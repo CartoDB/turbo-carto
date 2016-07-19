@@ -1,3 +1,22 @@
 #selector {
     marker-width: ramp([price], range(4, 40), equal(5));
 }
+/*
+Expected output:
+
+#selector {
+    marker-width: 4;
+    [ price > 100000 ] {
+        marker-width: 13
+    }
+    [ price > 250000 ] {
+        marker-width: 22
+    }
+    [ price > 500000 ] {
+        marker-width: 31
+    }
+    [ price > 1000000 ] {
+        marker-width: 40
+    }
+}
+*/

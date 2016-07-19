@@ -1,3 +1,16 @@
 #selector {
     marker-width: ramp([price], (10, 20, 30), jenks(), >=);
 }
+/*
+Expected output:
+
+#selector {
+    marker-width: 10;
+    [ price >= 100000 ] {
+        marker-width: 20
+    }
+    [ price >= 250000 ] {
+        marker-width: 30
+    }
+}
+*/

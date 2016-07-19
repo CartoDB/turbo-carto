@@ -1,3 +1,13 @@
 #selector {
     marker-width: ramp([room_type], (green, red), ("Private room"), =);
 }
+/*
+Expected output:
+
+#selector {
+    marker-width: red;
+    [ room_type = "Private room" ] {
+        marker-width: green
+    }
+}
+*/

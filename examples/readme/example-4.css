@@ -1,3 +1,16 @@
 #selector {
     marker-fill: ramp([room_type], (red, green, blue), category(2));
 }
+/*
+Expected output:
+
+#selector {
+    marker-fill: blue;
+    [ room_type = "Private Room" ] {
+        marker-fill: red
+    }
+    [ room_type = "Entire House" ] {
+        marker-fill: green
+    }
+}
+*/

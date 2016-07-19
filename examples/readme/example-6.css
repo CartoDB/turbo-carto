@@ -1,3 +1,22 @@
 #selector {
     polygon-fill: ramp([avg_price], colorbrewer(Reds), jenks());
 }
+/*
+Expected output:
+
+#selector {
+    polygon-fill: #fee5d9;
+    [ avg_price > 100000 ] {
+        polygon-fill: #fcae91
+    }
+    [ avg_price > 250000 ] {
+        polygon-fill: #fb6a4a
+    }
+    [ avg_price > 500000 ] {
+        polygon-fill: #de2d26
+    }
+    [ avg_price > 1000000 ] {
+        polygon-fill: #a50f15
+    }
+}
+*/

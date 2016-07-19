@@ -1,3 +1,22 @@
 #selector {
     polygon-fill: ramp([room_type], cartocolor(Bold), category(4));
 }
+/*
+Expected output:
+
+#selector {
+    polygon-fill: #E73F74;
+    [ room_type = "Private Room" ] {
+        polygon-fill: #7F3C8D
+    }
+    [ room_type = "Entire House" ] {
+        polygon-fill: #11A579
+    }
+    [ room_type = "Other" ] {
+        polygon-fill: #3969AC
+    }
+    [ room_type = "Complete floor" ] {
+        polygon-fill: #F2B701
+    }
+}
+*/
