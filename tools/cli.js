@@ -16,8 +16,7 @@ if (!fs.existsSync(filename)) {
 }
 var cartocss = fs.readFileSync(filename, {encoding: 'utf-8'});
 
-var postcss = require('postcss');
-var PostcssTurboCarto = require('../src/postcss-turbo-carto');
+var turbocarto = require('../src/index');
 var SqlApiDatasource = require('../examples/sql-api-datasource');
 
 // stubbed datasource
@@ -39,12 +38,10 @@ if (argv.datasource === 'sql') {
   datasource = new SqlApiDatasource(argv.query);
 }
 
-var postCssTurboCarto = new PostcssTurboCarto(datasource);
-postcss([postCssTurboCarto.getPlugin()])
-  .process(cartocss)
-  .then(function (result) {
-    console.log(result.css);
-  })
-  .catch(function (err) {
+turbocarto(cartocss, datasource, function (err, result) {
+  if (err) {
     console.error(err);
-  });
+    process.exit(1);
+  }
+  console.log(result);
+});
