@@ -1,10 +1,14 @@
 # Changelog
 
-## Version 0.14.1
+## Version 0.15.0
 Released 2016-mm-dd
 
+ - New API: `property: ramp([attribute], (...values), (...filters), mapping);`.
+   - It's backwards compatible with previous signatures.
+ - New `range(min, max)` function.
+ - High level functions for quantifications: `category()`, `equal()`, `headtails()`, `jenks()`, and `quantiles()`.
+ - Improved documentation and examples.
  - Removes `colors` and `buckets` function.
-
 
 ## Version 0.14.0
 Released 2016-07-06
