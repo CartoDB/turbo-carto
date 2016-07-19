@@ -155,7 +155,7 @@ RampResult.prototype.processEquality = function (column, decl) {
 RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   var buckets = Math.min(this.values.getMaxSize(), this.filters.getMaxSize());
 
-  var values = this.values.get(buckets);
+  var values = this.values.get(buckets + 1);
   var filters = this.filters.get(buckets);
 
   var defaultValue = values[0];
@@ -163,7 +163,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   decl.replaceWith(initialDecl);
 
   var previousNode = initialDecl;
-  filters.slice(0, filters.length - 1).forEach(function (filter, index) {
+  filters.slice(0, Math.max(filters.length - 1, 1)).forEach(function (filter, index) {
     var rule = postcss.rule({
       selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
     });
