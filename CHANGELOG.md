@@ -10,6 +10,7 @@ Released 2016-mm-dd
  - Improved documentation and examples.
  - Removes `colors` and `buckets` function.
 
+
 ## Version 0.14.0
 Released 2016-07-06
 
