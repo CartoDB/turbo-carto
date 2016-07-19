@@ -1,30 +1,11 @@
 'use strict';
 
 var assert = require('assert');
-var postcss = require('postcss');
-var PostcssTurboCarto = require('../../src/postcss-turbo-carto');
+var turbocarto = require('../../src/index');
 var DummyDatasource = require('../support/dummy-datasource');
 var DummyStrategyDatasource = require('../support/dummy-strategy-datasource');
 
 describe('regressions', function () {
-  function getCartoCss (cartocss, datasource, callback) {
-    if (!callback) {
-      callback = datasource;
-      datasource = new DummyDatasource();
-    }
-    datasource = datasource || new DummyDatasource();
-
-    var postcssTurboCarto = new PostcssTurboCarto(datasource);
-    postcss([postcssTurboCarto.getPlugin()])
-      .process(cartocss)
-      .then(function (result) {
-        return callback(null, result.css);
-      })
-      .catch(function (err) {
-        return callback(err);
-      });
-  }
-
   var scenarios = [
     {
       desc: 'should keep working with category quantification',
@@ -183,7 +164,8 @@ describe('regressions', function () {
   scenarios.forEach(function (scenario) {
     var itFn = scenario.only ? it.only : it;
     itFn(scenario.desc, function (done) {
-      getCartoCss(scenario.cartocss, scenario.datasource, function (err, cartocssResult) {
+      var datasource = scenario.datasource || new DummyDatasource();
+      turbocarto(scenario.cartocss, datasource, function (err, cartocssResult) {
         if (err) {
           return done(err);
         }
