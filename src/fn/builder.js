@@ -21,6 +21,12 @@ function createFnExecutor (fnNode, datasource, decl) {
     fnArgs = fnNode.nodes.reduce(function (args, nestedFnNode) {
       switch (nestedFnNode.type) {
         case 'word':
+          if (Number.isFinite(+nestedFnNode.value)) {
+            args.push(+nestedFnNode.value);
+          } else {
+            args.push(nestedFnNode.value);
+          }
+          break;
         case 'string':
           args.push(nestedFnNode.value);
           break;

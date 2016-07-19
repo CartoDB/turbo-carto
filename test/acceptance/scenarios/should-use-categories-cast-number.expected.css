@@ -1,0 +1,12 @@
+#layer{
+  marker-fill: Black;
+  [ cat = 1 ]{
+    marker-fill: Red
+  }
+  [ cat = 2 ]{
+    marker-fill: Green
+  }
+  [ cat = 3 ]{
+    marker-fill: Blue
+  }
+}

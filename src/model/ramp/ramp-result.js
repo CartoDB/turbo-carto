@@ -131,7 +131,7 @@ RampResult.prototype.processEquality = function (column, decl) {
 
   var previousNode = initialDecl;
   filters.forEach(function (filter, index) {
-    var filterSelector = Number.isFinite(+filter) ? filter : '"' + filter + '"';
+    var filterSelector = Number.isFinite(filter) ? filter : '"' + filter + '"';
     var rule = postcss.rule({
       selector: '[ ' + column + ' = ' + filterSelector + ' ]'
     });
