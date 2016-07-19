@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.15.0
-Released 2016-mm-dd
+Released 2016-07-19
 
  - New API: `property: ramp([attribute], (...values), (...filters), mapping);`.
    - It's backwards compatible with previous signatures.
