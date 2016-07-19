@@ -6,7 +6,7 @@ var postcss = require('postcss');
 function RampResult (values, filters, mapping) {
   this.values = values;
   this.filters = filters;
-  this.mapping = mapping;
+  this.mapping = mapping || '>';
 }
 
 module.exports = RampResult;
