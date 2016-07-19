@@ -155,7 +155,7 @@ RampResult.prototype.processEquality = function (column, decl) {
 RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   var buckets = Math.min(this.values.getMaxSize(), this.filters.getMaxSize());
 
-  var values = this.values.get(buckets + 1);
+  var values = this.values.get((buckets <= 1) ? buckets + 1 : buckets);
   var filters = this.filters.get(buckets);
 
   var defaultValue = values[0];
