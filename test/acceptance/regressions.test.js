@@ -150,10 +150,10 @@ describe('regressions', function () {
       expectedCartocss: [
         '#layer{',
         '  marker-width: 8;',
-        '  [ population > 24 ]{',
+        '  [ population > 8 ]{',
         '    marker-width: 24',
         '  }',
-        '  [ population > 96 ]{',
+        '  [ population > 24 ]{',
         '    marker-width: 96',
         '  }',
         '}'
