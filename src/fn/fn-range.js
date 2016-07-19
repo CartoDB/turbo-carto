@@ -7,7 +7,7 @@ var debug = require('../helper/debug')('fn-range');
 var linearBuckets = require('../helper/linear-buckets');
 
 module.exports = function () {
-  return function fn$colorbrewer (min, max, numBuckets) {
+  return function fn$range (min, max, numBuckets) {
     debug('fn$range(%j)', arguments);
     return new Promise(function (resolve) {
       var result = [+min, +max];
