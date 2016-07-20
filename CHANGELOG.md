@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.15.1
-Released 2016-mm-dd
+Released 2016-07-20
 
  - Fix category ramps: force equality filter on non numeric filters.
 
