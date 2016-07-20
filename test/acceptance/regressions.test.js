@@ -11,20 +11,41 @@ describe('regressions', function () {
       desc: 'should keep working with category quantification',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France), category);',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (Spain, Portugal, France), category);',
         '}'
       ].join('\n'),
       expectedCartocss: [
         '#layer{',
-        '  marker-width: 10;',
+        '  marker-width: 40;',
         '  [ population = "Spain" ]{',
-        '    marker-width: 20',
+        '    marker-width: 10',
         '  }',
         '  [ population = "Portugal" ]{',
-        '    marker-width: 30',
+        '    marker-width: 20',
         '  }',
         '  [ population = "France" ]{',
-        '    marker-width: 40',
+        '    marker-width: 30',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'will not use default value when exact number of values and filters is provided',
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (10, 20, 30), (Spain, Portugal, France), category);',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  [ population = "Spain" ]{',
+        '    marker-width: 10',
+        '  }',
+        '  [ population = "Portugal" ]{',
+        '    marker-width: 20',
+        '  }',
+        '  [ population = "France" ]{',
+        '    marker-width: 30',
         '  }',
         '}'
       ].join('\n')
@@ -33,20 +54,20 @@ describe('regressions', function () {
       desc: 'should use strings for filters',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, Spain, Portugal, France), category);',
+        '  marker-width: ramp([population], (10, 20, 30, 40), (Spain, Portugal, France), category);',
         '}'
       ].join('\n'),
       expectedCartocss: [
         '#layer{',
-        '  marker-width: 10;',
+        '  marker-width: 40;',
         '  [ population = "Spain" ]{',
-        '    marker-width: 20',
+        '    marker-width: 10',
         '  }',
         '  [ population = "Portugal" ]{',
-        '    marker-width: 30',
+        '    marker-width: 20',
         '  }',
         '  [ population = "France" ]{',
-        '    marker-width: 40',
+        '    marker-width: 30',
         '  }',
         '}'
       ].join('\n')
@@ -55,20 +76,20 @@ describe('regressions', function () {
       desc: 'should work with escaped strings',
       cartocss: [
         '#layer{',
-        '  marker-width: ramp([population], (10, 20, 30, 40), (_, "Spain\'s", Portugal, France), category);',
+        '  marker-width: ramp([population], (10, 20, 30, 40), ("Spain\'s", Portugal, France), category);',
         '}'
       ].join('\n'),
       expectedCartocss: [
         '#layer{',
-        '  marker-width: 10;',
+        '  marker-width: 40;',
         '  [ population = "Spain\'s" ]{',
-        '    marker-width: 20',
+        '    marker-width: 10',
         '  }',
         '  [ population = "Portugal" ]{',
-        '    marker-width: 30',
+        '    marker-width: 20',
         '  }',
         '  [ population = "France" ]{',
-        '    marker-width: 40',
+        '    marker-width: 30',
         '  }',
         '}'
       ].join('\n')
@@ -154,6 +175,27 @@ describe('regressions', function () {
         '    marker-width: 24',
         '  }',
         '  [ population > 24 ]{',
+        '    marker-width: 96',
+        '  }',
+        '}'
+      ].join('\n')
+    },
+    {
+      desc: 'should work with old string categories style',
+      cartocss: [
+        '#layer{',
+        '  marker-width: ramp([population], (8, 24, 96), ("WADUS", "FOO", "BAR"));',
+        '}'
+      ].join('\n'),
+      expectedCartocss: [
+        '#layer{',
+        '  [ population = "WADUS" ]{',
+        '    marker-width: 8',
+        '  }',
+        '  [ population = "FOO" ]{',
+        '    marker-width: 24',
+        '  }',
+        '  [ population = "BAR" ]{',
         '    marker-width: 96',
         '  }',
         '}'

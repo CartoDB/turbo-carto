@@ -3,6 +3,8 @@
 ## Version 0.15.1
 Released 2016-mm-dd
 
+ - Fix category ramps: force equality filter on non numeric filters.
+
 
 ## Version 0.15.0
 Released 2016-07-19

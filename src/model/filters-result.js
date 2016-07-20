@@ -13,5 +13,12 @@ util.inherits(FiltersResult, ValuesResult);
 module.exports = FiltersResult;
 
 FiltersResult.prototype.getStrategy = function () {
+  if (this.result.some(nonNumeric)) {
+    return '=';
+  }
   return this.strategy;
 };
+
+function nonNumeric (item) {
+  return !Number.isFinite(item);
+}
