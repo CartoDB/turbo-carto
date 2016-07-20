@@ -1,6 +1,6 @@
 # Turbo-Carto
 
-Next-Gen Styling for Data-Driven Maps, AKA CartoCSS preprocessor
+Next-Gen Styling for Data-Driven Maps, AKA CartoCSS preprocessor.
 
 tl;dr Enables adding functions to CartoCSS that can be evaluated asynchronously.
 
@@ -16,7 +16,7 @@ calculating the bins for your thematic map, if your data changes your CartoCSS c
 
 ### Very basic introduction to CartoCSS
 
-In CartoCSS you usually assign values to properties, and apply filters in order to change those values based on some
+In CartoCSS you usually assign values to properties and apply filters in order to change those values based on some
 data attributes.
 
 The general form for properties and filters is:
@@ -30,7 +30,7 @@ The general form for properties and filters is:
 }
 ```
 
-An example for a filter based on price attribute:
+An example of a filter based on price attribute:
 
 ```css
 #selector {
@@ -43,7 +43,7 @@ An example for a filter based on price attribute:
 
 ### Turbo-Carto ramps
 
-Turbo-Carto high level API for ramps is as follows:
+Turbo-Carto high-level API for ramps is as follows:
 
 ```css
 #selector {
@@ -66,7 +66,7 @@ So for the previous example you could write (see [examples/readme/example-0.css]
 }
 ```
 
-In this case the first value is the default value.
+In this case, the first value is the default value.
 
 
 If you want to have a category map, to generate a CartoCSS like:
@@ -137,7 +137,7 @@ Shorthand methods include:
 
 #### Color ramps
 
-For color ramps there are a couple of handy functions to retrieve color palettes: `cartocolor` and `colorbrewer`.
+For color ramps, there are a couple of handy functions to retrieve color palettes: `cartocolor` and `colorbrewer`.
 
 You can create a choropleth map using Reds color palette from colorbrewer (see [examples/readme/example-6.css](./examples/readme/example-6.css)):
 
