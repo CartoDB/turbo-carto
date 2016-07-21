@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.16.0
-Released 2016-mm-dd
+Released 2016-07-21
 
  - Updates cartocolor to 3.0.0.
 

@@ -13,9 +13,9 @@ describe('fn-cartocolor', function () {
     });
   });
 
-  it('should return at least 3 data classes', function (done) {
+  it('should return at least 2 data classes', function (done) {
     fn('Peach', 1).then(function (result) {
-      assert.equal(result.get().length, 3);
+      assert.equal(result.get().length, 2);
       done();
     });
   });
