@@ -56,7 +56,7 @@ Where:
  - `[attribute]` usually is a column/key name from your dataset.
  - `(...values)` is **what** `property` is gonna get for different filters.
  - `(...filters)` is **how** `property` is gonna get the different values.
- - `mapping` is the type of filter that will be applied: <, >, =.
+ - `mapping` is the type of filter that will be applied: <, <=, >, >=, =.
 
 So for the previous example you could write (see [examples/readme/example-0.css](./examples/readme/example-0.css)):
 
@@ -98,6 +98,13 @@ it won't have a default value, like in (see [examples/readme/example-2.css](./ex
 ```
 
 That's nice, but it is still unlinked from the actual data/attributes.
+
+#### Mappings default values
+
+`<` and `<=`: Last provided value will be the default value.
+`=`: Last provided value will be the default value, if the number of values is
+equal to the number of filters it won't have a default value.
+`>` and `>=`: First provided value will be the default value.
 
 #### Associate ramp filters to your data
 
