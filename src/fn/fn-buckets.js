@@ -6,8 +6,9 @@ var debug = require('../helper/debug')('fn-buckets');
 var columnName = require('../helper/column-name');
 var TurboCartoError = require('../helper/turbo-carto-error');
 var FiltersResult = require('../model/filters-result');
+var LazyFiltersResult = require('../model/lazy-filters-result');
 
-module.exports = function (datasource) {
+function fnBuckets (datasource) {
   return function fn$buckets (column, quantificationMethod, numBuckets) {
     debug('fn$buckets(%j)', arguments);
     debug('Using "%s" datasource to calculate buckets', datasource.getName());
@@ -32,6 +33,24 @@ module.exports = function (datasource) {
       });
     });
   };
-};
+}
 
+module.exports = fnBuckets;
 module.exports.fnName = 'buckets';
+
+module.exports.createBucketsFn = function (datasource, alias, defaultStrategy) {
+  return function fn$bucketsFn (numBuckets) {
+    debug('fn$%s(%j)', alias, arguments);
+    debug('Using "%s" datasource to calculate %s', datasource.getName(), alias);
+    return new Promise(function (resolve) {
+      return resolve(new LazyFiltersResult(function (column, strategy) {
+        return fnBuckets(datasource)(column, alias, numBuckets).then(function (filters) {
+          filters.strategy = strategy || defaultStrategy;
+          return new Promise(function (resolve) {
+            return resolve(filters);
+          });
+        });
+      }));
+    });
+  };
+};
