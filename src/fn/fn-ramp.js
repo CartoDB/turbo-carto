@@ -34,24 +34,20 @@ function createSplitStrategy (selector) {
   };
 }
 
+function evenIndex (value, index) {
+  return index % 2 === 0;
+}
+
+function oddIndex (value, index) {
+  return !evenIndex(value, index);
+}
+
 var strategy = {
   max: function maxStrategy (column, rampResult, decl) {
-    var defaultValue = rampResult[1];
-    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-    decl.replaceWith(initialDecl);
-
-    var previousNode = initialDecl;
-    for (var i = 0, until = rampResult.length - 2; i < until; i += 2) {
-      var rule = postcss.rule({
-        selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
-      });
-      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 3] }));
-
-      rule.moveAfter(previousNode);
-      previousNode = rule;
-    }
-
-    return rampResult;
+    var values = rampResult.filter(oddIndex);
+    var filters = rampResult.filter(evenIndex);
+    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters), '>');
+    return ramp.process(column, decl);
   },
 
   split: createSplitStrategy(function gtSelector (column, value) {
