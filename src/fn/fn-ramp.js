@@ -11,26 +11,20 @@ var ValuesResult = require('../model/values-result');
 var FiltersResult = require('../model/filters-result');
 var LazyFiltersResult = require('../model/lazy-filters-result');
 var RampResult = require('../model/ramp/ramp-result');
-var postcss = require('postcss');
 
-function createSplitStrategy (selector) {
+function createSplitStrategy (mapping) {
   return function splitStrategy (column, rampResult, decl) {
-    var defaultValue = rampResult[1];
-    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-    decl.replaceWith(initialDecl);
-
-    var previousNode = initialDecl;
-    for (var i = 2, until = rampResult.length; i < until; i += 2) {
-      var rule = postcss.rule({
-        selector: selector(column, rampResult[i])
-      });
-      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
-
-      rule.moveAfter(previousNode);
-      previousNode = rule;
+    var allFilters = rampResult.filter(evenIndex);
+    var values = rampResult.filter(oddIndex);
+    var filters = allFilters.slice(1);
+    if (mapping === '=') {
+      values = values.slice(1).concat([rampResult.filter(oddIndex)[0]]);
     }
-
-    return rampResult;
+    if (mapping === '>' && allFilters.length > 0 && allFilters[0] !== null) {
+      filters = filters.concat([allFilters[0]]);
+    }
+    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters), mapping);
+    return ramp.process(column, decl);
   };
 }
 
@@ -50,17 +44,11 @@ var strategy = {
     return ramp.process(column, decl);
   },
 
-  split: createSplitStrategy(function gtSelector (column, value) {
-    return '[ ' + column + ' > ' + value + ' ]';
-  }),
+  split: createSplitStrategy('>'),
 
-  exact: createSplitStrategy(function exactSelector (column, value) {
-    return Number.isFinite(value) ? '[ ' + column + ' = ' + value + ' ]' : '[ ' + column + ' = "' + value + '" ]';
-  }),
+  exact: createSplitStrategy('='),
 
-  '=': createSplitStrategy(function exactSelector (column, value) {
-    return Number.isFinite(value) ? '[ ' + column + ' = ' + value + ' ]' : '[ ' + column + ' = "' + value + '" ]';
-  })
+  '=': createSplitStrategy('=')
 };
 
 module.exports = function (datasource, decl) {
