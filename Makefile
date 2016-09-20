@@ -12,8 +12,7 @@ clean-dist:
 node_modules:
 	npm install
 
-dist:
-	./node_modules/.bin/browserify -s SqlApiDatasource examples/sql-api-datasource.js > dist/datasource.js
+dist: clean-dist
 	./node_modules/.bin/browserify -s turbocarto src/index.js > dist/bundle.js
 
 jshint: node_modules
