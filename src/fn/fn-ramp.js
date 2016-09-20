@@ -257,11 +257,13 @@ function getRamp (datasource, column, buckets, method) {
         );
       }
       var strategy = 'max';
+      var stats = {};
       if (!Array.isArray(filters)) {
         strategy = filters.strategy || 'max';
+        stats = filters.stats;
         filters = filters.ramp;
       }
-      resolve(new FiltersResult(filters, strategy));
+      resolve(new FiltersResult(filters, strategy, stats));
     });
   });
 }
@@ -285,7 +287,7 @@ function compatibilityCreateRampFn (valuesResult) {
       rampResult.push(null, values[0]);
     }
 
-    return { ramp: rampResult, strategy: filtersResult.getStrategy() };
+    return { ramp: rampResult, strategy: filtersResult.getStrategy(), stats: filtersResult.stats };
   };
 }
 
@@ -312,7 +314,7 @@ function createRampFn (valuesResult) {
       rampResult.push(null, values[0]);
     }
 
-    return { ramp: rampResult, strategy: filtersResult.getStrategy() };
+    return { ramp: rampResult, strategy: filtersResult.getStrategy(), stats: filtersResult.stats };
   };
 }
 
