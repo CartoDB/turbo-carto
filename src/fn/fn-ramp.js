@@ -13,7 +13,7 @@ var LazyFiltersResult = require('../model/lazy-filters-result');
 var RampResult = require('../model/ramp/ramp-result');
 
 function createSplitStrategy (mapping) {
-  return function splitStrategy (column, rampResult, decl) {
+  return function splitStrategy (column, rampResult, stats, decl, metadataHolder) {
     var allFilters = rampResult.filter(evenIndex);
     var values = rampResult.filter(oddIndex);
     var filters = allFilters.slice(1);
@@ -23,8 +23,8 @@ function createSplitStrategy (mapping) {
     if (mapping === '>' && allFilters.length > 0 && allFilters[0] !== null) {
       filters = filters.concat([allFilters[0]]);
     }
-    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters), mapping);
-    return ramp.process(column, decl);
+    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), mapping);
+    return ramp.process(column, decl, metadataHolder);
   };
 }
 
@@ -37,11 +37,11 @@ function oddIndex (value, index) {
 }
 
 var strategy = {
-  max: function maxStrategy (column, rampResult, decl) {
+  max: function maxStrategy (column, rampResult, stats, decl, metadataHolder) {
     var values = rampResult.filter(oddIndex);
     var filters = rampResult.filter(evenIndex);
-    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters), '>');
-    return ramp.process(column, decl);
+    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), '>');
+    return ramp.process(column, decl, metadataHolder);
   },
 
   split: createSplitStrategy('>'),
@@ -51,7 +51,7 @@ var strategy = {
   '=': createSplitStrategy('=')
 };
 
-module.exports = function (datasource, decl) {
+module.exports = function (datasource, decl, metadataHolder) {
   return function fn$ramp (column, /* ... */args) {
     debug('fn$ramp(%j)', arguments);
     debug('Using "%s" datasource to calculate ramp', datasource.getName());
@@ -61,10 +61,10 @@ module.exports = function (datasource, decl) {
     return ramp(datasource, column, args)
       .then(function (rampResult) {
         if (rampResult.constructor === RampResult) {
-          return rampResult.process(columnName(column), decl);
+          return rampResult.process(columnName(column), decl, metadataHolder);
         }
         var strategyFn = strategy.hasOwnProperty(rampResult.strategy) ? strategy[rampResult.strategy] : strategy.max;
-        return strategyFn(columnName(column), rampResult.ramp, decl);
+        return strategyFn(columnName(column), rampResult.ramp, rampResult.stats, decl, metadataHolder);
       })
       .catch(function (err) {
         var context = {};
