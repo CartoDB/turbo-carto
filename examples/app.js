@@ -32,53 +32,46 @@ function updateMap() {
         map.removeLayer(rasterLayer);
     }
 
-    var datasource = new SqlApiDatasource(sqlEditor.getValue());
-    turbocarto(cssEditor.getValue(), datasource, function(err, cartocss) {
-        if (err) {
-            console.error(err.message);
-            throw err;
-        }
-        var config = {
-            "version": "1.2.0",
-            "layers": [
-                {
-                    "type": "cartodb",
-                    "options": {
-                        "sql": sqlEditor.getValue(),
-                        "cartocss": cartocss,
-                        "cartocss_version": "2.3.0"
-                    }
+    var config = {
+        "version": "1.2.0",
+        "layers": [
+            {
+                "type": "cartodb",
+                "options": {
+                    "sql": sqlEditor.getValue(),
+                    "cartocss": cssEditor.getValue(),
+                    "cartocss_version": "2.3.0"
                 }
-            ]
-        };
-
-        var request = new XMLHttpRequest();
-        request.open('POST', currentEndpoint(), true);
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        request.onload = function() {
-            if (this.status >= 200 && this.status < 400){
-                var layergroup = JSON.parse(this.response);
-
-                var tilesEndpoint = currentEndpoint() + '/' + layergroup.layergroupid + '/{z}/{x}/{y}.png';
-
-                var protocol = 'https:' === document.location.protocol ? 'https' : 'http';
-                if (layergroup.cdn_url && layergroup.cdn_url[protocol]) {
-                    var domain = layergroup.cdn_url[protocol];
-                    if ('http' === protocol) {
-                        domain = '{s}.' + domain;
-                    }
-                    tilesEndpoint = protocol + '://' + domain + '/' + currentUser() + '/api/v1/map/' + layergroup.layergroupid + '/{z}/{x}/{y}.png';
-                }
-
-                rasterLayer = L.tileLayer(tilesEndpoint, {
-                    maxZoom: 18
-                }).addTo(map);
-            } else {
-                throw 'Error calling server: Error ' + this.status + ' -> ' + this.response;
             }
-        };
-        request.send(JSON.stringify(config));
-    });
+        ]
+    };
+
+    var request = new XMLHttpRequest();
+    request.open('POST', currentEndpoint(), true);
+    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    request.onload = function() {
+        if (this.status >= 200 && this.status < 400){
+            var layergroup = JSON.parse(this.response);
+
+            var tilesEndpoint = currentEndpoint() + '/' + layergroup.layergroupid + '/{z}/{x}/{y}.png';
+
+            var protocol = 'https:' === document.location.protocol ? 'https' : 'http';
+            if (layergroup.cdn_url && layergroup.cdn_url[protocol]) {
+                var domain = layergroup.cdn_url[protocol];
+                if ('http' === protocol) {
+                    domain = '{s}.' + domain;
+                }
+                tilesEndpoint = protocol + '://' + domain + '/' + currentUser() + '/api/v1/map/' + layergroup.layergroupid + '/{z}/{x}/{y}.png';
+            }
+
+            rasterLayer = L.tileLayer(tilesEndpoint, {
+                maxZoom: 18
+            }).addTo(map);
+        } else {
+            throw 'Error calling server: Error ' + this.status + ' -> ' + this.response;
+        }
+    };
+    request.send(JSON.stringify(config));
 }
 
 
