@@ -2,6 +2,7 @@
 
 var postcss = require('postcss');
 var PostcssTurboCarto = require('./postcss-turbo-carto');
+var MetadataHolder = require('./model/metadata-holder');
 
 function TurboCarto (cartocss, datasource) {
   this.cartocss = cartocss;
@@ -27,11 +28,3 @@ TurboCarto.prototype.getMetadata = function (callback) {
 };
 
 module.exports = TurboCarto;
-
-function MetadataHolder() {
-  this.rules = [];
-}
-
-MetadataHolder.prototype.add = function(rule) {
-  this.rules.push(rule);
-};
