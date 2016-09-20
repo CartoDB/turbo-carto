@@ -5,11 +5,12 @@ require('es6-promise').polyfill();
 var debug = require('../helper/debug')('fn-executor');
 var FnFactory = require('./factory');
 
-function FnExecutor (datasource, fnName, fnArgs, decl) {
+function FnExecutor (datasource, fnName, fnArgs, decl, metadataHolder) {
   this.datasource = datasource;
   this.fnName = fnName;
   this.args = fnArgs;
   this.decl = decl;
+  this.metadataHolder = metadataHolder;
 }
 
 module.exports = FnExecutor;
@@ -18,7 +19,7 @@ FnExecutor.prototype.exec = function () {
   var self = this;
   debug('[ENTERING] Fn.prototype.exec %s(%j)', self.fnName, self.args);
 
-  var backendFn = FnFactory.create(self.fnName, self.datasource, self.decl);
+  var backendFn = FnFactory.create(self.fnName, self.datasource, self.decl, self.metadataHolder);
 
   return Promise.all(self.getNestedFns())
     .then(function (nestedFnResults) {

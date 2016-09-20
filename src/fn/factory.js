@@ -20,14 +20,14 @@ var fnIdentity = require('./fn-identity');
 var fnAnonymousTuple = require('./fn-anonymous-tuple');
 
 var FnFactory = {
-  create: function (fnName, datasource, decl) {
+  create: function (fnName, datasource, decl, metadataHolder) {
     if (fnName === '') {
       return fnAnonymousTuple();
     }
 
     var fn = fnMap[fnName];
     if (fn) {
-      return fn(datasource, decl);
+      return fn(datasource, decl, metadataHolder);
     }
 
     return fnIdentity(fnName);

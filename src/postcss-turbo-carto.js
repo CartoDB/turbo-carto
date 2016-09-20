@@ -12,7 +12,7 @@ function PostcssTurboCarto (datasource) {
 
 module.exports = PostcssTurboCarto;
 
-PostcssTurboCarto.prototype.getPlugin = function () {
+PostcssTurboCarto.prototype.getPlugin = function (metadataHolder) {
   var self = this;
   return postcss.plugin('turbo-carto', function (/* opts */) {
     return function (css /* , result */) {
@@ -22,7 +22,7 @@ PostcssTurboCarto.prototype.getPlugin = function () {
         var parsedValue = valueParser(decl.value);
         parsedValue.walk(function (node) {
           if (node.type === 'function') {
-            fnBuilder.add(decl, node);
+            fnBuilder.add(decl, node, metadataHolder);
             return false;
           }
         }, false);
