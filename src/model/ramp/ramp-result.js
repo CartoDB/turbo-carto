@@ -208,8 +208,8 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
     });
     rule.append(postcss.decl({ prop: decl.prop, value: values[index + indexOffset] }));
 
-    metadataRule.filters.push(filter);
-    metadataRule.values.push(values[index + 1]);
+    metadataRule.filters.push(filterRaw);
+    metadataRule.values.push(values[index + indexOffset]);
 
     rule.moveAfter(previousNode);
     previousNode = rule;
