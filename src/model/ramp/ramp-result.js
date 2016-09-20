@@ -125,9 +125,7 @@ RampResult.prototype.processEquality = function (column, decl, metadataHolder) {
   }
 
   var values = this.values.get(this.filters.getLength() + 1);
-  var filters = this.filters.get().map(function (filter) {
-    return Number.isFinite(filter) ? filter : '"' + filter + '"';
-  });
+  var filters = this.filters.get();
 
   var initialDecl = decl;
   var defaultValue = null;
@@ -203,7 +201,8 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
   };
 
   var previousNode = decl;
-  filters.slice(range.start, range.end).forEach(function (filter, index) {
+  filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
+    var filter = Number.isFinite(filterRaw) ? filterRaw : '"' + filterRaw + '"';
     var rule = postcss.rule({
       selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
     });
