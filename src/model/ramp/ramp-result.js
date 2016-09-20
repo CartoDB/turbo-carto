@@ -7,6 +7,7 @@ function RampResult (values, filters, mapping) {
   this.values = values;
   this.filters = filters;
   this.mapping = mapping || '>';
+  this.mapping = this.mapping === '==' ? '=' : this.mapping;
 }
 
 module.exports = RampResult;
