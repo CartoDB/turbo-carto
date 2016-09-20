@@ -3,8 +3,11 @@ SHELL=/bin/bash
 all:
 	npm install
 
-clean:
+clean: clean-dist
 	@rm -rf ./node_modules
+
+clean-dist:
+	@rm -rf ./dist/*
 
 node_modules:
 	npm install
