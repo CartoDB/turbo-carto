@@ -15,14 +15,15 @@ var RampResult = require('../model/ramp/ramp-result');
 function createSplitStrategy (mapping) {
   return function splitStrategy (column, rampResult, stats, decl, metadataHolder) {
     var allFilters = rampResult.filter(evenIndex);
-    var values = rampResult.filter(oddIndex);
+    var values = rampResult.filter(reverse(evenIndex));
     var filters = allFilters.slice(1);
     if (mapping === '=') {
-      values = values.slice(1).concat([rampResult.filter(oddIndex)[0]]);
+      values = values.slice(1).concat([rampResult.filter(reverse(evenIndex))[0]]);
     }
     if (mapping === '>' && allFilters.length > 0 && allFilters[0] !== null) {
       filters = filters.concat([allFilters[0]]);
     }
+    filters = filters.filter(reverse(isNull));
     var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), mapping);
     return ramp.process(column, decl, metadataHolder);
   };
@@ -32,14 +33,20 @@ function evenIndex (value, index) {
   return index % 2 === 0;
 }
 
-function oddIndex (value, index) {
-  return !evenIndex(value, index);
+function isNull (val) {
+  return val === null;
+}
+
+function reverse (fn, ctx) {
+  return function () {
+    return !fn.apply(ctx, arguments);
+  };
 }
 
 var strategy = {
   max: function maxStrategy (column, rampResult, stats, decl, metadataHolder) {
-    var values = rampResult.filter(oddIndex);
-    var filters = rampResult.filter(evenIndex);
+    var values = rampResult.filter(reverse(evenIndex));
+    var filters = rampResult.filter(evenIndex).filter(reverse(isNull));
     var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), '>');
     return ramp.process(column, decl, metadataHolder);
   },
