@@ -11,7 +11,7 @@ function RampResult (values, filters, mapping) {
 
 module.exports = RampResult;
 
-var STRATEGIES_SUPPORTED = {
+var SUPPORTED_STRATEGIES = {
   /**
    * `equality` will get as many values - 1, and will filter `column` with those filters,
    * last value will be used as default value.
@@ -104,10 +104,10 @@ var STRATEGIES_SUPPORTED = {
 };
 
 RampResult.prototype.process = function (column, decl) {
-  var strategy = STRATEGIES_SUPPORTED[this.mapping];
-  if (strategy === STRATEGIES_SUPPORTED['<']) {
+  var strategy = SUPPORTED_STRATEGIES[this.mapping];
+  if (strategy === SUPPORTED_STRATEGIES['<']) {
     return this.processLessThanOrEqual(column, decl);
-  } else if (strategy === STRATEGIES_SUPPORTED['==']) {
+  } else if (strategy === SUPPORTED_STRATEGIES['==']) {
     return this.processEquality(column, decl);
   } else {
     return this.processGreaterThanOrEqual(column, decl);
@@ -115,7 +115,7 @@ RampResult.prototype.process = function (column, decl) {
 };
 
 RampResult.supports = function (strategy) {
-  return STRATEGIES_SUPPORTED.hasOwnProperty(strategy) || !strategy;
+  return SUPPORTED_STRATEGIES.hasOwnProperty(strategy) || !strategy;
 };
 
 RampResult.prototype.processEquality = function (column, decl) {
