@@ -104,6 +104,21 @@ var SUPPORTED_STRATEGIES = {
    */
 };
 
+var FILTER_TYPE = {
+  CATEGORY: 'category',
+  DEFAULT: 'default',
+  RANGE: 'range'
+};
+
+var MAPPING_TO_FILTER_TYPE = {
+  '=': FILTER_TYPE.CATEGORY,
+  '==': FILTER_TYPE.CATEGORY,
+  '>': FILTER_TYPE.RANGE,
+  '>=': FILTER_TYPE.RANGE,
+  '<': FILTER_TYPE.RANGE,
+  '<=': FILTER_TYPE.RANGE
+};
+
 RampResult.prototype.process = function (column, decl, metadataHolder) {
   var strategy = SUPPORTED_STRATEGIES[this.mapping];
   if (strategy === SUPPORTED_STRATEGIES['<']) {
@@ -190,6 +205,7 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
 // jshint maxparams:8
 RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters,
                                                 range, indexOffset, metadataHolder) {
+  var stats = defaultStats(this.filters.stats);
   var metadataRule = {
     selector: selector(decl.parent),
     prop: decl.prop,
@@ -197,9 +213,18 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
     'default-value': defaultValue,
     filters: [],
     values: [],
-    stats: this.filters.stats
+    buckets: [],
+    allValues: values,
+    allFilters: filters,
+    stats: stats
   };
 
+  var type = bucketType(this.mapping);
+  var previousFilter = null;
+  if (Number.isFinite(stats.min)) {
+    previousFilter = stats.min;
+  }
+  var lastIndex = 0;
   var previousNode = decl;
   filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
     var filter = Number.isFinite(filterRaw) ? filterRaw : '"' + filterRaw + '"';
@@ -211,9 +236,47 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
     metadataRule.filters.push(filterRaw);
     metadataRule.values.push(values[index + indexOffset]);
 
+    var bucket = {
+      filter: {
+        type: type
+      },
+      value: values[index + indexOffset]
+    };
+
+    if (type === FILTER_TYPE.CATEGORY) {
+      bucket.filter.name = filterRaw;
+    } else {
+      bucket.filter.start = previousFilter;
+      bucket.filter.end = filterRaw;
+    }
+    metadataRule.buckets.push(bucket);
+
+    previousFilter = filterRaw;
+    lastIndex = index;
+
     rule.moveAfter(previousNode);
     previousNode = rule;
   }.bind(this));
+
+  if (type === FILTER_TYPE.CATEGORY) {
+    if (defaultValue !== null) {
+      metadataRule.buckets.push({
+        filter: {
+          type: FILTER_TYPE.DEFAULT
+        },
+        value: defaultValue
+      });
+    }
+  } else {
+    metadataRule.buckets.push({
+      filter: {
+        type: type,
+        start: previousFilter,
+        end: stats.max
+      },
+      value: values[lastIndex + indexOffset + 1]
+    });
+  }
 
   if (metadataHolder) {
     metadataHolder.add(metadataRule);
@@ -221,6 +284,20 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
 
   return { values: values, filters: filters, mapping: this.mapping };
 };
+
+function bucketType (mapping) {
+  return MAPPING_TO_FILTER_TYPE[mapping];
+}
+
+function defaultStats (stats) {
+  stats = stats || {};
+  // jshint camelcase:false
+  return {
+    min: stats.min_val,
+    max: stats.max_val,
+    avg: stats.avg_val
+  };
+}
 
 function selector (node, repr) {
   repr = repr || '';
