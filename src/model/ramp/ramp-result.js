@@ -7,6 +7,7 @@ function RampResult (values, filters, mapping) {
   this.values = values;
   this.filters = filters;
   this.mapping = mapping || '>';
+  this.mapping = this.mapping === '==' ? '=' : this.mapping;
 }
 
 module.exports = RampResult;
@@ -103,14 +104,14 @@ var SUPPORTED_STRATEGIES = {
    */
 };
 
-RampResult.prototype.process = function (column, decl) {
+RampResult.prototype.process = function (column, decl, metadataHolder) {
   var strategy = SUPPORTED_STRATEGIES[this.mapping];
   if (strategy === SUPPORTED_STRATEGIES['<']) {
-    return this.processLessThanOrEqual(column, decl);
+    return this.processLessThanOrEqual(column, decl, metadataHolder);
   } else if (strategy === SUPPORTED_STRATEGIES['==']) {
-    return this.processEquality(column, decl);
+    return this.processEquality(column, decl, metadataHolder);
   } else {
-    return this.processGreaterThanOrEqual(column, decl);
+    return this.processGreaterThanOrEqual(column, decl, metadataHolder);
   }
 };
 
@@ -118,7 +119,7 @@ RampResult.supports = function (strategy) {
   return SUPPORTED_STRATEGIES.hasOwnProperty(strategy) || !strategy;
 };
 
-RampResult.prototype.processEquality = function (column, decl) {
+RampResult.prototype.processEquality = function (column, decl, metadataHolder) {
   if ((this.filters.getLength()) > this.values.getMaxSize()) {
     throw new TurboCartoError('`' + this.mapping + '` requires more or same values than filters to work.');
   }
@@ -127,32 +128,31 @@ RampResult.prototype.processEquality = function (column, decl) {
   var filters = this.filters.get();
 
   var initialDecl = decl;
+  var defaultValue = null;
   if (values.length !== filters.length) {
-    var defaultValue = values[values.length - 1];
+    defaultValue = values[values.length - 1];
     initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
     decl.replaceWith(initialDecl);
   }
 
-  var previousNode = initialDecl;
-  filters.forEach(function (filter, index) {
-    var filterSelector = Number.isFinite(filter) ? filter : '"' + filter + '"';
-    var rule = postcss.rule({
-      selector: '[ ' + column + ' = ' + filterSelector + ' ]'
-    });
-    rule.append(postcss.decl({ prop: decl.prop, value: values[index] }));
+  var range = {
+    start: 0,
+    end: filters.length
+  };
+  var indexOffset = 0;
 
-    rule.moveAfter(previousNode);
-    previousNode = rule;
-  });
+  var result = this.processGeneric(
+    initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder
+  );
 
   if (values.length === filters.length) {
     decl.remove();
   }
 
-  return { values: values, filters: filters, mapping: this.mapping };
+  return result;
 };
 
-RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
+RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadataHolder) {
   var buckets = Math.min(this.values.getMaxSize(), this.filters.getMaxSize());
 
   var values = this.values.get((buckets <= 1) ? buckets + 1 : buckets);
@@ -162,39 +162,70 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl) {
   var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
   decl.replaceWith(initialDecl);
 
-  var previousNode = initialDecl;
-  filters.slice(0, Math.max(filters.length - 1, 1)).forEach(function (filter, index) {
-    var rule = postcss.rule({
-      selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
-    });
-    rule.append(postcss.decl({ prop: decl.prop, value: values[index + 1] }));
+  var range = {
+    start: 0,
+    end: Math.max(filters.length - 1, 1)
+  };
+  var indexOffset = 1;
 
-    rule.moveAfter(previousNode);
-    previousNode = rule;
-  }.bind(this));
-
-  return { values: values, filters: filters, mapping: this.mapping };
+  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder);
 };
 
-RampResult.prototype.processLessThanOrEqual = function (column, decl) {
+RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHolder) {
   var values = this.values.get(this.filters.getLength() + 1);
   var filters = this.filters.get();
 
   var defaultValue = values[values.length - 1];
-
   var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
   decl.replaceWith(initialDecl);
 
-  var previousNode = initialDecl;
-  filters.slice(0, filters.length - 1).forEach(function (filter, index) {
+  var range = {
+    start: 0,
+    end: filters.length - 1
+  };
+  var indexOffset = 0;
+  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder);
+};
+
+// jshint maxparams:8
+RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters,
+                                                range, indexOffset, metadataHolder) {
+  var metadataRule = {
+    selector: selector(decl.parent),
+    prop: decl.prop,
+    mapping: this.mapping,
+    'default-value': defaultValue,
+    filters: [],
+    values: [],
+    stats: this.filters.stats
+  };
+
+  var previousNode = decl;
+  filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
+    var filter = Number.isFinite(filterRaw) ? filterRaw : '"' + filterRaw + '"';
     var rule = postcss.rule({
       selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
     });
-    rule.append(postcss.decl({ prop: decl.prop, value: values[index] }));
+    rule.append(postcss.decl({ prop: decl.prop, value: values[index + indexOffset] }));
+
+    metadataRule.filters.push(filterRaw);
+    metadataRule.values.push(values[index + indexOffset]);
 
     rule.moveAfter(previousNode);
     previousNode = rule;
   }.bind(this));
 
+  if (metadataHolder) {
+    metadataHolder.add(metadataRule);
+  }
+
   return { values: values, filters: filters, mapping: this.mapping };
 };
+
+function selector (node, repr) {
+  repr = repr || '';
+  if (node && node.type !== 'root') {
+    repr = selector(node.parent, node.selector + repr);
+  }
+  return repr;
+}

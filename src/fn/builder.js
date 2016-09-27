@@ -11,11 +11,11 @@ function FnBuilder (datasource) {
 
 module.exports = FnBuilder;
 
-FnBuilder.prototype.add = function (decl, fnNode) {
-  this.fnExecutors.push({ decl: decl, fnExecutor: createFnExecutor(fnNode, this.datasource, decl) });
+FnBuilder.prototype.add = function (decl, fnNode, metadataHolder) {
+  this.fnExecutors.push({ decl: decl, fnExecutor: createFnExecutor(fnNode, this.datasource, decl, metadataHolder) });
 };
 
-function createFnExecutor (fnNode, datasource, decl) {
+function createFnExecutor (fnNode, datasource, decl, metadataHolder) {
   var fnArgs = [];
   if (Array.isArray(fnNode.nodes)) {
     fnArgs = fnNode.nodes.reduce(function (args, nestedFnNode) {
@@ -31,7 +31,7 @@ function createFnExecutor (fnNode, datasource, decl) {
           args.push(nestedFnNode.value);
           break;
         case 'function':
-          args.push(createFnExecutor(nestedFnNode, datasource, decl));
+          args.push(createFnExecutor(nestedFnNode, datasource, decl, metadataHolder));
           break;
         default:
       // pass: includes 'div', 'space', 'comment'
@@ -39,7 +39,7 @@ function createFnExecutor (fnNode, datasource, decl) {
       return args;
     }, []);
   }
-  return new FnExecutor(datasource, fnNode.value, fnArgs, decl);
+  return new FnExecutor(datasource, fnNode.value, fnArgs, decl, metadataHolder);
 }
 
 FnBuilder.prototype.exec = function () {

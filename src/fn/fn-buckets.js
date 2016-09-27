@@ -25,11 +25,13 @@ function fnBuckets (datasource) {
           );
         }
         var strategy = 'max';
+        var stats = {};
         if (!Array.isArray(filters)) {
           strategy = filters.strategy || 'max';
+          stats = filters.stats;
           filters = filters.ramp;
         }
-        resolve(new FiltersResult(filters, strategy));
+        resolve(new FiltersResult(filters, strategy, stats));
       });
     });
   };

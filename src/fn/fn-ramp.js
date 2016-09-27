@@ -11,63 +11,54 @@ var ValuesResult = require('../model/values-result');
 var FiltersResult = require('../model/filters-result');
 var LazyFiltersResult = require('../model/lazy-filters-result');
 var RampResult = require('../model/ramp/ramp-result');
-var postcss = require('postcss');
 
-function createSplitStrategy (selector) {
-  return function splitStrategy (column, rampResult, decl) {
-    var defaultValue = rampResult[1];
-    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-    decl.replaceWith(initialDecl);
-
-    var previousNode = initialDecl;
-    for (var i = 2, until = rampResult.length; i < until; i += 2) {
-      var rule = postcss.rule({
-        selector: selector(column, rampResult[i])
-      });
-      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 1] }));
-
-      rule.moveAfter(previousNode);
-      previousNode = rule;
+function createSplitStrategy (mapping) {
+  return function splitStrategy (column, rampResult, stats, decl, metadataHolder) {
+    var allFilters = rampResult.filter(evenIndex);
+    var values = rampResult.filter(reverse(evenIndex));
+    var filters = allFilters.slice(1);
+    if (mapping === '=') {
+      values = values.slice(1).concat([rampResult.filter(reverse(evenIndex))[0]]);
     }
+    if (mapping === '>' && allFilters.length > 0 && allFilters[0] !== null) {
+      filters = filters.concat([allFilters[0]]);
+    }
+    filters = filters.filter(reverse(isNull));
+    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), mapping);
+    return ramp.process(column, decl, metadataHolder);
+  };
+}
 
-    return rampResult;
+function evenIndex (value, index) {
+  return index % 2 === 0;
+}
+
+function isNull (val) {
+  return val === null;
+}
+
+function reverse (fn, ctx) {
+  return function () {
+    return !fn.apply(ctx, arguments);
   };
 }
 
 var strategy = {
-  max: function maxStrategy (column, rampResult, decl) {
-    var defaultValue = rampResult[1];
-    var initialDecl = postcss.decl({ prop: decl.prop, value: defaultValue });
-    decl.replaceWith(initialDecl);
-
-    var previousNode = initialDecl;
-    for (var i = 0, until = rampResult.length - 2; i < until; i += 2) {
-      var rule = postcss.rule({
-        selector: '[ ' + column + ' > ' + rampResult[i] + ' ]'
-      });
-      rule.append(postcss.decl({ prop: decl.prop, value: rampResult[i + 3] }));
-
-      rule.moveAfter(previousNode);
-      previousNode = rule;
-    }
-
-    return rampResult;
+  max: function maxStrategy (column, rampResult, stats, decl, metadataHolder) {
+    var values = rampResult.filter(reverse(evenIndex));
+    var filters = rampResult.filter(evenIndex).filter(reverse(isNull));
+    var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), '>');
+    return ramp.process(column, decl, metadataHolder);
   },
 
-  split: createSplitStrategy(function gtSelector (column, value) {
-    return '[ ' + column + ' > ' + value + ' ]';
-  }),
+  split: createSplitStrategy('>'),
 
-  exact: createSplitStrategy(function exactSelector (column, value) {
-    return Number.isFinite(value) ? '[ ' + column + ' = ' + value + ' ]' : '[ ' + column + ' = "' + value + '" ]';
-  }),
+  exact: createSplitStrategy('='),
 
-  '=': createSplitStrategy(function exactSelector (column, value) {
-    return Number.isFinite(value) ? '[ ' + column + ' = ' + value + ' ]' : '[ ' + column + ' = "' + value + '" ]';
-  })
+  '=': createSplitStrategy('=')
 };
 
-module.exports = function (datasource, decl) {
+module.exports = function (datasource, decl, metadataHolder) {
   return function fn$ramp (column, /* ... */args) {
     debug('fn$ramp(%j)', arguments);
     debug('Using "%s" datasource to calculate ramp', datasource.getName());
@@ -77,10 +68,10 @@ module.exports = function (datasource, decl) {
     return ramp(datasource, column, args)
       .then(function (rampResult) {
         if (rampResult.constructor === RampResult) {
-          return rampResult.process(columnName(column), decl);
+          return rampResult.process(columnName(column), decl, metadataHolder);
         }
         var strategyFn = strategy.hasOwnProperty(rampResult.strategy) ? strategy[rampResult.strategy] : strategy.max;
-        return strategyFn(columnName(column), rampResult.ramp, decl);
+        return strategyFn(columnName(column), rampResult.ramp, rampResult.stats, decl, metadataHolder);
       })
       .catch(function (err) {
         var context = {};
@@ -273,11 +264,13 @@ function getRamp (datasource, column, buckets, method) {
         );
       }
       var strategy = 'max';
+      var stats = {};
       if (!Array.isArray(filters)) {
         strategy = filters.strategy || 'max';
+        stats = filters.stats;
         filters = filters.ramp;
       }
-      resolve(new FiltersResult(filters, strategy));
+      resolve(new FiltersResult(filters, strategy, stats));
     });
   });
 }
@@ -301,7 +294,7 @@ function compatibilityCreateRampFn (valuesResult) {
       rampResult.push(null, values[0]);
     }
 
-    return { ramp: rampResult, strategy: filtersResult.getStrategy() };
+    return { ramp: rampResult, strategy: filtersResult.getStrategy(), stats: filtersResult.stats };
   };
 }
 
@@ -328,7 +321,7 @@ function createRampFn (valuesResult) {
       rampResult.push(null, values[0]);
     }
 
-    return { ramp: rampResult, strategy: filtersResult.getStrategy() };
+    return { ramp: rampResult, strategy: filtersResult.getStrategy(), stats: filtersResult.stats };
   };
 }
 
