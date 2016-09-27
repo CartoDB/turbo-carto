@@ -69,9 +69,6 @@ describe('ramp-strategy', function () {
         '  [ population > 3 ]{',
         '    marker-width: 40',
         '  }',
-        '  [ population > 4 ]{',
-        '    marker-width: 50',
-        '  }',
         '}'
       ].join('\n')
     },
