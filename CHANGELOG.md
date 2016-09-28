@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.17.1
-Released 2016-mm-dd
+Released 2016-09-28
 
  - Fix selector in rules metadata.
 
