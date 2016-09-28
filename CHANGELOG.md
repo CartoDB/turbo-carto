@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.16.1
+## Version 0.17.0
 Released 2016-mm-dd
+
+ - Returns a metadata object per parsed rule.
 
 
 ## Version 0.16.0
