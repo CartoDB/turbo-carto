@@ -10,19 +10,20 @@ with num_buckets AS (
 ),
 agg AS (
   select
-array_agg(r1) as arr1,
+  array_agg(r4) as arr1,
   array_agg(r1) as arr2,
   array_agg(r2) as arr3,
   array_agg(r3) as arr4
 from
 generate_series(0, 10) as r1,
   generate_series(0, 10, 4) as r2,
-  generate_series(0, 10, 2.5) as r3
+  generate_series(0, 10, 2.5) as r3,
+  generate_series(0, 100) as r4
 ),
 ramps as (
   select
   CDB_EqualIntervalBins(arr3, count)::int[] as equal,
-  CDB_HeadsTailsBins(arr1, count)::int[] as headtails,
+  CDB_HeadsTailsBins(arr4, count)::int[] as headtails,
   CDB_JenksBins(arr4, count)::int[] as jenks,
   CDB_QuantileBins(arr2, count)::int[] as quantiles
 FROM agg, num_buckets
@@ -31,7 +32,7 @@ select row_to_json(ramps) from ramps
 */
 var ramps = {
   equal: [ 2, 4, 6, 8 ],
-  headtails: [ 5, 8, 10, 10 ],
+  headtails: [ 50, 76, 88, 95 ],
   jenks: [ 3, 5, 8, 10 ],
   quantiles: [ 2, 5, 8, 10 ]
 };
@@ -79,14 +80,14 @@ describe('ramp-buckets', function () {
         return [
           '#layer{',
           '  marker-width: 40;',
-          '  [ pop ' + mapping + ' 5 ]{',
-          '    marker-width: 10',
+          '  [ pop ' + mapping + ' 95 ]{',
+          '    marker-width: 30',
           '  }',
-          '  [ pop ' + mapping + ' 8 ]{',
+          '  [ pop ' + mapping + ' 88 ]{',
           '    marker-width: 20',
           '  }',
-          '  [ pop ' + mapping + ' 10 ]{',
-          '    marker-width: 30',
+          '  [ pop ' + mapping + ' 76 ]{',
+          '    marker-width: 10',
           '  }',
           '}'
         ].join('\n');

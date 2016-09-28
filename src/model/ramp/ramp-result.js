@@ -263,7 +263,7 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
     start: 0,
     end: filters.length - 1
   };
-  var indexOffset = 0;
+  var indexOffset = 1;
 
   if (metadataHolder) {
     var stats = defaultStats(this.filters.stats);
@@ -310,7 +310,10 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
     metadataHolder.add(metadataRule);
   }
 
-  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset);
+  var reversedValues = values.concat().reverse();
+  var reversedFilters = filters.concat().reverse();
+
+  return this.processGeneric(initialDecl, column, defaultValue, reversedValues, reversedFilters, range, indexOffset);
 };
 
 // jshint maxparams:8
