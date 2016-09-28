@@ -252,7 +252,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
 };
 
 RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHolder) {
-  var values = this.values.get(this.filters.getLength() + 1);
+  var values = this.values.get(this.filters.getLength());
   var filters = this.filters.get();
 
   var defaultValue = values[values.length - 1];
