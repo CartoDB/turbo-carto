@@ -291,7 +291,6 @@ function bucketType (mapping) {
 
 function defaultStats (stats) {
   stats = stats || {};
-  // jshint camelcase:false
   return {
     min: stats.min_val,
     max: stats.max_val,
