@@ -23,6 +23,7 @@ describe('metadata', function () {
 
       var rule = metadata.rules[0];
 
+      assert.equal(rule.selector, '#layer');
       assert.equal(rule.prop, 'marker-width');
       assert.equal(rule.buckets.length, 5);
 
@@ -44,7 +45,7 @@ describe('metadata', function () {
 
   it('should generate a valid metadata for headtails alike datasource', function (done) {
     var cartocss = [
-      '#layer{',
+      '#layerheads {',
       '  marker-width: ramp([pop_max], range(8, 32), headtails());',
       '}'
     ].join('\n');
@@ -61,6 +62,7 @@ describe('metadata', function () {
 
       var rule = metadata.rules[0];
 
+      assert.equal(rule.selector, '#layerheads');
       assert.equal(rule.prop, 'marker-width');
       assert.equal(rule.buckets.length, 5);
 
@@ -82,7 +84,7 @@ describe('metadata', function () {
 
   it('should generate a valid metadata for category alike datasource', function (done) {
     var cartocss = [
-      '#layer{',
+      '#layercat{',
       '  marker-width: ramp([adm0name], cartocolor(Safe), category(8));',
       '}'
     ].join('\n');
@@ -107,6 +109,7 @@ describe('metadata', function () {
 
       var rule = metadata.rules[0];
 
+      assert.equal(rule.selector, '#layercat');
       assert.equal(rule.prop, 'marker-width');
       assert.equal(rule.buckets.length, 9);
 
