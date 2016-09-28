@@ -110,15 +110,6 @@ var FILTER_TYPE = {
   RANGE: 'range'
 };
 
-var MAPPING_TO_FILTER_TYPE = {
-  '=': FILTER_TYPE.CATEGORY,
-  '==': FILTER_TYPE.CATEGORY,
-  '>': FILTER_TYPE.RANGE,
-  '>=': FILTER_TYPE.RANGE,
-  '<': FILTER_TYPE.RANGE,
-  '<=': FILTER_TYPE.RANGE
-};
-
 RampResult.prototype.process = function (column, decl, metadataHolder) {
   var strategy = SUPPORTED_STRATEGIES[this.mapping];
   if (strategy === SUPPORTED_STRATEGIES['<']) {
@@ -156,12 +147,41 @@ RampResult.prototype.processEquality = function (column, decl, metadataHolder) {
   };
   var indexOffset = 0;
 
-  var result = this.processGeneric(
-    initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder
-  );
+  var result = this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset);
 
   if (values.length === filters.length) {
     decl.remove();
+  }
+
+  if (metadataHolder) {
+    var metadataRule = {
+      selector: selector(decl.parent),
+      prop: decl.prop,
+      mapping: this.mapping,
+      buckets: [],
+      stats: {}
+    };
+
+    metadataRule.buckets = filters.map(function (filterRaw, index) {
+      return {
+        filter: {
+          name: filterRaw,
+          type: FILTER_TYPE.CATEGORY
+        },
+        value: values[index]
+      };
+    });
+
+    if (defaultValue !== null) {
+      metadataRule.buckets.push({
+        filter: {
+          type: FILTER_TYPE.DEFAULT
+        },
+        value: defaultValue
+      });
+    }
+
+    metadataHolder.add(metadataRule);
   }
 
   return result;
@@ -183,7 +203,52 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
   };
   var indexOffset = 1;
 
-  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder);
+  if (metadataHolder) {
+    var stats = defaultStats(this.filters.stats);
+    var metadataRule = {
+      selector: selector(decl.parent),
+      prop: decl.prop,
+      mapping: this.mapping,
+      buckets: [],
+      stats: {
+        filter_avg: stats.avg
+      }
+    };
+
+    var previousFilter = null;
+    if (Number.isFinite(stats.min)) {
+      previousFilter = stats.min;
+    }
+    var lastIndex = 0;
+    metadataRule.buckets = filters.slice(range.start, range.end).map(function (filterRaw, index) {
+      var bucket = {
+        filter: {
+          type: FILTER_TYPE.RANGE,
+          start: previousFilter,
+          end: filterRaw
+        },
+        value: values[index]
+      };
+
+      previousFilter = filterRaw;
+      lastIndex = index;
+
+      return bucket;
+    });
+
+    metadataRule.buckets.push({
+      filter: {
+        type: FILTER_TYPE.RANGE,
+        start: previousFilter,
+        end: stats.max
+      },
+      value: values[lastIndex + 1]
+    });
+
+    metadataHolder.add(metadataRule);
+  }
+
+  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset);
 };
 
 RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHolder) {
@@ -199,32 +264,57 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
     end: filters.length - 1
   };
   var indexOffset = 0;
-  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder);
+
+  if (metadataHolder) {
+    var stats = defaultStats(this.filters.stats);
+    var metadataRule = {
+      selector: selector(decl.parent),
+      prop: decl.prop,
+      mapping: this.mapping,
+      buckets: [],
+      stats: {
+        filter_avg: stats.avg
+      }
+    };
+
+    var previousFilter = null;
+    if (Number.isFinite(stats.min)) {
+      previousFilter = stats.min;
+    }
+    var lastIndex = 0;
+    metadataRule.buckets = filters.slice(range.start, range.end).map(function (filterRaw, index) {
+      var bucket = {
+        filter: {
+          type: FILTER_TYPE.RANGE,
+          start: previousFilter,
+          end: filterRaw
+        },
+        value: values[index]
+      };
+
+      previousFilter = filterRaw;
+      lastIndex = index;
+
+      return bucket;
+    });
+
+    metadataRule.buckets.push({
+      filter: {
+        type: FILTER_TYPE.RANGE,
+        start: previousFilter,
+        end: stats.max
+      },
+      value: values[lastIndex + 1]
+    });
+
+    metadataHolder.add(metadataRule);
+  }
+
+  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset);
 };
 
 // jshint maxparams:8
-RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters,
-                                                range, indexOffset, metadataHolder) {
-  var stats = defaultStats(this.filters.stats);
-  var metadataRule = {
-    selector: selector(decl.parent),
-    prop: decl.prop,
-    mapping: this.mapping,
-    'default-value': defaultValue,
-    filters: [],
-    values: [],
-    buckets: [],
-    allValues: values,
-    allFilters: filters,
-    stats: stats
-  };
-
-  var type = bucketType(this.mapping);
-  var previousFilter = null;
-  if (Number.isFinite(stats.min)) {
-    previousFilter = stats.min;
-  }
-  var lastIndex = 0;
+RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters, range, indexOffset) {
   var previousNode = decl;
   filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
     var filter = Number.isFinite(filterRaw) ? filterRaw : '"' + filterRaw + '"';
@@ -233,61 +323,12 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
     });
     rule.append(postcss.decl({ prop: decl.prop, value: values[index + indexOffset] }));
 
-    metadataRule.filters.push(filterRaw);
-    metadataRule.values.push(values[index + indexOffset]);
-
-    var bucket = {
-      filter: {
-        type: type
-      },
-      value: values[index + indexOffset]
-    };
-
-    if (type === FILTER_TYPE.CATEGORY) {
-      bucket.filter.name = filterRaw;
-    } else {
-      bucket.filter.start = previousFilter;
-      bucket.filter.end = filterRaw;
-    }
-    metadataRule.buckets.push(bucket);
-
-    previousFilter = filterRaw;
-    lastIndex = index;
-
     rule.moveAfter(previousNode);
     previousNode = rule;
   }.bind(this));
 
-  if (type === FILTER_TYPE.CATEGORY) {
-    if (defaultValue !== null) {
-      metadataRule.buckets.push({
-        filter: {
-          type: FILTER_TYPE.DEFAULT
-        },
-        value: defaultValue
-      });
-    }
-  } else {
-    metadataRule.buckets.push({
-      filter: {
-        type: type,
-        start: previousFilter,
-        end: stats.max
-      },
-      value: values[lastIndex + indexOffset + 1]
-    });
-  }
-
-  if (metadataHolder) {
-    metadataHolder.add(metadataRule);
-  }
-
   return { values: values, filters: filters, mapping: this.mapping };
 };
-
-function bucketType (mapping) {
-  return MAPPING_TO_FILTER_TYPE[mapping];
-}
 
 function defaultStats (stats) {
   stats = stats || {};
