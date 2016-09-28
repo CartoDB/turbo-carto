@@ -20,9 +20,6 @@ function createSplitStrategy (mapping) {
     if (mapping === '=') {
       values = values.slice(1).concat([rampResult.filter(reverse(evenIndex))[0]]);
     }
-    if (mapping === '>' && allFilters.length > 0 && allFilters[0] !== null) {
-      filters = filters.concat([allFilters[0]]);
-    }
     filters = filters.filter(reverse(isNull));
     var ramp = new RampResult(new ValuesResult(values), new FiltersResult(filters, null, stats), mapping);
     return ramp.process(column, decl, metadataHolder);

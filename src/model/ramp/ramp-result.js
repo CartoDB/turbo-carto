@@ -104,6 +104,12 @@ var SUPPORTED_STRATEGIES = {
    */
 };
 
+var FILTER_TYPE = {
+  CATEGORY: 'category',
+  DEFAULT: 'default',
+  RANGE: 'range'
+};
+
 RampResult.prototype.process = function (column, decl, metadataHolder) {
   var strategy = SUPPORTED_STRATEGIES[this.mapping];
   if (strategy === SUPPORTED_STRATEGIES['<']) {
@@ -141,12 +147,41 @@ RampResult.prototype.processEquality = function (column, decl, metadataHolder) {
   };
   var indexOffset = 0;
 
-  var result = this.processGeneric(
-    initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder
-  );
+  var result = this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset);
 
   if (values.length === filters.length) {
     decl.remove();
+  }
+
+  if (metadataHolder) {
+    var metadataRule = {
+      selector: selector(decl.parent),
+      prop: decl.prop,
+      mapping: this.mapping,
+      buckets: [],
+      stats: {}
+    };
+
+    metadataRule.buckets = filters.map(function (filterRaw, index) {
+      return {
+        filter: {
+          name: filterRaw,
+          type: FILTER_TYPE.CATEGORY
+        },
+        value: values[index]
+      };
+    });
+
+    if (defaultValue !== null) {
+      metadataRule.buckets.push({
+        filter: {
+          type: FILTER_TYPE.DEFAULT
+        },
+        value: defaultValue
+      });
+    }
+
+    metadataHolder.add(metadataRule);
   }
 
   return result;
@@ -168,11 +203,56 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
   };
   var indexOffset = 1;
 
-  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder);
+  if (metadataHolder) {
+    var stats = defaultStats(this.filters.stats);
+    var metadataRule = {
+      selector: selector(decl.parent),
+      prop: decl.prop,
+      mapping: this.mapping,
+      buckets: [],
+      stats: {
+        filter_avg: stats.avg
+      }
+    };
+
+    var previousFilter = null;
+    if (Number.isFinite(stats.min)) {
+      previousFilter = stats.min;
+    }
+    var lastIndex = 0;
+    metadataRule.buckets = filters.slice(range.start, range.end).map(function (filterRaw, index) {
+      var bucket = {
+        filter: {
+          type: FILTER_TYPE.RANGE,
+          start: previousFilter,
+          end: filterRaw
+        },
+        value: values[index]
+      };
+
+      previousFilter = filterRaw;
+      lastIndex = index;
+
+      return bucket;
+    });
+
+    metadataRule.buckets.push({
+      filter: {
+        type: FILTER_TYPE.RANGE,
+        start: previousFilter,
+        end: stats.max
+      },
+      value: values[lastIndex + 1]
+    });
+
+    metadataHolder.add(metadataRule);
+  }
+
+  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset);
 };
 
 RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHolder) {
-  var values = this.values.get(this.filters.getLength() + 1);
+  var values = this.values.get(this.filters.getLength());
   var filters = this.filters.get();
 
   var defaultValue = values[values.length - 1];
@@ -183,23 +263,61 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
     start: 0,
     end: filters.length - 1
   };
-  var indexOffset = 0;
-  return this.processGeneric(initialDecl, column, defaultValue, values, filters, range, indexOffset, metadataHolder);
+  var indexOffset = 1;
+
+  if (metadataHolder) {
+    var stats = defaultStats(this.filters.stats);
+    var metadataRule = {
+      selector: selector(decl.parent),
+      prop: decl.prop,
+      mapping: this.mapping,
+      buckets: [],
+      stats: {
+        filter_avg: stats.avg
+      }
+    };
+
+    var previousFilter = null;
+    if (Number.isFinite(stats.min)) {
+      previousFilter = stats.min;
+    }
+    var lastIndex = 0;
+    metadataRule.buckets = filters.slice(range.start, range.end).map(function (filterRaw, index) {
+      var bucket = {
+        filter: {
+          type: FILTER_TYPE.RANGE,
+          start: previousFilter,
+          end: filterRaw
+        },
+        value: values[index]
+      };
+
+      previousFilter = filterRaw;
+      lastIndex = index;
+
+      return bucket;
+    });
+
+    metadataRule.buckets.push({
+      filter: {
+        type: FILTER_TYPE.RANGE,
+        start: previousFilter,
+        end: stats.max
+      },
+      value: values[lastIndex + 1]
+    });
+
+    metadataHolder.add(metadataRule);
+  }
+
+  var reversedValues = values.concat().reverse();
+  var reversedFilters = filters.concat().reverse();
+
+  return this.processGeneric(initialDecl, column, defaultValue, reversedValues, reversedFilters, range, indexOffset);
 };
 
 // jshint maxparams:8
-RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters,
-                                                range, indexOffset, metadataHolder) {
-  var metadataRule = {
-    selector: selector(decl.parent),
-    prop: decl.prop,
-    mapping: this.mapping,
-    'default-value': defaultValue,
-    filters: [],
-    values: [],
-    stats: this.filters.stats
-  };
-
+RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters, range, indexOffset) {
   var previousNode = decl;
   filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
     var filter = Number.isFinite(filterRaw) ? filterRaw : '"' + filterRaw + '"';
@@ -208,19 +326,21 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
     });
     rule.append(postcss.decl({ prop: decl.prop, value: values[index + indexOffset] }));
 
-    metadataRule.filters.push(filterRaw);
-    metadataRule.values.push(values[index + indexOffset]);
-
     rule.moveAfter(previousNode);
     previousNode = rule;
   }.bind(this));
 
-  if (metadataHolder) {
-    metadataHolder.add(metadataRule);
-  }
-
   return { values: values, filters: filters, mapping: this.mapping };
 };
+
+function defaultStats (stats) {
+  stats = stats || {};
+  return {
+    min: stats.min_val,
+    max: stats.max_val,
+    avg: stats.avg_val
+  };
+}
 
 function selector (node, repr) {
   repr = repr || '';
