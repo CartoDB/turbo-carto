@@ -25,6 +25,7 @@ describe('metadata', function () {
 
       assert.equal(rule.selector, '#layer');
       assert.equal(rule.prop, 'marker-width');
+      assert.equal(rule.column, 'pop_max');
       assert.equal(rule.buckets.length, 5);
 
       assert.equal(rule.stats.filter_avg, 322717);
@@ -64,6 +65,7 @@ describe('metadata', function () {
 
       assert.equal(rule.selector, '#layerheads');
       assert.equal(rule.prop, 'marker-width');
+      assert.equal(rule.column, 'pop_max');
       assert.equal(rule.buckets.length, 5);
 
       assert.equal(rule.stats.filter_avg, 322717);
@@ -111,6 +113,7 @@ describe('metadata', function () {
 
       assert.equal(rule.selector, '#layercat');
       assert.equal(rule.prop, 'marker-width');
+      assert.equal(rule.column, 'adm0name');
       assert.equal(rule.buckets.length, 9);
 
       assert.equal(rule.stats.filter_avg, undefined);

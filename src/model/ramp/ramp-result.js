@@ -157,6 +157,7 @@ RampResult.prototype.processEquality = function (column, decl, metadataHolder) {
     var metadataRule = {
       selector: selector(initialDecl.parent),
       prop: initialDecl.prop,
+      column: column,
       mapping: this.mapping,
       buckets: [],
       stats: {}
@@ -208,6 +209,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
     var metadataRule = {
       selector: selector(initialDecl.parent),
       prop: initialDecl.prop,
+      column: column,
       mapping: this.mapping,
       buckets: [],
       stats: {
@@ -270,6 +272,7 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
     var metadataRule = {
       selector: selector(initialDecl.parent),
       prop: initialDecl.prop,
+      column: column,
       mapping: this.mapping,
       buckets: [],
       stats: {

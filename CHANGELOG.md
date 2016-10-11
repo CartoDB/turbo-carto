@@ -3,6 +3,8 @@
 ## Version 0.17.2
 Released 2016-mm-dd
 
+ - Adds column to metadata rules.
+
 
 ## Version 0.17.1
 Released 2016-09-28
