@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.17.2
+## Version 0.18.0
 Released 2016-mm-dd
 
  - Adds column to metadata rules.
