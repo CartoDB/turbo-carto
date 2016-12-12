@@ -1,6 +1,6 @@
 {
   "name": "turbo-carto",
-  "version": "0.18.1",
+  "version": "0.19.0",
   "description": "CartoCSS preprocessor",
   "main": "src/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "colorbrewer": "1.0.0",
-    "cartocolor": "3.0.0",
+    "cartocolor": "4.0.0",
     "debug": "2.2.0",
     "es6-promise": "3.1.2",
     "postcss": "5.0.19",

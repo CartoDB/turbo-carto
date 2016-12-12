@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.18.1
-Released 2016-mm-dd
+## Version 0.19.0
+Released 2016-12-12
+ 
+ - Updated CartoColor version to 4.0.0.
 
 
 ## Version 0.18.0
