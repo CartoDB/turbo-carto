@@ -127,7 +127,7 @@ describe('metadata', function () {
         { filter: { type: 'category', name: 'Australia' }, value: '#AA4499' },
         { filter: { type: 'category', name: 'India' }, value: '#44AA99' },
         { filter: { type: 'category', name: 'Mexico' }, value: '#999933' },
-        { filter: { type: 'default' }, value: '#882255' }
+        { filter: { type: 'default' }, value: '#888888' }
       ];
 
       assert.deepEqual(rule.buckets, expectedBuckets);
