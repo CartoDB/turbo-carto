@@ -101,10 +101,10 @@ That's nice, but it is still unlinked from the actual data/attributes.
 
 #### Mappings default values
 
-`<` and `<=`: Last provided value will be the default value.
-`=`: Last provided value will be the default value, if the number of values is
+ - `<` and `<=`: Last provided value will be the default value.
+ - `=`: Last provided value will be the default value, if the number of values is
 equal to the number of filters it won't have a default value.
-`>` and `>=`: First provided value will be the default value.
+ - `>` and `>=`: First provided value will be the default value.
 
 #### Associate ramp filters to your data
 
