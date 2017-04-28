@@ -93,7 +93,7 @@ it won't have a default value, like in (see [examples/readme/example-2.css](./ex
 
 ```css
 #selector {
-    marker-width: ramp([room_type], (green), ("Private room"), =);
+    marker-fill: ramp([room_type], (green, red), ("Private room"), =);
 }
 ```
 
