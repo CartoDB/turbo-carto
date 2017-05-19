@@ -323,7 +323,7 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
 RampResult.prototype.processGeneric = function (decl, column, defaultValue, values, filters, range, indexOffset) {
   var previousNode = decl;
   filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
-    var filter = Number.isFinite(filterRaw) ? filterRaw : '"' + filterRaw + '"';
+    var filter = processFilterValue(filterRaw);
     var rule = postcss.rule({
       selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
     });
@@ -335,6 +335,16 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
 
   return { values: values, filters: filters, mapping: this.mapping };
 };
+
+function processFilterValue (rawValue) {
+  if (rawValue === 'false') {
+    return false;
+  } else if (rawValue === 'true') {
+    return true;
+  } else {
+    return Number.isFinite(rawValue) ? rawValue : '"' + rawValue + '"';
+  }
+}
 
 function defaultStats (stats) {
   stats = stats || {};
