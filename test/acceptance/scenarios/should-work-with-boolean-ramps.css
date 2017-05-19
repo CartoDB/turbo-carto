@@ -1,0 +1,3 @@
+#layer{
+  marker-fill: ramp([test_boolean], (#d7d069, #1D6996), (false, true), "=");
+}
