@@ -1,11 +1,13 @@
 # Changelog
 
 ## Version 0.19.1
-Released 201y-mm-dd
+Released 2017-05-22
+
+ - Fix ramp filter with boolean values
 
 ## Version 0.19.0
 Released 2016-12-12
- 
+
  - Updated CartoColor version to 4.0.0.
 
 
