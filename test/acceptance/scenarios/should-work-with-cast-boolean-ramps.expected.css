@@ -1,0 +1,8 @@
+#layer{
+  [ test_boolean = false ]{
+    marker-fill: #d7d069
+  }
+  [ test_boolean = true ]{
+    marker-fill: #1D6996
+  }
+}
