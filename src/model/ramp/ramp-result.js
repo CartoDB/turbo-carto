@@ -324,8 +324,9 @@ RampResult.prototype.processGeneric = function (decl, column, defaultValue, valu
   var previousNode = decl;
   filters.slice(range.start, range.end).forEach(function (filterRaw, index) {
     var filter = processFilterValue(filterRaw);
+    var columnName = this.filters.meta.columnName || column;
     var rule = postcss.rule({
-      selector: '[ ' + column + ' ' + this.mapping + ' ' + filter + ' ]'
+      selector: '[ ' + columnName + ' ' + this.mapping + ' ' + filter + ' ]'
     });
     rule.append(postcss.decl({ prop: decl.prop, value: values[index + indexOffset] }));
 
