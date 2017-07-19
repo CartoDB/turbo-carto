@@ -17,10 +17,10 @@ describe('range issue', function () {
       '}'
     ].join('\n');
     var datasource = new DummyDatasource(function () {
-        return {
-            ramp: [ 5 ],
-            stats: { min_val: 5, max_val: 5, avg_val: 5 }
-        };
+      return {
+        ramp: [5],
+        stats: { min_val: 5, max_val: 5, avg_val: 5 }
+      };
     });
     turbocarto(turboCartocss, datasource, function (err, result, metadata) {
       if (err) {
