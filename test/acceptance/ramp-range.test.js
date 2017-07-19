@@ -5,7 +5,7 @@ var turbocarto = require('../../src/index');
 var DummyDatasource = require('../support/dummy-datasource');
 
 describe('range issue', function () {
-  it('should generate a valid cartocss for blah blah', function (done) {
+  it('should generate a valid cartocss for a ramp with only one bucket/value', function (done) {
     var turboCartocss = [
       '#layer{',
       '  marker-width: ramp([cartodb_id], cartocolor(SunsetDark, 10), jenks);',
