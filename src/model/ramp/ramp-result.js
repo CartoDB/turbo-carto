@@ -200,7 +200,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
 
   var range = {
     start: 0,
-    end: Math.max(filters.length - 1, 1)
+    end: Math.max(filters.length - 1, 0)
   };
   var indexOffset = 1;
 
