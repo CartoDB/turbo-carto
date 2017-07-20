@@ -1,7 +1,9 @@
 # Changelog
 
 ## Version 0.19.2
-Released 2017-mm-dd
+Released 2017-07-20
+
+ - Fix ramp to not generate conditional cartocss when datasource returns one value #69
 
 
 ## Version 0.19.1
