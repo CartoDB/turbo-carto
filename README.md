@@ -93,7 +93,7 @@ it won't have a default value, like in (see [examples/readme/example-2.css](./ex
 
 ```css
 #selector {
-    marker-width: ramp([room_type], (green, red), ("Private room"), =);
+    marker-fill: ramp([room_type], (green, red), ("Private room"), =);
 }
 ```
 
@@ -142,9 +142,9 @@ Shorthand methods include:
  - `jenks()`: default mapping is `>`.
  - `quantiles()`: default mapping is `>`.
 
-#### Color ramps
+#### Color schemes
 
-For color ramps, there are a couple of handy functions to retrieve color palettes: `cartocolor` and `colorbrewer`.
+For color schemes, there are a couple of handy functions to retrieve color palettes: `cartocolor` and `colorbrewer`.
 
 You can create a choropleth map using Reds color palette from colorbrewer (see [examples/readme/example-6.css](./examples/readme/example-6.css)):
 
@@ -161,6 +161,8 @@ Or a category map using Bold color palette from cartocolor (see [examples/readme
     polygon-fill: ramp([room_type], cartocolor(Bold), category(4));
 }
 ```
+
+Go to [CARTOcolors](https://carto.com/carto-colors) website to discover the wide diversity of color schemes that are available.
 
 #### Numeric ramps
 
