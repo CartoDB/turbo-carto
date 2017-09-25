@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.19.3
+## Version 0.20.0
 Released 2017-mm-dd
+
+ - Allow to override filters' column name via metadata from datasource #72.
 
 
 ## Version 0.19.2

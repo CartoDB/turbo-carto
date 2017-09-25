@@ -1,6 +1,6 @@
 {
   "name": "turbo-carto",
-  "version": "0.19.3",
+  "version": "0.20.0",
   "description": "CartoCSS preprocessor",
   "main": "src/index.js",
   "scripts": {
