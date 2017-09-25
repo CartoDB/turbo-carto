@@ -3,10 +3,11 @@
 var util = require('util');
 var ValuesResult = require('./values-result');
 
-function FiltersResult (result, strategy, stats) {
+function FiltersResult (result, strategy, stats, meta) {
   ValuesResult.call(this, result, result.length);
   this.strategy = strategy;
   this.stats = stats;
+  this.meta = meta || {};
 }
 
 util.inherits(FiltersResult, ValuesResult);

@@ -26,12 +26,14 @@ function fnBuckets (datasource) {
         }
         var strategy = 'max';
         var stats = {};
+        var meta = {};
         if (!Array.isArray(filters)) {
           strategy = filters.strategy || 'max';
           stats = filters.stats;
+          meta = filters.meta || {};
           filters = filters.ramp;
         }
-        resolve(new FiltersResult(filters, strategy, stats));
+        resolve(new FiltersResult(filters, strategy, stats, meta));
       });
     });
   };
