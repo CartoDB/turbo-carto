@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.20.1
+Released 2017-mm-dd
+ - Upgrade debug to 3.x.
+
 ## Version 0.20.0
 Released 2017-09-25
 
