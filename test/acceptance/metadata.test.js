@@ -18,7 +18,7 @@ describe('metadata', function () {
       };
     });
     turbocarto(cartocss, jenksDatasource, function (err, result, metadata) {
-      assert.ok(!err);
+      assert.ifError(err);
       assert.equal(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
@@ -44,6 +44,41 @@ describe('metadata', function () {
     });
   });
 
+  it('should generate a valid metadata for jenks when datasource returns one value', function (done) {
+    var cartocss = [
+      '#layer{',
+      '  marker-width: ramp([pop_max], (8), jenks());',
+      '}'
+    ].join('\n');
+    var jenksDatasource = new DummyDatasource(function () {
+      return {
+        ramp: [ 8 ],
+        stats: { min_val: 8, max_val: 8, avg_val: 8 }
+      };
+    });
+    turbocarto(cartocss, jenksDatasource, function (err, result, metadata) {
+      assert.ifError(err);
+      assert.equal(metadata.rules.length, 1);
+
+      var rule = metadata.rules[0];
+
+      assert.equal(rule.selector, '#layer');
+      assert.equal(rule.prop, 'marker-width');
+      assert.equal(rule.column, 'pop_max');
+      assert.equal(rule.buckets.length, 1);
+
+      assert.equal(rule.stats.filter_avg, 8);
+
+      var expectedBuckets = [
+        { filter: { type: 'range', start: 8, end: 8 }, value: 8 },
+      ];
+
+      assert.deepEqual(rule.buckets, expectedBuckets);
+
+      done();
+    });
+  });
+
   it('should generate a valid metadata for headtails alike datasource', function (done) {
     var cartocss = [
       '#layerheads {',
@@ -58,7 +93,7 @@ describe('metadata', function () {
       };
     });
     turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
-      assert.ok(!err);
+      assert.ifError(err);
       assert.equal(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
@@ -76,6 +111,42 @@ describe('metadata', function () {
         { filter: { type: 'range', start: 1408234, end: 3680157 }, value: 20 },
         { filter: { type: 'range', start: 3680157, end: 7778065 }, value: 26 },
         { filter: { type: 'range', start: 7778065, end: 35676000 }, value: 32 }
+      ];
+
+      assert.deepEqual(rule.buckets, expectedBuckets);
+
+      done();
+    });
+  });
+
+  it('should generate a valid metadata for headtails with datasource that returns one value', function (done) {
+    var cartocss = [
+      '#layerheads {',
+      '  marker-width: ramp([pop_max], (8), headtails());',
+      '}'
+    ].join('\n');
+    var headtailsDatasource = new DummyDatasource(function () {
+      return {
+        ramp: [ 325723 ],
+        strategy: 'split',
+        stats: { min_val: 100, max_val: 100, avg_val: 100 }
+      };
+    });
+    turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
+      assert.ifError(err);
+      assert.equal(metadata.rules.length, 1);
+
+      var rule = metadata.rules[0];
+
+      assert.equal(rule.selector, '#layerheads');
+      assert.equal(rule.prop, 'marker-width');
+      assert.equal(rule.column, 'pop_max');
+      assert.equal(rule.buckets.length, 1);
+
+      assert.equal(rule.stats.filter_avg, 100);
+
+      var expectedBuckets = [
+        { filter: { type: 'range', start: 100, end: 100 }, value: 8 },
       ];
 
       assert.deepEqual(rule.buckets, expectedBuckets);
@@ -106,7 +177,7 @@ describe('metadata', function () {
         stats: { min_val: undefined, max_val: undefined, avg_val: undefined } };
     });
     turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
-      assert.ok(!err);
+      assert.ifError(err);
       assert.equal(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
