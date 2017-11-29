@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.20.2
+Released 2017-11-29
+ - Fix ramp result that returns undefined values when the datasource returns only one element #73
+
 ## Version 0.20.1
 Released 2017-10-03
  - Upgrade debug to 3.x.

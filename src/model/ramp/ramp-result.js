@@ -2,6 +2,7 @@
 
 var TurboCartoError = require('../../helper/turbo-carto-error');
 var postcss = require('postcss');
+var debug = require('../../helper/debug')('ramp-result');
 
 function RampResult (values, filters, mapping) {
   this.values = values;
@@ -238,15 +239,17 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
       return bucket;
     });
 
+    var lastElementIndex = lastIndex === 0 ? 0 : (lastIndex + 1);
     metadataRule.buckets.push({
       filter: {
         type: FILTER_TYPE.RANGE,
         start: previousFilter,
         end: stats.max
       },
-      value: values[lastIndex + 1]
+      value: values[lastElementIndex]
     });
 
+    debug(metadataRule.buckets);
     metadataHolder.add(metadataRule);
   }
 
@@ -301,13 +304,14 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
       return bucket;
     });
 
+    var lastElementIndex = lastIndex === 0 ? 0 : (lastIndex + 1);
     metadataRule.buckets.push({
       filter: {
         type: FILTER_TYPE.RANGE,
         start: previousFilter,
         end: stats.max
       },
-      value: values[lastIndex + 1]
+      value: values[lastElementIndex]
     });
 
     metadataHolder.add(metadataRule);
