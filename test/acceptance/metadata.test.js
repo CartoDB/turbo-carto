@@ -70,7 +70,7 @@ describe('metadata', function () {
       assert.equal(rule.stats.filter_avg, 8);
 
       var expectedBuckets = [
-        { filter: { type: 'range', start: 8, end: 8 }, value: 8 },
+        { filter: { type: 'range', start: 8, end: 8 }, value: 8 }
       ];
 
       assert.deepEqual(rule.buckets, expectedBuckets);
@@ -146,7 +146,7 @@ describe('metadata', function () {
       assert.equal(rule.stats.filter_avg, 100);
 
       var expectedBuckets = [
-        { filter: { type: 'range', start: 100, end: 100 }, value: 8 },
+        { filter: { type: 'range', start: 100, end: 100 }, value: 8 }
       ];
 
       assert.deepEqual(rule.buckets, expectedBuckets);
