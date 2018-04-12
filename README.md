@@ -1,12 +1,10 @@
-# Turbo-Carto
+## Turbo-Carto
 
-Next-Gen Styling for Data-Driven Maps, AKA CartoCSS preprocessor.
+Turbo-Carto enables adding functions to CartoCSS that can be evaluated asynchronously. It's a generator styling for Data-Driven Maps, AKA CartoCSS preprocessor.
 
-tl;dr Enables adding functions to CartoCSS that can be evaluated asynchronously.
+**Tip:** If you want to learn more about the different components of CARTO platform, and how tools like Turbo-Carto can be combined with others, read the [fundamentals]({{site.fundamental_docs}}/components/).
 
-[![Build Status](https://travis-ci.org/CartoDB/turbo-carto.png?branch=master)](https://travis-ci.org/CartoDB/turbo-carto)
-
-## Ramps
+### Ramps
 
 It's all about ramps.
 
@@ -58,7 +56,7 @@ Where:
  - `(...filters)` is **how** `property` is gonna get the different values.
  - `mapping` is the type of filter that will be applied: <, <=, >, >=, =.
 
-So for the previous example you could write (see [examples/readme/example-0.css](./examples/readme/example-0.css)):
+So for the previous example you could write:
 
 ```css
 #selector {
@@ -80,7 +78,7 @@ If you want to have a category map, to generate a CartoCSS like:
 }
 ```
 
-You can use the same approach but specifying the mapping type to be an equality (see [examples/readme/example-1.css](./examples/readme/example-1.css)):
+You can use the same approach but specifying the mapping type to be an equality:
 
 ```css
 #selector {
@@ -89,7 +87,7 @@ You can use the same approach but specifying the mapping type to be an equality 
 ```
 
 See that in this case the last value is the default value, and if the number of values is equal to the number of filters
-it won't have a default value, like in (see [examples/readme/example-2.css](./examples/readme/example-2.css)):
+it won't have a default value, like in:
 
 ```css
 #selector {
@@ -111,7 +109,7 @@ equal to the number of filters it won't have a default value.
 To generate ramps based on actual data you have to say what kind of quantification you want to use, for that purpose
 Turbo-Carto provides some shorthand methods that will delegate the filters computation to different collaborators.
 
-Let's say you want to compute the ramp using jenks as quantification function (see [examples/readme/example-3.css](./examples/readme/example-3.css)):
+Let's say you want to compute the ramp using jenks as quantification function:
 
 ```css
 #selector {
@@ -127,7 +125,7 @@ Or generate a category map depending on the room_type property (see [examples/re
 }
 ```
 
-You can override the mapping if you know your data requires an more strict filter (see [examples/readme/example-5.css](./examples/readme/example-5.css)):
+You can override the mapping if you know your data requires an more strict filter:
 
 ```css
 #selector {
@@ -142,11 +140,11 @@ Shorthand methods include:
  - `jenks()`: default mapping is `>`.
  - `quantiles()`: default mapping is `>`.
 
-#### Color schemes
+### Color schemes
 
 For color schemes, there are a couple of handy functions to retrieve color palettes: `cartocolor` and `colorbrewer`.
 
-You can create a choropleth map using Reds color palette from colorbrewer (see [examples/readme/example-6.css](./examples/readme/example-6.css)):
+You can create a choropleth map using Reds color palette from colorbrewer:
 
 ```css
 #selector {
@@ -164,11 +162,11 @@ Or a category map using Bold color palette from cartocolor (see [examples/readme
 
 Go to [CARTOcolors](https://carto.com/carto-colors) website to discover the wide diversity of color schemes that are available.
 
-#### Numeric ramps
+### Numeric ramps
 
 Sometimes is really useful to have a continuous range that can be split in as many bins as desired, so you don't have to
 worry about how many values you have to provide for your calculated filters. You only specify the start and the end, and
-the values are computed linearly (see [examples/readme/example-8.css](./examples/readme/example-8.css)):
+the values are computed linearly:
 
 ```css
 #selector {
@@ -179,12 +177,12 @@ the values are computed linearly (see [examples/readme/example-8.css](./examples
 It is kind of similar to color palettes where depending on your number of filters you get the correct number of values.
 
 
-## Dependencies
+### Dependencies
 
  * Node >=0.10
  * npm >=2.x
 
-## Install
+### Install
 
 To install the rest of the dependencies just run:
 
@@ -192,7 +190,7 @@ To install the rest of the dependencies just run:
 npm install
 ```
 
-#### Some examples
+### Some examples
 
 Current examples expect to have CartoDB's SQL API running at http://development.localhost.lan:8080/. It should have a
 publicly accessible `populated_places_simple` table.
@@ -206,7 +204,7 @@ $ ./tools/cli.js examples/populated_places.css --datasource sql --query 'select 
 
 Visit `examples/index.html`, to test different styles using CartoDB's SQL API as datasource.
 
-## Tests
+### Tests
 
 Tests suite can be run with:
 
@@ -215,7 +213,3 @@ npm test
 ```
 
 That will check code style and run the tests.
-
-## TODO
-
-See https://github.com/CartoDB/turbo-carto/issues
