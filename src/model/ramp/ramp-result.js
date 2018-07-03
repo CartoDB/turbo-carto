@@ -222,7 +222,7 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
     if (Number.isFinite(stats.min)) {
       previousFilter = stats.min;
     }
-    var lastIndex = 0;
+    var lastIndex = null;
     metadataRule.buckets = filters.slice(range.start, range.end).map(function (filterRaw, index) {
       var bucket = {
         filter: {
@@ -239,7 +239,8 @@ RampResult.prototype.processGreaterThanOrEqual = function (column, decl, metadat
       return bucket;
     });
 
-    var lastElementIndex = lastIndex === 0 ? 0 : (lastIndex + 1);
+    var lastElementIndex = (lastIndex === null) ? 0 : (lastIndex + 1);
+
     metadataRule.buckets.push({
       filter: {
         type: FILTER_TYPE.RANGE,
@@ -287,7 +288,7 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
     if (Number.isFinite(stats.min)) {
       previousFilter = stats.min;
     }
-    var lastIndex = 0;
+    var lastIndex = null;
     metadataRule.buckets = filters.slice(range.start, range.end).map(function (filterRaw, index) {
       var bucket = {
         filter: {
@@ -304,7 +305,7 @@ RampResult.prototype.processLessThanOrEqual = function (column, decl, metadataHo
       return bucket;
     });
 
-    var lastElementIndex = lastIndex === 0 ? 0 : (lastIndex + 1);
+    var lastElementIndex = (lastIndex === null) ? 0 : (lastIndex + 1);
     metadataRule.buckets.push({
       filter: {
         type: FILTER_TYPE.RANGE,
