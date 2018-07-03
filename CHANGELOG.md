@@ -2,6 +2,7 @@
 
 ## Version 0.20.3
 Released 2017-mm-dd
+ - Fix ramp result when number of buckets equals 2
 
 ## Version 0.20.2
 Released 2017-11-29
