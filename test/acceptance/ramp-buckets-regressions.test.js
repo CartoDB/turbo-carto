@@ -39,7 +39,7 @@ describe('conditional ramp-buckets', function () {
       ].join('\n')
     }
   ];
-  
+
   scenarios.forEach(function (scenario) {
     it('should generate a valid cartocss for a ramp with only one bucket/value and ' + scenario.desc, function (done) {
       turbocarto(scenario.turboCartocss, scenario.datasource, function (err, result) {
@@ -55,7 +55,7 @@ describe('conditional ramp-buckets', function () {
 });
 
 describe('Buckets calculation', function () {
-  function createCartoCSS(numBuckets) {
+  function createCartoCSS (numBuckets) {
     return [
       '#layer {',
       '  marker-width: ramp([population], range(1, 100), quantiles(' + numBuckets + '));',
@@ -79,7 +79,7 @@ describe('Buckets calculation', function () {
             'start': 1,
             'end': 100
           },
-          'value': 1         
+          'value': 1
         }
       ],
       expectedStats: {
@@ -166,7 +166,7 @@ describe('Buckets calculation', function () {
         assert.ifError(err);
 
         assert.equal(metadata.rules[0].buckets.length, scenario.numBuckets);
-        assert.deepEqual(metadata.rules[0].buckets, scenario.expectedBuckets);  
+        assert.deepEqual(metadata.rules[0].buckets, scenario.expectedBuckets);
         done();
       });
     });
