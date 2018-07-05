@@ -17,10 +17,10 @@ TurboCarto.prototype.getCartocss = function (callback) {
 
   postcss([postCssTurboCarto.getPlugin(this.metadataHolder)])
     .process(this.cartocss)
+    .catch(callback)
     .then(function (result) {
       callback(null, result.css, self.metadataHolder);
-    })
-    .catch(callback);
+    });
 };
 
 TurboCarto.prototype.getMetadata = function (callback) {
