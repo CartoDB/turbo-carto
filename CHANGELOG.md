@@ -1,7 +1,9 @@
 # Changelog
 
 ## Version 0.20.3
-Released 2017-mm-dd
+Released 2017-07-08
+ - Fix ramp result when number of buckets equals 2 #14075
+ - Move .catch() before .then() when calling postcss.process() #78
 
 ## Version 0.20.2
 Released 2017-11-29
