@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.20.5
+Released 2018-XX-XX
+ - 
+
 ## Version 0.20.4
 Released 2018-07-12
  - revert .then() .catch() call order until we upgrade to node8/10 #78
