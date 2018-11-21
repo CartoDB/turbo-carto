@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 0.20.5
-Released 2018-XX-XX
- - 
+## Version 0.21.0
+Released 2018-mm-dd
+ - Support Node.js 8 and 10
+ - Add package-lock.json
 
 ## Version 0.20.4
 Released 2018-07-12
