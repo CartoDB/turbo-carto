@@ -47,7 +47,7 @@ describe('conditional ramp-buckets', function () {
           return done(err);
         }
 
-        assert.equal(result, scenario.expectedCartocss);
+        assert.strictEqual(result, scenario.expectedCartocss);
         done();
       });
     });
@@ -165,8 +165,8 @@ describe('Buckets calculation', function () {
       turbocarto(cartocss, datasource, function (err, result, metadata) {
         assert.ifError(err);
 
-        assert.equal(metadata.rules[0].buckets.length, scenario.numBuckets);
-        assert.deepEqual(metadata.rules[0].buckets, scenario.expectedBuckets);
+        assert.strictEqual(metadata.rules[0].buckets.length, scenario.numBuckets);
+        assert.deepStrictEqual(metadata.rules[0].buckets, scenario.expectedBuckets);
         done();
       });
     });

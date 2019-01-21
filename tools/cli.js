@@ -14,7 +14,7 @@ if (!fs.existsSync(filename)) {
   console.error('File "%s" does not exist', filename);
   process.exit(1);
 }
-var cartocss = fs.readFileSync(filename, {encoding: 'utf-8'});
+var cartocss = fs.readFileSync(filename, { encoding: 'utf-8' });
 
 var turbocarto = require('../src/index');
 var SqlApiDatasource = require('../examples/sql-api-datasource');

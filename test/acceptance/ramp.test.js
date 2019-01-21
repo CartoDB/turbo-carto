@@ -4,10 +4,11 @@ var fs = require('fs');
 var assert = require('assert');
 var turbocarto = require('../../src/index');
 var DummyDatasource = require('../support/dummy-datasource');
+var path = require('path');
 
 var datasource = new DummyDatasource();
 
-var scenariosPath = __dirname + '/scenarios';
+var scenariosPath = path.join(__dirname, '/scenarios');
 var scenarios = fs.readdirSync(scenariosPath)
   .filter(function (filename) {
     return filename.match(/.css$/) &&
@@ -21,8 +22,8 @@ var scenarios = fs.readdirSync(scenariosPath)
 
     return {
       desc: desc,
-      cartocss: fs.readFileSync(cartocssFilePath, {encoding: 'utf-8'}),
-      expectedCartocss: fs.readFileSync(expectedCartocssFilePath, {encoding: 'utf-8'})
+      cartocss: fs.readFileSync(cartocssFilePath, { encoding: 'utf-8' }),
+      expectedCartocss: fs.readFileSync(expectedCartocssFilePath, { encoding: 'utf-8' })
     };
   });
 
@@ -33,7 +34,7 @@ describe('ramp', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss);
+        assert.strictEqual(cartocssResult, scenario.expectedCartocss);
         done();
       });
     });
