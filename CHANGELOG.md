@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version 0.21.1
-Released 2018-mm-dd
+Released 2019-01-21
 
 - Update dev deps:
   - mocha@5.2.0
