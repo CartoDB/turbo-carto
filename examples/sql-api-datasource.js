@@ -40,9 +40,9 @@ function querySummaryStats (query, column, method, buckets, callback) {
     methods[method] || methods.quantiles,
     'from ({{sql}}) _table_sql where {{column}} is not null'
   ].join('\n');
-  var q = format(sql, {column: column, sql: query, buckets: buckets});
+  var q = format(sql, { column: column, sql: query, buckets: buckets });
 
-  request('http://development.localhost.lan:8080/api/v1/sql?' + qs.stringify({q: q}), function (err, response, body) {
+  request('http://development.localhost.lan:8080/api/v1/sql?' + qs.stringify({ q: q }), function (err, response, body) {
     if (!err && response.statusCode === 200) {
       var result = JSON.parse(body).rows[0];
       return callback(null, result[method]);

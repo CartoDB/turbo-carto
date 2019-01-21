@@ -150,7 +150,7 @@ describe('ramp-buckets', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss());
+        assert.strictEqual(cartocssResult, scenario.expectedCartocss());
         done();
       });
     });
@@ -163,7 +163,7 @@ describe('ramp-buckets', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss());
+        assert.strictEqual(cartocssResult, scenario.expectedCartocss());
         done();
       });
     });
@@ -180,7 +180,7 @@ describe('ramp-buckets', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss(mapping));
+        assert.strictEqual(cartocssResult, scenario.expectedCartocss(mapping));
         done();
       });
     });

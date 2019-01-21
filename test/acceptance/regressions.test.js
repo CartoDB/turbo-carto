@@ -211,7 +211,7 @@ describe('regressions', function () {
         if (err) {
           return done(err);
         }
-        assert.equal(cartocssResult, scenario.expectedCartocss);
+        assert.strictEqual(cartocssResult, scenario.expectedCartocss);
         done();
       });
     });

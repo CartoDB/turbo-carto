@@ -9,7 +9,7 @@ describe('fn-range should return a linear ramp', function () {
   it('with 5 buckets as default', function (done) {
     fn(1, 10)
       .then(function (result) {
-        assert.deepEqual(result.get(), [1, 3.25, 5.5, 7.75, 10]);
+        assert.deepStrictEqual(result.get(), [1, 3.25, 5.5, 7.75, 10]);
         done();
       })
       .catch(done);
@@ -18,7 +18,7 @@ describe('fn-range should return a linear ramp', function () {
   it('with 4 buckets as defined', function (done) {
     fn(1, 10, 4)
       .then(function (result) {
-        assert.deepEqual(result.get(), [1, 4, 7, 10]);
+        assert.deepStrictEqual(result.get(), [1, 4, 7, 10]);
         done();
       })
       .catch(done);
@@ -27,7 +27,7 @@ describe('fn-range should return a linear ramp', function () {
   it('with 4 when overrided', function (done) {
     fn(1, 10)
       .then(function (result) {
-        assert.deepEqual(result.get(4), [1, 4, 7, 10]);
+        assert.deepStrictEqual(result.get(4), [1, 4, 7, 10]);
         done();
       })
       .catch(done);

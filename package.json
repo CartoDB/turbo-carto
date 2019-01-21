@@ -12,7 +12,8 @@
     "email": "wadus@cartodb.com"
   },
   "contributors": [
-    "Raul Ochoa <rochoa@cartodb.com>"
+    "Raul Ochoa <rochoa@cartodb.com>",
+    "Daniel García Aubert <dgaubert@carto.com>"
   ],
   "license": "BSD-3-Clause",
   "repository": {
@@ -32,11 +33,11 @@
     "browserify": "^12.0.1",
     "istanbul": "^0.4.1",
     "jshint": "^2.9.1-rc2",
-    "mocha": "^2.3.4",
+    "mocha": "^5.2.0",
     "querystring": "^0.2.0",
     "request": "^2.67.0",
-    "semistandard": "^7.0.4",
-    "semistandard-format": "^2.1.0",
+    "semistandard": "^13.0.1",
+    "semistandard-format": "^3.0.0",
     "yargs": "^3.31.0"
   },
   "semistandard": {

@@ -31,8 +31,8 @@ describe('FnExecutor', function () {
     );
     return fn.exec()
       .then(function (result) {
-        assert.deepEqual(result.values, ['#f0f9e8', '#bae4bc', '#7bccc4', '#43a2ca', '#0868ac']);
-        assert.deepEqual(result.filters, [0, 1, 2, 3, 4]);
+        assert.deepStrictEqual(result.values, ['#f0f9e8', '#bae4bc', '#7bccc4', '#43a2ca', '#0868ac']);
+        assert.deepStrictEqual(result.filters, [0, 1, 2, 3, 4]);
       });
   });
 
@@ -53,8 +53,8 @@ describe('FnExecutor', function () {
     );
     return fn.exec()
       .then(function (result) {
-        assert.deepEqual(result.values, ['Red', 'Green', 'Blue']);
-        assert.deepEqual(result.filters, [0, 1, 2]);
+        assert.deepStrictEqual(result.values, ['Red', 'Green', 'Blue']);
+        assert.deepStrictEqual(result.filters, [0, 1, 2]);
       });
   });
 });

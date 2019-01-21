@@ -3,6 +3,10 @@
 ## Version 0.21.1
 Released 2018-mm-dd
 
+- Update dev deps:
+  - mocha@5.2.0
+  - semistandard@13.0.1
+  - semistandard-format@3.0.0
 
 ## Version 0.21.0
 Released 2018-11-21

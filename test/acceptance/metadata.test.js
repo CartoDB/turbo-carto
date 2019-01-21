@@ -19,16 +19,16 @@ describe('metadata', function () {
     });
     turbocarto(cartocss, jenksDatasource, function (err, result, metadata) {
       assert.ifError(err);
-      assert.equal(metadata.rules.length, 1);
+      assert.strictEqual(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
 
-      assert.equal(rule.selector, '#layer');
-      assert.equal(rule.prop, 'marker-width');
-      assert.equal(rule.column, 'pop_max');
-      assert.equal(rule.buckets.length, 5);
+      assert.strictEqual(rule.selector, '#layer');
+      assert.strictEqual(rule.prop, 'marker-width');
+      assert.strictEqual(rule.column, 'pop_max');
+      assert.strictEqual(rule.buckets.length, 5);
 
-      assert.equal(rule.stats.filter_avg, 322717);
+      assert.strictEqual(rule.stats.filter_avg, 322717);
 
       var expectedBuckets = [
         { filter: { type: 'range', start: -99, end: 41316 }, value: 8 },
@@ -38,7 +38,7 @@ describe('metadata', function () {
         { filter: { type: 'range', start: 2769072, end: 35676000 }, value: 32 }
       ];
 
-      assert.deepEqual(rule.buckets, expectedBuckets);
+      assert.deepStrictEqual(rule.buckets, expectedBuckets);
 
       done();
     });
@@ -58,22 +58,22 @@ describe('metadata', function () {
     });
     turbocarto(cartocss, jenksDatasource, function (err, result, metadata) {
       assert.ifError(err);
-      assert.equal(metadata.rules.length, 1);
+      assert.strictEqual(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
 
-      assert.equal(rule.selector, '#layer');
-      assert.equal(rule.prop, 'marker-width');
-      assert.equal(rule.column, 'pop_max');
-      assert.equal(rule.buckets.length, 1);
+      assert.strictEqual(rule.selector, '#layer');
+      assert.strictEqual(rule.prop, 'marker-width');
+      assert.strictEqual(rule.column, 'pop_max');
+      assert.strictEqual(rule.buckets.length, 1);
 
-      assert.equal(rule.stats.filter_avg, 8);
+      assert.strictEqual(rule.stats.filter_avg, 8);
 
       var expectedBuckets = [
         { filter: { type: 'range', start: 8, end: 8 }, value: 8 }
       ];
 
-      assert.deepEqual(rule.buckets, expectedBuckets);
+      assert.deepStrictEqual(rule.buckets, expectedBuckets);
 
       done();
     });
@@ -94,16 +94,16 @@ describe('metadata', function () {
     });
     turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
       assert.ifError(err);
-      assert.equal(metadata.rules.length, 1);
+      assert.strictEqual(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
 
-      assert.equal(rule.selector, '#layerheads');
-      assert.equal(rule.prop, 'marker-width');
-      assert.equal(rule.column, 'pop_max');
-      assert.equal(rule.buckets.length, 5);
+      assert.strictEqual(rule.selector, '#layerheads');
+      assert.strictEqual(rule.prop, 'marker-width');
+      assert.strictEqual(rule.column, 'pop_max');
+      assert.strictEqual(rule.buckets.length, 5);
 
-      assert.equal(rule.stats.filter_avg, 322717);
+      assert.strictEqual(rule.stats.filter_avg, 322717);
 
       var expectedBuckets = [
         { filter: { type: 'range', start: -99, end: 325723 }, value: 8 },
@@ -113,7 +113,7 @@ describe('metadata', function () {
         { filter: { type: 'range', start: 7778065, end: 35676000 }, value: 32 }
       ];
 
-      assert.deepEqual(rule.buckets, expectedBuckets);
+      assert.deepStrictEqual(rule.buckets, expectedBuckets);
 
       done();
     });
@@ -134,22 +134,22 @@ describe('metadata', function () {
     });
     turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
       assert.ifError(err);
-      assert.equal(metadata.rules.length, 1);
+      assert.strictEqual(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
 
-      assert.equal(rule.selector, '#layerheads');
-      assert.equal(rule.prop, 'marker-width');
-      assert.equal(rule.column, 'pop_max');
-      assert.equal(rule.buckets.length, 1);
+      assert.strictEqual(rule.selector, '#layerheads');
+      assert.strictEqual(rule.prop, 'marker-width');
+      assert.strictEqual(rule.column, 'pop_max');
+      assert.strictEqual(rule.buckets.length, 1);
 
-      assert.equal(rule.stats.filter_avg, 100);
+      assert.strictEqual(rule.stats.filter_avg, 100);
 
       var expectedBuckets = [
         { filter: { type: 'range', start: 100, end: 100 }, value: 8 }
       ];
 
-      assert.deepEqual(rule.buckets, expectedBuckets);
+      assert.deepStrictEqual(rule.buckets, expectedBuckets);
 
       done();
     });
@@ -178,16 +178,16 @@ describe('metadata', function () {
     });
     turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
       assert.ifError(err);
-      assert.equal(metadata.rules.length, 1);
+      assert.strictEqual(metadata.rules.length, 1);
 
       var rule = metadata.rules[0];
 
-      assert.equal(rule.selector, '#layercat');
-      assert.equal(rule.prop, 'marker-width');
-      assert.equal(rule.column, 'adm0name');
-      assert.equal(rule.buckets.length, 9);
+      assert.strictEqual(rule.selector, '#layercat');
+      assert.strictEqual(rule.prop, 'marker-width');
+      assert.strictEqual(rule.column, 'adm0name');
+      assert.strictEqual(rule.buckets.length, 9);
 
-      assert.equal(rule.stats.filter_avg, undefined);
+      assert.strictEqual(rule.stats.filter_avg, undefined);
 
       var expectedBuckets = [
         { filter: { type: 'category', name: 'United States of America' }, value: '#88CCEE' },
@@ -201,7 +201,7 @@ describe('metadata', function () {
         { filter: { type: 'default' }, value: '#888888' }
       ];
 
-      assert.deepEqual(rule.buckets, expectedBuckets);
+      assert.deepStrictEqual(rule.buckets, expectedBuckets);
 
       done();
     });

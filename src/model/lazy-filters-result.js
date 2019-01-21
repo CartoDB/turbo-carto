@@ -16,4 +16,3 @@ module.exports = LazyFiltersResult;
 LazyFiltersResult.prototype.get = function (column, strategy) {
   return this.filterGenerator(column, strategy);
 };
-
