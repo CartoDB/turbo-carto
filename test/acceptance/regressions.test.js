@@ -216,4 +216,27 @@ describe('regressions', function () {
       });
     });
   });
+
+  it('should return an error if it receives an evil ramp (instead of unhandled exception)', function (done) {
+    // NOTE the missing first param (the column) in the ramp
+    var cartocss = [
+      '#layercat{',
+      '  marker-width: ramp(, cartocolor(Safe), category(3));',
+      '}'
+    ].join('\n');
+    var headtailsDatasource = new DummyDatasource(function () {
+      return {
+        ramp: [
+          'United States of America',
+          'Russia',
+          'China'
+        ],
+        strategy: 'exact',
+        stats: { min_val: undefined, max_val: undefined, avg_val: undefined } };
+    });
+    turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
+      assert.ifError(err);
+      done();
+    });
+  });
 });
