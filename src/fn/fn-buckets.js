@@ -49,24 +49,18 @@ module.exports.createBucketsFn = function (datasource, alias, defaultStrategy) {
   return function fn$bucketsFn (numBuckets) {
     debug('fn$%s(%j)', alias, arguments);
     debug('Using "%s" datasource to calculate %s', datasource.getName(), alias);
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       return resolve(new LazyFiltersResult(function (column, strategy) {
         return fnBuckets(datasource)(column, alias, numBuckets).then(function (filters) {
           filters.strategy = strategy || defaultStrategy;
           return new Promise(function (resolve) {
             return resolve(filters);
-          })
-            .catch(function (err) {
-              reject(err);
-            });
-        })
-          .catch(function (err) {
-            reject(err);
           });
+        });
       }));
     })
-      .catch(function (e) {
-        return (e);
+      .catch(function (err) {
+        return (err);
       });
   };
 };
