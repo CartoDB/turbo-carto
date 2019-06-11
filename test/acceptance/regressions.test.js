@@ -234,9 +234,13 @@ describe('regressions', function () {
         strategy: 'exact',
         stats: { min_val: undefined, max_val: undefined, avg_val: undefined } };
     });
-    turbocarto(cartocss, headtailsDatasource, function (err, result, metadata) {
-      assert.ifError(err);
-      done();
+    turbocarto(cartocss, headtailsDatasource, function (err /*, result, metadata */) {
+      if (err) {
+        // We're expecting this error
+        assert.strictEqual(err.name, 'TurboCartoError');
+        assert.strictEqual(err.message, 'Failed to process "marker-width" property: column.replace is not a function');
+        done();
+      }
     });
   });
 });
