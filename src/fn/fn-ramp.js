@@ -188,8 +188,22 @@ function strategyFromMapping (mapping) {
 function compatibilityValuesRamp (datasource, column, args) {
   var values = args[0];
   var method = (args[1] || 'quantiles').toLowerCase();
-  var numBuckets = values.getLength();
-  return getRamp(datasource, column, numBuckets, method).then(compatibilityCreateRampFn(values));
+
+  if (values.is(LazyFiltersResult)) {
+    var mapping = args[2];
+    var strategy = strategyFromMapping(mapping);
+
+    return values.getLength(column, strategy)
+      .then(function (numBuckets) {
+        return getRamp(datasource, column, numBuckets, method);
+      })
+      .then(compatibilityCreateRampFn(values));
+  } else {
+    var numBuckets = values.getLength();
+
+    return getRamp(datasource, column, numBuckets, method)
+      .then(compatibilityCreateRampFn(values));
+  }
 }
 
 /**
