@@ -36,8 +36,8 @@ function fnBuckets (datasource) {
         resolve(new FiltersResult(filters, strategy, stats, meta));
       });
     })
-      .catch(function (e) {
-        return (e);
+      .catch(function (err) {
+        return (err);
       });
   };
 }
