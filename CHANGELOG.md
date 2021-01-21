@@ -1,7 +1,8 @@
 # Changelog
 
 ## Version 0.21.3
-Released 2019-mm-dd
+Released 2021-01-21
+- Update cartocolor version
 
 ## Version 0.21.2
 Released 2019-06-12
