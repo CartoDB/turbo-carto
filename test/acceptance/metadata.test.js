@@ -206,4 +206,83 @@ describe('metadata', function () {
       done();
     });
   });
+
+  it('should return metadata rules in order', function (done) {
+    var cartocss = [
+      '#layercat {',
+      '  marker-width: ramp([adm0name0], cartocolor(Safe), category(3));',
+      '  marker-width: ramp([adm0name1], (red, green, blue, grey), category(3));',
+      '}'
+    ].join('\n');
+
+    var firstCallback = null;
+
+    var datasource = {
+      getName: function() {
+        return 'Lazy';
+      },
+      getRamp: function(column, buckets, method, callback) {
+        if (column === 'adm0name1') {
+          callback(null, {
+            ramp: [
+              'Spain',
+              'Italy',
+              'France'
+            ],
+            strategy: 'exact',
+            stats: { min_val: undefined, max_val: undefined, avg_val: undefined }
+          });
+          return process.nextTick(firstCallback);
+        }
+
+        firstCallback = callback.bind(null, null, {
+          ramp: [
+            'United States of America',
+            'Russia',
+            'China'
+          ],
+          strategy: 'exact',
+          stats: { min_val: undefined, max_val: undefined, avg_val: undefined }
+        });
+      }
+    };
+
+    turbocarto(cartocss, datasource, function (err, result, metadata) {
+      if (err) {
+        return done(err);
+      }
+
+      assert.equal(metadata.rules.length, 2);
+
+      var rule0 = metadata.rules[0];
+      assert.equal(rule0.selector, '#layercat');
+      assert.equal(rule0.prop, 'marker-width');
+      assert.equal(rule0.column, 'adm0name0');
+      assert.equal(rule0.buckets.length, 4);
+      assert.equal(rule0.stats.filter_avg, undefined);
+      var expectedBuckets0 = [
+        { filter: { type: 'category', name: 'United States of America' }, value: '#88CCEE' },
+        { filter: { type: 'category', name: 'Russia' }, value: '#CC6677' },
+        { filter: { type: 'category', name: 'China' }, value: '#DDCC77' },
+        { filter: { type: 'default' }, value: '#888888' }
+      ];
+      assert.deepEqual(rule0.buckets, expectedBuckets0);
+
+      var rule1 = metadata.rules[1];
+      assert.equal(rule1.selector, '#layercat');
+      assert.equal(rule1.prop, 'marker-width');
+      assert.equal(rule1.column, 'adm0name1');
+      assert.equal(rule1.buckets.length, 4);
+      assert.equal(rule1.stats.filter_avg, undefined);
+      var expectedBuckets1 = [
+        { filter: { type: 'category', name: 'Spain' }, value: 'red' },
+        { filter: { type: 'category', name: 'Italy' }, value: 'green' },
+        { filter: { type: 'category', name: 'France' }, value: 'blue' },
+        { filter: { type: 'default' }, value: 'grey' }
+      ];
+      assert.deepEqual(rule1.buckets, expectedBuckets1);
+
+      done();
+    });
+  });
 });
